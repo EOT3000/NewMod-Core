@@ -1,5 +1,6 @@
 package me.fly.newmod.core.api;
 
+import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
 
@@ -11,6 +12,11 @@ public interface NewModAPI {
      * @return the API's item manager.
      */
     ItemManager itemManager();
+
+    /**
+     * @return the API's block manager.
+     */
+    BlockManager blockManager();
 
     /**
      * @return the API's block storage.

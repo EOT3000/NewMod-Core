@@ -1,6 +1,7 @@
 package me.fly.newmod.core;
 
 import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.blockstorage.BlockStorageImpl;
@@ -9,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NewModPlugin extends JavaPlugin implements NewModAPI {
     private ItemManagerImpl itemManager;
+    private BlockManagerImpl blockManager;
     private BlockStorageImpl blockStorage;
 
     @Override
@@ -19,6 +21,11 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     @Override
     public ItemManager itemManager() {
         return itemManager;
+    }
+
+    @Override
+    public BlockManager blockManager() {
+        return blockManager;
     }
 
     @Override

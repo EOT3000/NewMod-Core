@@ -4,7 +4,7 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.core.api.block.data.ModBlockDataSerializer;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.BlockStack;
+import org.bukkit.block.Block;
 
 /**
  * A singleton which holds the block registry and provides mod block utility methods.
@@ -20,10 +20,10 @@ public interface BlockManager {
     /**
      * Attempts to find this BlockStack's ModBlock.
      *
-     * @param stack the BlockStack to check.
+     * @param block the BlockStack to check.
      * @return the found ModBlock, or null if none could be found.
      */
-    ModBlock getType(BlockStack stack);
+    ModBlock getType(Block block);
 
     /**
      * Attempts to find the ModBlock of this NamespacedKey
@@ -50,19 +50,19 @@ public interface BlockManager {
     <T extends ModBlockData> T createDefaultData(ModBlock type);
 
     /**
-     * Gets the data stored on this block stack.
+     * Gets the data stored on this block block.
      *
-     * @param stack the stack to check.
+     * @param block the block to check.
      * @return the block data, or null if there is none.
      */
-    ModBlockData getData(BlockStack stack);
+    ModBlockData getData(Block block);
 
     /**
-     * Applies data to an block stack.
+     * Applies data to an block block.
      *
-     * @param stack the stack to apply the data to.
+     * @param block the block to apply the data to.
      * @param data the data to apply.
-     * @return true if successful, false if it fails, such as if the data type does not match the stack.
+     * @return true if successful, false if it fails, such as if the data type does not match the block.
      */
-    boolean applyData(BlockStack stack, ModBlockData data);
+    boolean applyData(Block block, ModBlockData data);
 }
