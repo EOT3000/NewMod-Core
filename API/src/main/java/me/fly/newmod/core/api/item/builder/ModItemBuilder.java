@@ -11,16 +11,16 @@ import org.bukkit.enchantments.Enchantment;
  */
 public interface ModItemBuilder {
     /**
-     * Colors the item.
+     * Sets the item color.
      *
-     * @param color the color to use.
+     * @param color the color to set.
      */
     void color(int color);
 
     /**
      * Sets the custom name.
      *
-     * @param component the custom name
+     * @param component the custom name to set.
      */
     void customName(TextComponent component);
 
@@ -38,7 +38,7 @@ public interface ModItemBuilder {
      * @param enchantment the enchantment.
      * @param lvl the level.
      */
-    void enchantment(Enchantment enchantment, int lvl);
+    void addEnchantment(Enchantment enchantment, int lvl);
 
     /**
      * Adds a line of lore.

@@ -32,7 +32,12 @@ public interface ItemManager {
      */
     ModItem getType(NamespacedKey key);
 
-
+    /**
+     * Registers an item data serializer.
+     *
+     * @param serializer the serializer to register.
+     * @param clazz the serializer class.
+     */
     <T extends ModItemData> void registerSerializer(ModItemDataSerializer<T> serializer, Class<T> clazz);
 
     /**
