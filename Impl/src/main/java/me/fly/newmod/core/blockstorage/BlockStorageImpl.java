@@ -24,14 +24,14 @@ public class BlockStorageImpl implements BlockStorage {
     }
 
     @Override
-    public boolean hasData(Location location, NamespacedKey key) {
+    public boolean hasData(Location location, NamespacedKey key, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
         return !(storage == null || storage.getByKey(IntTriple.fromLocation(location), key) == null);
     }
 
     @Override
-    public Set<NamespacedKey> getKeys(Location location) {
+    public Set<NamespacedKey> getKeys(Location location, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
         if(storage == null) {
@@ -42,7 +42,7 @@ public class BlockStorageImpl implements BlockStorage {
     }
 
     @Override
-    public String getData(Location location, NamespacedKey key) {
+    public String getData(Location location, NamespacedKey key, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
         if(storage == null) {
@@ -53,7 +53,7 @@ public class BlockStorageImpl implements BlockStorage {
     }
 
     @Override
-    public void setData(Location location, NamespacedKey key, String value) {
+    public void setData(Location location, NamespacedKey key, String value, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
         if(storage == null) {
@@ -64,7 +64,7 @@ public class BlockStorageImpl implements BlockStorage {
     }
 
     @Override
-    public void removeData(Location location, NamespacedKey key) {
+    public void removeData(Location location, NamespacedKey key, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
         if(storage == null) {

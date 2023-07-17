@@ -1,5 +1,6 @@
 package me.fly.newmod.core.blockstorage;
 
+import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.util.IntTriple;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -10,10 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -35,46 +33,74 @@ public class RegionBlockStorage {
     }
 
     //TODO: private this
-    public final Map<IntTriple, MarkingHashMapWrapper> data = new HashMap<>();
+    public final Map<IntTriple, MarkingHashMapWrapper> block = new HashMap<>();
+    public final Map<IntTriple, MarkingHashMapWrapper> envir = new HashMap<>();
 
-    public void remove(IntTriple vector) {
+    private Map<IntTriple, MarkingHashMapWrapper> getData(BlockStorage.StorageType type) {
+        return type.equals(BlockStorage.StorageType.BLOCK_DATA) ? block : envir;
+    }
+
+    public void remove(IntTriple vector, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         data.remove(vector);
     }
 
-    public Set<NamespacedKey> getKeys(IntTriple vector) {
+    public Set<NamespacedKey> getKeys(IntTriple vector, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         return data.getOrDefault(vector, new MarkingHashMapWrapper()).keySet();
     }
 
-    public Map<NamespacedKey, String> getValues(IntTriple vector) {
+    public Map<NamespacedKey, String> getValues(IntTriple vector, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         data.putIfAbsent(vector, new MarkingHashMapWrapper());
 
         return data.get(vector);
     }
 
-    public String getByKey(IntTriple vector, NamespacedKey key) {
+    public String getByKey(IntTriple vector, NamespacedKey key, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         return data.getOrDefault(vector, new MarkingHashMapWrapper()).get(key);
     }
 
-    public void modifyKey(IntTriple vector, NamespacedKey key, String value) {
+    public void modifyKey(IntTriple vector, NamespacedKey key, String value, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         data.putIfAbsent(vector, new MarkingHashMapWrapper());
 
         data.get(vector).put(key, value);
     }
 
-    public void removeKey(IntTriple vector, NamespacedKey key) {
+    public void removeKey(IntTriple vector, NamespacedKey key, BlockStorage.StorageType type) {
+        Map<IntTriple, MarkingHashMapWrapper> data = getData(type);
+
         if(data.containsKey(vector)) {
             data.get(vector).remove(key);
         }
     }
 
     public Set<IntTriple> getAllLocations() {
-        return data.keySet();
+        Set<IntTriple> ret = new HashSet<>(block.keySet());
+
+        ret.addAll(envir.keySet());
+
+        return ret;
     }
 
     public void load(YamlConfiguration configuration, String file) {
         ConfigurationSection b = configuration.getConfigurationSection("blocks");
 
         if(b == null) {
+            Bukkit.getLogger().severe("Error loading file " + file);
+            return;
+        }
+
+        ConfigurationSection e = configuration.getConfigurationSection("environment");
+
+        if(e == null) {
             Bukkit.getLogger().severe("Error loading file " + file);
             return;
         }
@@ -96,7 +122,27 @@ public class RegionBlockStorage {
                 map.put(key, sec.getString(data));
             }
 
-            this.data.put(new IntTriple(x, y, z), map);
+            this.block.put(new IntTriple(x, y, z), map);
+        }
+
+        for(String rk : e.getKeys(false)) {
+            ConfigurationSection sec = e.getConfigurationSection(rk);
+
+            int x = sec.getInt("x");
+            int y = sec.getInt("y");
+            int z = sec.getInt("z");
+
+            MarkingHashMapWrapper map = new MarkingHashMapWrapper();
+
+            for(String data : sec.getKeys(false)) {
+                String[] spl = data.split(":");
+
+                NamespacedKey key = new NamespacedKey(spl[0], spl[1]);
+
+                map.put(key, sec.getString(data));
+            }
+
+            this.envir.put(new IntTriple(x, y, z), map);
         }
     }
 
@@ -127,7 +173,7 @@ public class RegionBlockStorage {
 
         Map<String, Map<String, String>> blocks = new HashMap<>();
 
-        for(Map.Entry<IntTriple, MarkingHashMapWrapper> map : data.entrySet()) {
+        for(Map.Entry<IntTriple, MarkingHashMapWrapper> map : this.block.entrySet()) {
             if(map.getKey() == null) {
                 Bukkit.getLogger().severe("Error saving null block in region " + x + "," + z + ":" + world.getName());
                 continue;
@@ -149,7 +195,31 @@ public class RegionBlockStorage {
             blocks.put(key, keys);
         }
 
-        configuration.set("blocks", blocks);
+        Map<String, Map<String, String>> environment = new HashMap<>();
+
+        for(Map.Entry<IntTriple, MarkingHashMapWrapper> map : this.envir.entrySet()) {
+            if(map.getKey() == null) {
+                Bukkit.getLogger().severe("Error saving null block in region " + x + "," + z + ":" + world.getName());
+                continue;
+            }
+
+            if(map.getValue() == null) {
+                Bukkit.getLogger().severe("Error saving block " + map.getKey().toString() + " in region " + x + "," + z + ":" + world.getName());
+                continue;
+            }
+
+            String key = map.getKey().x + "," + map.getKey().y + "," + map.getKey().z;
+
+            Map<String, String> keys = new HashMap<>(nkToS(map.getValue()));
+
+            keys.put("n:x", Integer.toString(map.getKey().x));
+            keys.put("n:y", Integer.toString(map.getKey().y));
+            keys.put("n:z", Integer.toString(map.getKey().z));
+
+            environment.put(key, keys);
+        }
+
+        configuration.set("environment", environment);
 
         try {
             configuration.save(file);

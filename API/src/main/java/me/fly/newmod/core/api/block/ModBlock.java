@@ -34,4 +34,13 @@ public interface ModBlock {
      * @param instance the container which holds the data the block should be placed with.
      */
     void place(Block block, ModBlockInstance instance);
+
+    /**
+     * Checks whether this block should be deleted or not.
+     *
+     * @param block the block to check.
+     * @param instance the block's data.
+     * @return true if the block should be deleted, false if it shouldn't.
+     */
+    boolean shouldDelete(Block block, ModBlockInstance instance);
 }

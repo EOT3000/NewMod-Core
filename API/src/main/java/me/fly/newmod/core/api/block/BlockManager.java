@@ -65,4 +65,12 @@ public interface BlockManager {
      * @return true if successful, false if it fails, such as if the data type does not match the block.
      */
     boolean applyData(Block block, ModBlockData data);
+
+    /**
+     * Creates a mod block instance from the provided block.
+     *
+     * @param block the block to create from.
+     * @return the created mod block instance.
+     */
+    ModBlockInstance from(Block block);
 }

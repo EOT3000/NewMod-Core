@@ -3,6 +3,7 @@ package me.fly.newmod.core.block;
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
+import me.fly.newmod.core.api.block.ModBlockInstance;
 import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.core.api.block.data.ModBlockDataSerializer;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
@@ -29,11 +30,11 @@ public class BlockManagerImpl implements BlockManager {
     public ModBlock getType(Block block) {
         BlockStorage storage = NewModPlugin.get().blockStorage();
 
-        if(block == null || !storage.hasData(block.getLocation(), ID)) {
+        if(block == null || !storage.hasData(block.getLocation(), ID, BlockStorage.StorageType.BLOCK_DATA)) {
             return null;
         }
 
-        NamespacedKey id = PersistentDataUtil.namespacedKeyFromPrimitive(storage.getData(block.getLocation(), ID));
+        NamespacedKey id = PersistentDataUtil.namespacedKeyFromPrimitive(storage.getData(block.getLocation(), ID, BlockStorage.StorageType.BLOCK_DATA));
 
         return registry.get(id);
     }
@@ -84,5 +85,10 @@ public class BlockManagerImpl implements BlockManager {
         serializer.applyData(block, data);
 
         return true;
+    }
+
+    @Override
+    public ModBlockInstance from(Block block) {
+        return new ModBlockInstanceImpl(block);
     }
 }
