@@ -1,4 +1,4 @@
-package me.fly.newmod.core.api.item.meta;
+package me.fly.newmod.core.api.item.data;
 
 import me.fly.newmod.core.api.item.ModItem;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 public interface ModItemData {
     /**
-     * @return the mod type of this data.
+     * @return the mod item type of this data.
      */
     ModItem getType();
 
