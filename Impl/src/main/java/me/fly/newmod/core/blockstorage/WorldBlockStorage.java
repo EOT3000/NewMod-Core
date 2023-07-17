@@ -1,4 +1,4 @@
-package me.fly.newmod.core.impl.blockstorage;
+package me.fly.newmod.core.blockstorage;
 
 import me.fly.newmod.core.api.util.IntPair;
 import me.fly.newmod.core.api.util.IntTriple;
