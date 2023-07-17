@@ -46,8 +46,8 @@ public class ModBlockInstanceImpl implements ModBlockInstance {
     }
 
     @Override
-    public Block create(Location location) {
-        if(representation == null || !location.equals(representation.getLocation())) {
+    public Block createOrGet(Location location) {
+        if(representation == null || !representation.getLocation().equals(location)) {
             BlockManager manager = NewModPlugin.get().blockManager();
             Block block = location.getBlock();
 
@@ -57,6 +57,8 @@ public class ModBlockInstanceImpl implements ModBlockInstance {
 
             return block;
         } else {
+            update();
+
             return representation;
         }
     }

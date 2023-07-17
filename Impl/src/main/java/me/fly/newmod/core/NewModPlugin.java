@@ -4,6 +4,7 @@ import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
+import me.fly.newmod.core.block.BlockManagerImpl;
 import me.fly.newmod.core.blockstorage.BlockStorageImpl;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,8 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     @Override
     public void onEnable() {
         this.blockStorage = new BlockStorageImpl();
+        this.blockManager = new BlockManagerImpl();
+        this.itemManager = new ItemManagerImpl();
     }
 
     @Override

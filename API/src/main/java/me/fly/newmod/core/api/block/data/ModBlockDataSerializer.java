@@ -1,37 +1,37 @@
 package me.fly.newmod.core.api.block.data;
 
-import me.fly.newmod.core.api.item.ModItem;
-import org.bukkit.inventory.ItemStack;
+import me.fly.newmod.core.api.block.ModBlock;
+import org.bukkit.block.Block;
 
 /**
- * A class that converts between in-game NBT and code for mod item data.
+ * A class that converts between in-game NBT and code for mod block data.
  *
  * @param <T> the data type this serializer can convert.
  */
 public interface ModBlockDataSerializer<T extends ModBlockData> {
     /**
-     * Gets the data stored on this item stack.
+     * Gets the data stored on this block.
      *
-     * @param stack the stack to check.
-     * @return the item data, or null if there is none.
+     * @param block the block to check.
+     * @return the block data, or null if there is none.
      */
-    T getData(ItemStack stack);
+    T getData(Block block);
 
     /**
-     * Creates the default version of an item data type.
+     * Creates the default version of an block data type.
      *
-     * @param type the item for which the data should be created.
+     * @param type the block for which the data should be created.
      * @return the created default data.
      */
-    T createDefaultData(ModItem type);
+    T createDefaultData(ModBlock type);
 
     /**
-     * Applies data to an item stack.
+     * Applies data to an block.
      *
-     * @param stack the stack to apply the data to.
+     * @param block the block to apply the data to.
      * @param data the data to apply.
      */
-    void applyData(ItemStack stack, ModBlockData data);
+    void applyData(Block block, ModBlockData data);
 
     /**
      * Checks if this serializer can serialize the provided data.
