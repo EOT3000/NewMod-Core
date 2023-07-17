@@ -4,42 +4,58 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.ModItemBuilder;
 import me.fly.newmod.core.api.item.builder.meta.MetaModifier;
+import me.fly.newmod.core.api.item.builder.modifiers.ColorModifier;
+import me.fly.newmod.core.api.item.builder.modifiers.DisplayNameModifier;
+import me.fly.newmod.core.api.item.builder.modifiers.EnchantmentModifier;
+import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.util.Pair;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ModItemBuilderImpl implements ModItemBuilder {
-    private Color color;
-    private final List<Pair<Enchantment, Integer>> enchantments = new ArrayList<>();
+    private final Map<Enchantment, Integer> enchantments = new LinkedHashMap<>();
     private final List<TextComponent> lore = new ArrayList<>();
+    private final List<MetaModifier> modifiers = new ArrayList<>();
 
-    TextComponent customName;
-    ModBlock block;
+    private TextComponent displayName;
+    private ModBlock block;
+    private Color color;
+    private Class<? extends ModItemData> data;
 
-    public ModItemBuilderImpl() {
+    private final Material material;
+    private final NamespacedKey key;
+    private final ModItemCategory category;
 
+    public ModItemBuilderImpl(Material material, NamespacedKey key, ModItemCategory category) {
+        this.material = material;
+        this.key = key;
+        this.category = category;
     }
 
     @Override
     public ModItemBuilder displayName(TextComponent component) {
+        this.displayName = component;
+
         return this;
     }
 
     @Override
-    public ModItemBuilder color(int color) {
-        return null;
+    public ModItemBuilder color(Color color) {
+        this.color = color;
+
+        return this;
     }
 
     @Override
     public ModItemBuilder addEnchantment(Enchantment enchantment, int lvl) {
-        enchantments.add(new Pair<>(enchantment, lvl));
+        enchantments.put(enchantment, lvl);
 
         return this;
     }
@@ -53,21 +69,41 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
     @Override
     public ModItemBuilder addModifier(MetaModifier modifier) {
-        return null;
+        modifiers.add(modifier);
+
+        return this;
     }
 
     @Override
     public ModItemBuilder setBlock(ModBlock block) {
-        return null;
+        this.block = block;
+
+        return this;
     }
 
     @Override
     public ModItemBuilder setDataType(Class<? extends ModItemData> clazz) {
-        return null;
+        this.data = clazz;
+
+        return this;
     }
 
     @Override
     public ModItem build() {
+        if(displayName != null) {
+            displayName = Component.text("");
+        }
+
+        modifiers.add(new DisplayNameModifier(displayName));
+
+        if(color != null) {
+            modifiers.add(new ColorModifier(color));
+        }
+
+        for(Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+            modifiers.add(new EnchantmentModifier(entry.getKey(), entry.getValue()));
+        }
+
         return null;
     }
 }

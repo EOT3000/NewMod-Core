@@ -7,6 +7,7 @@ import me.fly.newmod.core.api.item.data.ModItemData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 
 /**
@@ -45,7 +46,16 @@ public interface ModItemBuilder {
      *
      * @param color the color to set.
      */
-    ModItemBuilder color(int color);
+    ModItemBuilder color(Color color);
+
+    /**
+     * Sets the item color.
+     *
+     * @param color the color to set.
+     */
+    default ModItemBuilder color(int color) {
+        return color(Color.fromRGB(color));
+    }
 
     /**
      * Adds an enchantment.
