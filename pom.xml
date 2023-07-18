@@ -13,6 +13,10 @@
         <module>Impl</module>
     </modules>
 
+    <properties>
+        <java.version>16</java.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>purpur</id>

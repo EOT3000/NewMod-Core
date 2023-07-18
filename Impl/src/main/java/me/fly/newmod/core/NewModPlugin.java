@@ -1,6 +1,7 @@
 package me.fly.newmod.core;
 
 import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.addon.NewModAddon;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
@@ -36,6 +37,11 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     @Override
     public BlockStorage blockStorage() {
         return blockStorage;
+    }
+
+    @Override
+    public void registerAddon(NewModAddon addon) {
+        //nothing yet
     }
 
     public static NewModPlugin get() {
