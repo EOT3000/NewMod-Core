@@ -31,12 +31,10 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
     private final Material material;
     private final NamespacedKey key;
-    private final ModItemCategory category;
 
     public ModItemBuilderImpl(Material material, NamespacedKey key, ModItemCategory category) {
         this.material = material;
         this.key = key;
-        this.category = category;
     }
 
     @Override

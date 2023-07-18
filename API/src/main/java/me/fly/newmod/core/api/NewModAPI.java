@@ -5,6 +5,8 @@ import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.event.EventManager;
 import me.fly.newmod.core.api.item.ItemManager;
+import me.fly.newmod.core.api.item.category.CategoryManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * The primary class for accessing the NewMod API.
@@ -26,11 +28,18 @@ public interface NewModAPI {
     BlockStorage blockStorage();
 
     /**
+     * @return the API's category manager.
+     */
+    CategoryManager categoryManager();
+
+    /**
      * @return the API's event manager.
      */
     //EventManager eventManager();
 
     /**
+     * Registers an addon. Should be done during {@link JavaPlugin#onLoad()}.
+     *
      * @param addon the addon to register.
      */
     void registerAddon(NewModAddon addon);
