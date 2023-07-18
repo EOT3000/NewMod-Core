@@ -3,6 +3,7 @@ package me.fly.newmod.core.api;
 import me.fly.newmod.core.api.addon.NewModAddon;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
+import me.fly.newmod.core.api.event.EventManager;
 import me.fly.newmod.core.api.item.ItemManager;
 
 /**
@@ -23,6 +24,11 @@ public interface NewModAPI {
      * @return the API's block storage.
      */
     BlockStorage blockStorage();
+
+    /**
+     * @return the API's event manager.
+     */
+    EventManager eventManager();
 
     /**
      * @param addon the addon to register.
