@@ -1,5 +1,6 @@
 package me.fly.newmod.core.api;
 
+import me.fly.newmod.core.api.addon.NewModAddon;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
@@ -22,4 +23,9 @@ public interface NewModAPI {
      * @return the API's block storage.
      */
     BlockStorage blockStorage();
+
+    /**
+     * @param addon the addon to register.
+     */
+    void registerAddon(NewModAddon addon);
 }

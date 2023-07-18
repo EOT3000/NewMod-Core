@@ -36,18 +36,18 @@ public class BlockListener implements Listener {
                     continue;
                 }
 
-                if (type.getMaterial().equals(b)) {
+                if (type.getMaterial().equals(b.getType())) {
                     try {
-                        type.tick(b, manager.from(b));
+                        type.tick(event.getTickNumber(), b, manager.from(b));
                     } catch (Exception e) {
-                        NewMod.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") error:");
+                        NewModPlugin.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") error:");
 
                         e.printStackTrace();
                     }
                 } else {
-                    manager.purgeData(location);
+                    storage.removeAllData(location, BlockStorage.StorageType.BLOCK_DATA);
 
-                    NewMod.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") has been purged for block mismatch");
+                    NewModPlugin.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") has been purged for block mismatch");
                 }
             }
         }

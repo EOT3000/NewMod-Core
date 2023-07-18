@@ -58,6 +58,14 @@ public interface BlockStorage {
     void removeData(Location location, NamespacedKey key, StorageType type);
 
     /**
+     * Removes all data of a type from the provided block.
+     *
+     * @param location the location to purge.
+     * @param type the storage type to purge.
+     */
+    void removeAllData(Location location, StorageType type);
+
+    /**
      * Gets all the blocks stored in this storage, in the provided world.
      *
      * @param world the world from which to get all stored locations.

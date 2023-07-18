@@ -10,6 +10,8 @@ import me.fly.newmod.core.item.ItemManagerImpl;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NewModPlugin extends JavaPlugin implements NewModAPI {
+    private static NewModPlugin instance;
+
     private ItemManagerImpl itemManager;
     private BlockManagerImpl blockManager;
     private BlockStorageImpl blockStorage;
@@ -37,6 +39,14 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     }
 
     public static NewModPlugin get() {
-        return null;
+        return instance;
+    }
+
+    public NewModPlugin() {
+        if(instance != null) {
+            throw new RuntimeException("Attempted to create a second NewModPlugin instance.");
+        }
+
+        instance = this;
     }
 }

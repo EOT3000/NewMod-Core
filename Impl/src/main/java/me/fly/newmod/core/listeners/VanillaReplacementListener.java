@@ -2,6 +2,8 @@ package me.fly.newmod.core.listeners;
 
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ModItem;
+import me.fly.newmod.core.crafting.ShapedRecipeMatcher;
+import me.fly.newmod.core.crafting.ShapelessRecipeMatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BrewingStand;
@@ -81,11 +83,11 @@ public class VanillaReplacementListener implements Listener {
     public void onPreCraft(PrepareItemCraftEvent event) {
         if(event.getRecipe() instanceof ShapedRecipe) {
             if(!ShapedRecipeMatcher.matches(event.getInventory())) {
-                event.getInventory().setResult(new ItemStack(Material.AIR));
+                event.getInventory().setResult(null);
             }
         } else if(event.getRecipe() instanceof ShapelessRecipe recipe) {
             if(!ShapelessRecipeMatcher.matches(recipe, event.getInventory().getMatrix())) {
-                event.getInventory().setResult(new ItemStack(Material.AIR));
+                event.getInventory().setResult(null);
             }
         }
     }

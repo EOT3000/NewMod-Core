@@ -27,7 +27,7 @@ public class BlockStorageImpl implements BlockStorage {
     public boolean hasData(Location location, NamespacedKey key, StorageType type) {
         RegionBlockStorage storage = getRegion(location);
 
-        return !(storage == null || storage.getByKey(IntTriple.fromLocation(location), key) == null);
+        return !(storage == null || storage.getByKey(IntTriple.fromLocation(location), key, type) == null);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BlockStorageImpl implements BlockStorage {
             return new HashSet<>();
         }
 
-        return storage.getKeys(IntTriple.fromLocation(location));
+        return storage.getKeys(IntTriple.fromLocation(location), type);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class BlockStorageImpl implements BlockStorage {
             return null;
         }
 
-        return storage.getByKey(IntTriple.fromLocation(location), key);
+        return storage.getByKey(IntTriple.fromLocation(location), key, type);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BlockStorageImpl implements BlockStorage {
             return;
         }
 
-        storage.modifyKey(IntTriple.fromLocation(location), key, value);
+        storage.modifyKey(IntTriple.fromLocation(location), key, value, type);
     }
 
     @Override
@@ -71,7 +71,18 @@ public class BlockStorageImpl implements BlockStorage {
             return;
         }
 
-        storage.removeKey(IntTriple.fromLocation(location), key);
+        storage.removeKey(IntTriple.fromLocation(location), key, type);
+    }
+
+    @Override
+    public void removeAllData(Location location, StorageType type) {
+        RegionBlockStorage storage = getRegion(location);
+
+        if(storage == null) {
+            return;
+        }
+
+        storage.remove(IntTriple.fromLocation(location), type);
     }
 
     @Override
