@@ -28,7 +28,7 @@ public interface NewModAPI {
     /**
      * @return the API's event manager.
      */
-    EventManager eventManager();
+    //EventManager eventManager();
 
     /**
      * @param addon the addon to register.
