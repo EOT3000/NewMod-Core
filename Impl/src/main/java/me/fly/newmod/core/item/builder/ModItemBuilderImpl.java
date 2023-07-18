@@ -32,7 +32,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
     private final Material material;
     private final NamespacedKey key;
 
-    public ModItemBuilderImpl(Material material, NamespacedKey key, ModItemCategory category) {
+    public ModItemBuilderImpl(Material material, NamespacedKey key) {
         this.material = material;
         this.key = key;
     }
@@ -102,6 +102,6 @@ public class ModItemBuilderImpl implements ModItemBuilder {
             modifiers.add(new EnchantmentModifier(entry.getKey(), entry.getValue()));
         }
 
-        return null;
+        return new BuiltModItemImpl(key, material, displayName, block, data, modifiers);
     }
 }

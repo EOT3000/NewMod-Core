@@ -3,11 +3,15 @@ package me.fly.newmod.core.item;
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
+import me.fly.newmod.core.api.item.builder.ModItemBuilder;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.item.data.ModItemDataSerializer;
 import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.item.builder.ModItemBuilderImpl;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -62,6 +66,11 @@ public class ItemManagerImpl implements ItemManager {
         Class<? extends ModItemData> clazz = type.getDataType();
 
         return serializers.get(clazz).getData(stack);
+    }
+
+    @Override
+    public ModItemBuilder createBuilder(Material material, JavaPlugin plugin, String id) {
+        return new ModItemBuilderImpl(material, new NamespacedKey(plugin, id));
     }
 
     @Override

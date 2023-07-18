@@ -1,9 +1,12 @@
 package me.fly.newmod.core.api.item;
 
+import me.fly.newmod.core.api.item.builder.ModItemBuilder;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.item.data.ModItemDataSerializer;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * A singleton which holds the item registry and provides mod item utility methods.
@@ -55,6 +58,16 @@ public interface ItemManager {
      * @return the item data, or null if there is none.
      */
     ModItemData getData(ItemStack stack);
+
+    /**
+     * Creates a mod item builder.
+     *
+     * @param material the item material.
+     * @param plugin the plugin.
+     * @param id the item id.
+     * @return the created builder.
+     */
+    ModItemBuilder createBuilder(Material material, JavaPlugin plugin, String id);
 
     /**
      * Applies data to an item stack.
