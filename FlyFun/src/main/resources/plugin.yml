@@ -1,0 +1,4 @@
+name: FlyFun
+main: me.fly.newmod.flyfun.FlyFunPlugin
+version: Pre-Alpha
+api-version: 1.20
