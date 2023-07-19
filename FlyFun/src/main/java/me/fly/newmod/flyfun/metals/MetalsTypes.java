@@ -8,10 +8,10 @@ import me.fly.newmod.flyfun.FlyFunPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 
+@SuppressWarnings("unused")
 public class MetalsTypes {
     public static void init() {
 

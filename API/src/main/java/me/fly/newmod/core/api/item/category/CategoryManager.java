@@ -32,6 +32,14 @@ public interface CategoryManager {
     ModItemCategory createCategory(NamespacedKey id, ItemStack stack);
 
     /**
+     * Gets the category.
+     *
+     * @param key the category ID.
+     * @return the category, or null if there is none with the specified ID.
+     */
+    ModItemCategory getCategory(NamespacedKey key);
+
+    /**
      * Gets all registered item categories.
      *
      * @return a set of all item categories.

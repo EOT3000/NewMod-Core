@@ -4,11 +4,14 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.meta.MetaModifier;
 import me.fly.newmod.core.api.item.data.ModItemData;
+import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.item.ItemManagerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -63,6 +66,21 @@ public class BuiltModItemImpl implements ModItem {
         for(MetaModifier modifier : modifiers) {
             modifier.apply(stack);
         }
+
+        return stack;
+    }
+
+    @Override
+    public ItemStack create() {
+        ItemStack stack = new ItemStack(material);
+
+        applyModifiers(stack);
+
+        ItemMeta meta = stack.getItemMeta();
+
+        meta.getPersistentDataContainer().set(ItemManagerImpl.ID, PersistentDataUtil.NAMESPACED_KEY, id);
+
+        stack.setItemMeta(meta);
 
         return stack;
     }

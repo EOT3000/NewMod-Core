@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public interface ModItemCategory {
     /**
-     * @return this category's cover item.
+     * @return a copy of this category's cover item.
      */
     ItemStack getCover();
 

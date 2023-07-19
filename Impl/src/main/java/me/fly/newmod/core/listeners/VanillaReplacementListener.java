@@ -166,9 +166,14 @@ public class VanillaReplacementListener implements Listener {
         System.out.println("itemcur: " + event.getCurrentItem());
         System.out.println();*/
 
-        if(event.getClick().isShiftClick() && event.getInventory() instanceof BrewerInventory) {
+        /*if(event.getClick().isShiftClick() && event.getInventory() instanceof BrewerInventory) {
             itc(event, event.getCurrentItem());
         } else if(event.getClickedInventory() instanceof BrewerInventory) {
+            itc(event, event.getCursor());
+        }*/
+
+        if(event.getInventory() instanceof BrewerInventory || event.getClickedInventory() instanceof BrewerInventory) {
+            itc(event, event.getCurrentItem());
             itc(event, event.getCursor());
         }
     }

@@ -30,6 +30,11 @@ public class CategoryManagerImpl implements CategoryManager {
     }
 
     @Override
+    public ModItemCategory getCategory(NamespacedKey key) {
+        return categories.get(key);
+    }
+
+    @Override
     public Set<ModItemCategory> getCategories() {
         return new LinkedHashSet<>(categories.values());
     }

@@ -44,5 +44,11 @@ public interface ModItem extends Item {
      */
     ItemStack applyModifiers(ItemStack stack);
 
+    /**
+     * Creates an item stack from this item type.
+     *
+     * @return the created item stack.
+     */
+    ItemStack create();
 
 }
