@@ -15,7 +15,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     @Override
     public void onLoad() {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("NewMod");
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("NewMod-Core");
 
         if(plugin == null) {
             throw new RuntimeException("NewMod is not present");
