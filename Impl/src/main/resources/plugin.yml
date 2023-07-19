@@ -1,0 +1,9 @@
+name: Mods
+main: me.fly.newmod.core.NewMod
+version: Pre-Alpha
+api-version: 1.20
+commands:
+  nm:
+    description: Mod commands
+  ff:
+    description: Mod commands

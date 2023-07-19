@@ -8,9 +8,14 @@ import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.category.CategoryManager;
 import me.fly.newmod.core.block.BlockManagerImpl;
 import me.fly.newmod.core.blockstorage.BlockStorageImpl;
+import me.fly.newmod.core.command.CheatCommand;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import me.fly.newmod.core.item.category.CategoryManagerImpl;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class NewModPlugin extends JavaPlugin implements NewModAPI {
     private static NewModPlugin instance;
@@ -20,12 +25,31 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     private BlockStorageImpl blockStorage;
     private CategoryManagerImpl categoryManager;
 
+    private CheatCommand cheatCommand;
+
     @Override
     public void onEnable() {
         this.blockStorage = new BlockStorageImpl();
         this.blockManager = new BlockManagerImpl();
         this.itemManager = new ItemManagerImpl();
         this.categoryManager = new CategoryManagerImpl();
+
+        this.cheatCommand = new CheatCommand();
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(sender instanceof Player player && player.isOp()) {
+            if(args.length < 1 || !args[0].equalsIgnoreCase("cheat")) {
+                return false;
+            }
+
+            cheatCommand.run(player);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
