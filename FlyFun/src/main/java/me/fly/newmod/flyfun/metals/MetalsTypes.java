@@ -22,7 +22,7 @@ public class MetalsTypes {
     private static final ItemManager item = api.itemManager();
 
     public static final ModItemCategory METALS = api.categoryManager().createCategory(new NamespacedKey(FlyFunPlugin.get(), "metals_category"),
-            Material.IRON_INGOT, Component.text("Metals").color(NamedTextColor.RED).decorate(TextDecoration.BOLD), Component.text(""), Component.text("Metals, ores and refining"));
+            Material.IRON_INGOT, Component.text("Metals").color(NamedTextColor.RED).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false), Component.text(""), Component.text("Metals, ores and refining").decoration(TextDecoration.ITALIC, false));
 
     public static final ModItem ALUMINUM_INGOT = item.createBuilder(Material.IRON_INGOT, plugin, "aluminum_ingot").displayName("Aluminum Ingot", 0x93adb8).category(METALS).build();
 }
