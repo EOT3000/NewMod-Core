@@ -11,6 +11,10 @@ import me.fly.newmod.core.blockstorage.BlockStorageImpl;
 import me.fly.newmod.core.command.CheatCommand;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import me.fly.newmod.core.item.category.CategoryManagerImpl;
+import me.fly.newmod.core.listeners.BlockListener;
+import me.fly.newmod.core.listeners.CheatInventoryListener;
+import me.fly.newmod.core.listeners.VanillaReplacementListener;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,6 +39,11 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         this.categoryManager = new CategoryManagerImpl();
 
         this.cheatCommand = new CheatCommand();
+
+        Bukkit.getPluginManager().registerEvents(new CheatInventoryListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VanillaReplacementListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+
     }
 
     @Override

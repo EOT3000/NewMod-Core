@@ -87,6 +87,12 @@ public class BlockStorageImpl implements BlockStorage {
 
     @Override
     public Set<Location> getAllStoredLocations(World world) {
+        if(world == null) {
+            return new HashSet<>();
+        }
+
+        worlds.putIfAbsent(world, new WorldBlockStorage(world));
+
         return worlds.get(world).getAllLocations();
     }
 }
