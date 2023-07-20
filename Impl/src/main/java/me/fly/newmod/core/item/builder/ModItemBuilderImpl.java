@@ -7,6 +7,7 @@ import me.fly.newmod.core.api.item.builder.meta.MetaModifier;
 import me.fly.newmod.core.api.item.builder.modifiers.ColorModifier;
 import me.fly.newmod.core.api.item.builder.modifiers.DisplayNameModifier;
 import me.fly.newmod.core.api.item.builder.modifiers.EnchantmentModifier;
+import me.fly.newmod.core.api.item.builder.modifiers.LoreModifier;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.util.Pair;
@@ -31,6 +32,8 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
     private final Material material;
     private final NamespacedKey key;
+
+    private ModItemCategory category;
 
     public ModItemBuilderImpl(Material material, NamespacedKey key) {
         this.material = material;
@@ -73,15 +76,22 @@ public class ModItemBuilderImpl implements ModItemBuilder {
     }
 
     @Override
-    public ModItemBuilder setBlock(ModBlock block) {
+    public ModItemBuilder block(ModBlock block) {
         this.block = block;
 
         return this;
     }
 
     @Override
-    public ModItemBuilder setDataType(Class<? extends ModItemData> clazz) {
+    public ModItemBuilder dataType(Class<? extends ModItemData> clazz) {
         this.data = clazz;
+
+        return this;
+    }
+
+    @Override
+    public ModItemBuilder category(ModItemCategory category) {
+        this.category = category;
 
         return this;
     }
@@ -102,6 +112,16 @@ public class ModItemBuilderImpl implements ModItemBuilder {
             modifiers.add(new EnchantmentModifier(entry.getKey(), entry.getValue()));
         }
 
-        return new BuiltModItemImpl(key, material, displayName, block, data, modifiers);
+        if(lore.size() != 0) {
+            modifiers.add(new LoreModifier(lore));
+        }
+
+        ModItem item = new BuiltModItemImpl(key, material, displayName, block, data, modifiers);
+
+        if(category != null) {
+            category.addItem(item);
+        }
+
+        return item;
     }
 }

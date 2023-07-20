@@ -3,6 +3,7 @@ package me.fly.newmod.core.api.item.builder;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.meta.MetaModifier;
+import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -86,14 +87,21 @@ public interface ModItemBuilder {
      *
      * @param block the block to set.
      */
-    ModItemBuilder setBlock(ModBlock block);
+    ModItemBuilder block(ModBlock block);
 
     /**
      * Sets this item's data type.
      *
      * @param clazz the class of the data type to set.
      */
-    ModItemBuilder setDataType(Class<? extends ModItemData> clazz);
+    ModItemBuilder dataType(Class<? extends ModItemData> clazz);
+
+
+
+    /**
+     * @param category sets the item category.
+     */
+    ModItemBuilder category(ModItemCategory category);
 
 
 
