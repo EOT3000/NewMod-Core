@@ -1,5 +1,6 @@
 package me.fly.newmod.core.item.builder;
 
+import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.ModItemBuilder;
@@ -98,7 +99,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
     @Override
     public ModItem build() {
-        if(displayName != null) {
+        if(displayName == null) {
             displayName = Component.text("");
         }
 
@@ -121,6 +122,10 @@ public class ModItemBuilderImpl implements ModItemBuilder {
         if(category != null) {
             category.addItem(item);
         }
+
+        NewModPlugin.get().itemManager().registerItem(item);
+
+        System.out.println("Item built");
 
         return item;
     }

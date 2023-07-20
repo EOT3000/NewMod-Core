@@ -21,7 +21,11 @@ public class CategoryManagerImpl implements CategoryManager {
         new DisplayNameModifier(displayName).apply(stack);
         new LoreModifier(Arrays.asList(lore)).apply(stack);
 
-        return categories.put(id, new ModItemCategoryImpl(stack, id));
+        ModItemCategory cat = new ModItemCategoryImpl(stack, id);
+
+        categories.put(id, cat);
+
+        return cat;
     }
 
     @Override
