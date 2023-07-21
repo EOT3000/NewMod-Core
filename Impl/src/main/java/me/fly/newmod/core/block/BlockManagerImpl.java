@@ -51,6 +51,10 @@ public class BlockManagerImpl implements BlockManager {
 
     @Override
     public <T extends ModBlockData> T createDefaultData(ModBlock type) {
+        if(type.getDataType() == null) {
+            return null;
+        }
+
         //noinspection unchecked
         return (T) serializers.get(type.getDataType()).createDefaultData(type);
     }
@@ -59,7 +63,7 @@ public class BlockManagerImpl implements BlockManager {
     public ModBlockData getData(Block block) {
         ModBlock type = getType(block);
 
-        if(type == null) {
+        if(type == null || type.getDataType() == null) {
             return null;
         }
 

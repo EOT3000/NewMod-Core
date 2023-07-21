@@ -8,6 +8,7 @@ import me.fly.newmod.core.api.item.data.ModItemData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 
@@ -29,7 +30,7 @@ public interface ModItemBuilder {
      * @param color the color to use.
      */
     default ModItemBuilder displayName(String string, TextColor color) {
-        return displayName(Component.text(string).color(color));
+        return displayName(Component.text(string).color(color).decoration(TextDecoration.ITALIC, false));
     }
 
     /**

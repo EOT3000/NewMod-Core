@@ -18,11 +18,6 @@ public interface ModBlock {
     Material getMaterial();
 
     /**
-     * @return the display name of this block.
-     */
-    Component getDisplayName();
-
-    /**
      * @return the data type of this block.
      */
     Class<? extends ModBlockData> getDataType();

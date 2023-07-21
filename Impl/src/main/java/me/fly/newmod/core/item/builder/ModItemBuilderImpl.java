@@ -44,7 +44,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
     @Override
     public ModItemBuilder displayName(TextComponent component) {
-        this.displayName = component.decoration(TextDecoration.ITALIC, false);
+        this.displayName = component;
 
         return this;
     }
