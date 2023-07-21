@@ -2,10 +2,13 @@ package me.fly.newmod.flyfun;
 
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
+import me.fly.newmod.flyfun.books.BooksTypes;
+import me.fly.newmod.flyfun.books.data.WritableItemData;
+import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.metals.MetalsTypes;
+import me.fly.newmod.flyfun.plants.PlantsTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
@@ -29,6 +32,11 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     @Override
     public void onEnable() {
         MetalsTypes.init();
+        PlantsTypes.init();
+        BooksTypes.init();
+
+        api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemData.class);
+        api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemDataImpl.class);
     }
 
     public FlyFunPlugin() {

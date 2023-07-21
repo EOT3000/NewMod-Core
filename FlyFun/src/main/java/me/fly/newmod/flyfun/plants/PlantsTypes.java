@@ -13,6 +13,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 
 public class PlantsTypes {
+    public static void init() {
+
+    }
+
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
     private static final NewModAPI api = plugin.api;
     private static final ItemManager item = api.itemManager();

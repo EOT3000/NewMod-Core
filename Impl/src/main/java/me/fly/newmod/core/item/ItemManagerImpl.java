@@ -45,7 +45,7 @@ public class ItemManagerImpl implements ItemManager {
     }
 
     @Override
-    public <T extends ModItemData> void registerSerializer(ModItemDataSerializer<T> serializer, Class<T> clazz) {
+    public <T extends ModItemData> void registerSerializer(ModItemDataSerializer<? extends T> serializer, Class<T> clazz) {
         serializers.put(clazz, serializer);
     }
 

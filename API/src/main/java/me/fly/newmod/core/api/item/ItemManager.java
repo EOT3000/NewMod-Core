@@ -41,7 +41,7 @@ public interface ItemManager {
      * @param serializer the serializer to register.
      * @param clazz the serializer class.
      */
-    <T extends ModItemData> void registerSerializer(ModItemDataSerializer<T> serializer, Class<T> clazz);
+    <T extends ModItemData> void registerSerializer(ModItemDataSerializer<? extends T> serializer, Class<T> clazz);
 
     /**
      * Creates the default version of an item data type.

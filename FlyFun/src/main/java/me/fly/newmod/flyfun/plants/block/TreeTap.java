@@ -4,7 +4,6 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.block.ModBlockInstance;
 import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.flyfun.FlyFunPlugin;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
