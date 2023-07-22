@@ -3,6 +3,7 @@ package me.fly.newmod.core.item;
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
+import me.fly.newmod.core.api.item.ModItemStack;
 import me.fly.newmod.core.api.item.builder.ModItemBuilder;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.item.data.ModItemDataSerializer;
@@ -47,6 +48,20 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public <T extends ModItemData> void registerSerializer(ModItemDataSerializer<? extends T> serializer, Class<T> clazz) {
         serializers.put(clazz, serializer);
+    }
+
+    @Override
+    public ModItemStack getStack(ItemStack stack) {
+        return ModItemStackImpl.makeOrNull(stack);
+    }
+
+    @Override
+    public ModItemStack getStack(ModItem item) {
+        if(item == null) {
+            return null;
+        }
+
+        return new ModItemStackImpl(item);
     }
 
     @Override

@@ -44,6 +44,22 @@ public interface ItemManager {
     <T extends ModItemData> void registerSerializer(ModItemDataSerializer<? extends T> serializer, Class<T> clazz);
 
     /**
+     * Creates a mod item stack from an existing item.
+     *
+     * @param stack the item to create from.
+     * @return the created mod item stack.
+     */
+    ModItemStack getStack(ItemStack stack);
+
+    /**
+     * Creates a mod item stack from a mod item type.
+     *
+     * @param item the mod item type to create from.
+     * @return the created mod item stack.
+     */
+    ModItemStack getStack(ModItem item);
+
+    /**
      * Creates the default version of an item data type.
      *
      * @param type the item for which the data should be created.
