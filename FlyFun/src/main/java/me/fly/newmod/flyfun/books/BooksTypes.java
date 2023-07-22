@@ -15,7 +15,7 @@ import org.bukkit.NamespacedKey;
 @SuppressWarnings("unused")
 public class BooksTypes {
     public static void init() {
-
+        plugin.getBooksManager().setPages(BIRCH_BARK, 1);
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
