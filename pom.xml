@@ -23,6 +23,10 @@
             <id>purpur</id>
             <url>https://repo.purpurmc.org/snapshots</url>
         </repository>
+        <repository>
+            <id>jeff-media-gbr</id>
+            <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>

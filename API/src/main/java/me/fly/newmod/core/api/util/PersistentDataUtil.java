@@ -1,5 +1,6 @@
 package me.fly.newmod.core.api.util;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.NamespacedKey;
@@ -77,28 +78,7 @@ public final class PersistentDataUtil {
         }
     };
 
-    public static final PersistentDataType<String[], String[]> STRING_ARRAY = new PersistentDataType<String[], String[]>() {
-        @Override
-        public @NotNull Class<String[]> getPrimitiveType() {
-            return String[].class;
-        }
-
-        @Override
-        public @NotNull Class<String[]> getComplexType() {
-            return String[].class;
-        }
-
-        @Override
-        public String @NotNull [] toPrimitive(String @NotNull [] strings, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-            return strings;
-        }
-
-        @Override
-        public String @NotNull [] fromPrimitive(String @NotNull [] strings, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-            return strings;
-        }
-    };
-
+    public static final PersistentDataType<byte[], String[]> STRING_ARRAY = DataType.STRING_ARRAY;
 
     public static NamespacedKey namespacedKeyFromPrimitive(String s) {
         if(s == null) {

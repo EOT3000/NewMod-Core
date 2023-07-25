@@ -7,6 +7,7 @@ import me.fly.newmod.core.api.block.ModBlockInstance;
 import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.core.api.block.data.ModBlockDataSerializer;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
+import me.fly.newmod.core.api.blockstorage.StoredBlock;
 import me.fly.newmod.core.api.util.PersistentDataUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -30,11 +31,17 @@ public class BlockManagerImpl implements BlockManager {
     public ModBlock getType(Block block) {
         BlockStorage storage = NewModPlugin.get().blockStorage();
 
-        if(block == null || !storage.hasData(block.getLocation(), ID, BlockStorage.StorageType.BLOCK_DATA)) {
+        if(block == null) {
             return null;
         }
 
-        NamespacedKey id = PersistentDataUtil.namespacedKeyFromPrimitive(storage.getData(block.getLocation(), ID, BlockStorage.StorageType.BLOCK_DATA));
+        StoredBlock b = storage.getBlock(block.getLocation());
+
+        if(!b.hasData(ID, BlockStorage.StorageType.BLOCK_DATA)) {
+            return null;
+        }
+
+        NamespacedKey id = PersistentDataUtil.namespacedKeyFromPrimitive(b.getData(ID, BlockStorage.StorageType.BLOCK_DATA));
 
         return registry.get(id);
     }
