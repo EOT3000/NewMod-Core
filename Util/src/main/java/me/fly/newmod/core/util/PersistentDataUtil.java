@@ -1,10 +1,9 @@
-package me.fly.newmod.core.api.util;
+package me.fly.newmod.core.util;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;

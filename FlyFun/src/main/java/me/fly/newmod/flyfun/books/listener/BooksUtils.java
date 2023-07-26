@@ -99,4 +99,12 @@ public class BooksUtils {
             inventory.setItemInOffHand(writableBook);
         }
     }
+
+    public static boolean signed(ItemStack stack) {
+        if(!writable(stack)) {
+            return false;
+        }
+
+        return ((WritableItemData) item.getStack(stack).getData()).isSigned();
+    }
 }

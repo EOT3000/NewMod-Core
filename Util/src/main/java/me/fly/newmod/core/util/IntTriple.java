@@ -1,4 +1,4 @@
-package me.fly.newmod.core.api.util;
+package me.fly.newmod.core.util;
 
 import org.bukkit.Location;
 

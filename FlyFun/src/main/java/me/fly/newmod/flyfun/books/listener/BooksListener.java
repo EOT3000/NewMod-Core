@@ -1,5 +1,9 @@
 package me.fly.newmod.flyfun.books.listener;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -7,10 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataType;
@@ -18,6 +19,8 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Collection;
 
 public class BooksListener implements Listener {
+    private ProtocolManager library = ProtocolLibrary.getProtocolManager();
+
     // The base behaviours - add a book when the paper or bark is in your hand, remove it when it's not, and apply data when it's finished
 
     @EventHandler
@@ -128,5 +131,17 @@ public class BooksListener implements Listener {
     public void onDeath(EntityDeathEvent event) {
         //Thank you intellij idea for this beautiful code
         event.getDrops().removeIf(BooksUtils::isBook);
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if(BooksUtils.signed(event.getItem())) {
+            PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
+
+            packet.getBytes().write(0, (byte) 0);
+            packet.getBytes().write(1, (byte) 0);
+
+            library.sendServerPacket(event.getPlayer(), packet);
+        }
     }
 }

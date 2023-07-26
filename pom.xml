@@ -12,6 +12,7 @@
         <module>API</module>
         <module>Impl</module>
         <module>FlyFun</module>
+        <module>Util</module>
     </modules>
 
     <properties>

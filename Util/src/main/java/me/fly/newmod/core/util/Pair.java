@@ -1,21 +1,21 @@
-package me.fly.newmod.core.api.util;
+package me.fly.newmod.core.util;
 
 import java.util.Objects;
 
-public class IntPair {
-    private final int key;
-    private final int value;
+public class Pair<X, Y> {
+    private final X key;
+    private final Y value;
 
-    public IntPair(int key, int value) {
+    public Pair(X key, Y value) {
         this.key = key;
         this.value = value;
     }
 
-    public int getKey() {
+    public X getKey() {
         return key;
     }
 
-    public int getValue() {
+    public Y getValue() {
         return value;
     }
 
@@ -23,8 +23,8 @@ public class IntPair {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntPair intPair = (IntPair) o;
-        return key == intPair.key && value == intPair.value;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return key.equals(pair.key) && value.equals(pair.value);
     }
 
     @Override
