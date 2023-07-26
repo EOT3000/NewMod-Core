@@ -107,4 +107,12 @@ public class BooksUtils {
 
         return ((WritableItemData) item.getStack(stack).getData()).isSigned();
     }
+
+    public static String[] pages(ItemStack stack) {
+        if(!writable(stack)) {
+            return new String[0];
+        }
+
+        return ((WritableItemData) item.getStack(stack).getData()).getText();
+    }
 }

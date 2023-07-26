@@ -4,8 +4,11 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.fly.newmod.flyfun.books.data.WritableItemData;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collection;
@@ -136,12 +140,14 @@ public class BooksListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if(BooksUtils.signed(event.getItem())) {
-            PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_SLOT);
+            ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+            BookMeta meta = (BookMeta) book.getItemMeta();
 
-            packet.getBytes().write(0, (byte) 0);
-            packet.getBytes().write(1, (byte) 0);
+            meta.setPages(BooksUtils.pages(event.getItem()));
 
-            library.sendServerPacket(event.getPlayer(), packet);
+            book.setItemMeta(meta);
+
+            NMSUtil.sendSetItemPacket(event.getPlayer().getInventory().getHeldItemSlot(), book, event.getPlayer().getInventory());
         }
     }
 }
