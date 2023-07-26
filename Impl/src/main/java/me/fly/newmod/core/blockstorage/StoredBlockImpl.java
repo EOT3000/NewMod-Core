@@ -5,7 +5,7 @@ import com.jeff_media.morepersistentdatatypes.DataType;
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.blockstorage.StoredBlock;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataContainer;

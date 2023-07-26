@@ -8,7 +8,7 @@ import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.core.api.block.data.ModBlockDataSerializer;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.blockstorage.StoredBlock;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 

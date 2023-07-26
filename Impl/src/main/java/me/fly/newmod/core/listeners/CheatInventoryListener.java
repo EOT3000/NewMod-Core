@@ -2,7 +2,7 @@ package me.fly.newmod.core.listeners;
 
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ModItem;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.core.command.CheatCommand;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import org.bukkit.Bukkit;

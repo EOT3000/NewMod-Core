@@ -7,7 +7,7 @@ import me.fly.newmod.core.api.item.ModItemStack;
 import me.fly.newmod.core.api.item.builder.ModItemBuilder;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.item.data.ModItemDataSerializer;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.core.item.builder.ModItemBuilderImpl;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

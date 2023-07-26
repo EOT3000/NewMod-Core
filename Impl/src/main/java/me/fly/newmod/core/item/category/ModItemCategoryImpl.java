@@ -2,7 +2,7 @@ package me.fly.newmod.core.item.category;
 
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

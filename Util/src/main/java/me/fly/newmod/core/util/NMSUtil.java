@@ -1,15 +1,13 @@
 package me.fly.newmod.core.util;
 
-import java.lang.reflect.Method;
+import org.bukkit.entity.Player;
 
 public class NMSUtil {
     static {
         
     }
 
-    public static final Method INCREMENT_STATE_ID;
-
-    public static int incrementStateId() {
-
+    public static int incrementStateId(Player player) {
+        return 1;
     }
 }

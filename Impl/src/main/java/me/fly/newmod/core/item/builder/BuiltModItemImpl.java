@@ -4,7 +4,7 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.meta.MetaModifier;
 import me.fly.newmod.core.api.item.data.ModItemData;
-import me.fly.newmod.core.api.util.PersistentDataUtil;
+import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

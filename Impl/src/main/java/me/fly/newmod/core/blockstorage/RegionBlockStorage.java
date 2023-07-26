@@ -1,7 +1,7 @@
 package me.fly.newmod.core.blockstorage;
 
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
-import me.fly.newmod.core.api.util.IntTriple;
+import me.fly.newmod.core.util.IntTriple;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
