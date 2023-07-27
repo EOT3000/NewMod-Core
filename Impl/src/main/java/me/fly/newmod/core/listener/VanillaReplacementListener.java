@@ -1,11 +1,10 @@
-package me.fly.newmod.core.listeners;
+package me.fly.newmod.core.listener;
 
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.crafting.ShapedRecipeMatcher;
 import me.fly.newmod.core.crafting.ShapelessRecipeMatcher;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.Cancellable;

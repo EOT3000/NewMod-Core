@@ -1,4 +1,4 @@
-package me.fly.newmod.core.listeners;
+package me.fly.newmod.core.listener;
 
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.item.ModItem;

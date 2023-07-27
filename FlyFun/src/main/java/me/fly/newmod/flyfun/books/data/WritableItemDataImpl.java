@@ -1,6 +1,5 @@
 package me.fly.newmod.flyfun.books.data;
 
-import com.jeff_media.morepersistentdatatypes.DataType;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.data.ModItemData;
 import me.fly.newmod.core.api.item.data.ModItemDataSerializer;
@@ -54,7 +53,7 @@ public class WritableItemDataImpl extends ModItemData.AbstractModItemMeta implem
 
             //TODO: writable sizes
 
-            String[] text = container.getOrDefault(TEXT, DataType.STRING_ARRAY, new String[1]);
+            String[] text = container.getOrDefault(TEXT, PersistentDataUtil.STRING_ARRAY, new String[1]);
             boolean signed = container.getOrDefault(SIGNED, PersistentDataType.BOOLEAN, false);
 
             ModItem item = FlyFunPlugin.get().api.itemManager().getType(stack);
@@ -77,7 +76,7 @@ public class WritableItemDataImpl extends ModItemData.AbstractModItemMeta implem
                 ItemMeta meta = stack.getItemMeta();
                 PersistentDataContainer container = meta.getPersistentDataContainer();
 
-                container.set(TEXT, DataType.STRING_ARRAY, wid.getText());
+                container.set(TEXT, PersistentDataUtil.STRING_ARRAY, wid.getText());
                 container.set(SIGNED, PersistentDataType.BOOLEAN, wid.isSigned());
 
                 stack.setItemMeta(meta);

@@ -8,16 +8,21 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 
-public class TreeTap implements ModBlock {
+public class Seedling implements ModBlock {
+    private final String id;
+
+    public Seedling(String id) {
+        this.id = id;
+    }
 
     @Override
     public NamespacedKey getId() {
-        return new NamespacedKey(FlyFunPlugin.get(), "tree_tap");
+        return new NamespacedKey(FlyFunPlugin.get(), id);
     }
 
     @Override
     public Material getMaterial() {
-        return Material.TRIPWIRE_HOOK;
+        return Material.MELON_STEM;
     }
 
     @Override
@@ -27,12 +32,11 @@ public class TreeTap implements ModBlock {
 
     @Override
     public boolean place(Block block, ModBlockInstance instance) {
-        //nothing
         return true;
     }
 
     @Override
     public void tick(int tick, Block block, ModBlockInstance instance) {
-        //TODO
+
     }
 }

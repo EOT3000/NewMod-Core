@@ -26,9 +26,10 @@ public interface ModBlock {
      * Places this block.
      *
      * @param block the block to place at.
-     * @param instance the container which holds the data the block should be placed with.
+     * @param instance the container which holds the data the block should be placed with. May be null.
+     * @return whether or not the block was placed successfully. If true, data should be added to the block.
      */
-    void place(Block block, ModBlockInstance instance);
+    boolean place(Block block, ModBlockInstance instance);
 
     /**
      * Ticks the block. This method should <b>only</b> be used by ticking listeners.

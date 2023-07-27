@@ -1,12 +1,7 @@
 package me.fly.newmod.flyfun.books.listener;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.books.data.WritableItemData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -23,7 +18,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Collection;
 
 public class BooksListener implements Listener {
-    private ProtocolManager library = ProtocolLibrary.getProtocolManager();
 
     // The base behaviours - add a book when the paper or bark is in your hand, remove it when it's not, and apply data when it's finished
 
