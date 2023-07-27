@@ -53,6 +53,8 @@ public class ModBlockInstanceImpl implements ModBlockInstance {
 
             type.place(block, this);
 
+            manager.setBlock(block, type);
+
             manager.applyData(block, data);
 
             return block;

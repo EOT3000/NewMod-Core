@@ -61,10 +61,18 @@ public interface BlockManager {
      * Applies data to an block block.
      *
      * @param block the block to apply the data to.
-     * @param data the data to apply.
+     * @param data the data to apply. If null, just apply the id.
      * @return true if successful, false if it fails, such as if the data type does not match the block.
      */
     boolean applyData(Block block, ModBlockData data);
+
+    /**
+     * Sets the block type of this block. Overrides previous data.
+     *
+     * @param block the block to set.
+     * @param type the type to set to.
+     */
+    void setBlock(Block block, ModBlock type);
 
     /**
      * Creates a mod block instance from the provided block.

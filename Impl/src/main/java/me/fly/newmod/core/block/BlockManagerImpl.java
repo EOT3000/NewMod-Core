@@ -89,13 +89,21 @@ public class BlockManagerImpl implements BlockManager {
 
         ModBlockDataSerializer<?> serializer = serializers.get(type.getDataType());
 
-        if(!serializer.canSerialize(data)) {
+        if(serializer == null || !serializer.canSerialize(data)) {
             return false;
         }
 
         serializer.applyData(block, data);
 
         return true;
+    }
+
+    @Override
+    public void setBlock(Block block, ModBlock type) {
+        StoredBlock sb = NewModPlugin.get().blockStorage().getBlock(block.getLocation());
+
+        sb.removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+        sb.setData(ID, type.getId().toString(), BlockStorage.StorageType.BLOCK_DATA);
     }
 
     @Override
