@@ -30,10 +30,17 @@ public class StoredBlockImpl implements StoredBlock {
 
     private Map<NamespacedKey, String> get(BlockStorage.StorageType type) {
         return type == null ? null :
-                new CustomBlockData(location.getBlock(), NewModPlugin.get()).get(switch (type) {
+                new CustomBlockData(location.getBlock(), NewModPlugin.get()).getOrDefault(switch (type) {
                     case BLOCK_DATA -> BLOCK;
                     case ENVIRONMENTAL -> ENVIR;
-                }, TYPE);
+                }, TYPE, new HashMap<>());
+    }
+
+    private void put(BlockStorage.StorageType type, Map<NamespacedKey, String> map) {
+        new CustomBlockData(location.getBlock(), NewModPlugin.get()).set(switch (type) {
+            case BLOCK_DATA -> BLOCK;
+            case ENVIRONMENTAL -> ENVIR;
+        }, TYPE, map);
     }
 
     @Override
@@ -53,12 +60,20 @@ public class StoredBlockImpl implements StoredBlock {
 
     @Override
     public void setData(NamespacedKey key, String value, BlockStorage.StorageType type) {
-        get(type).put(key, value);
+        Map<NamespacedKey, String> map = get(type);
+
+        map.put(key, value);
+
+        put(type, map);
     }
 
     @Override
     public void removeData(NamespacedKey key, BlockStorage.StorageType type) {
-        get(type).remove(key);
+        Map<NamespacedKey, String> map = get(type);
+
+        map.remove(key);
+
+        put(type, map);
     }
 
     @Override
