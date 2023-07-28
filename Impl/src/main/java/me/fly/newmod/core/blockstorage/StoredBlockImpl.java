@@ -26,7 +26,7 @@ public class StoredBlockImpl implements StoredBlock {
         this.location = location;
     }
 
-    private Location location;
+    private final Location location;
 
     private Map<NamespacedKey, String> get(BlockStorage.StorageType type) {
         return type == null ? null :

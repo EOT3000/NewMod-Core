@@ -1,6 +1,7 @@
 package me.fly.newmod.flyfun.plants;
 
 import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
@@ -11,6 +12,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+
+import java.util.function.Consumer;
 
 public class PlantsTypes {
     public static void init() {
@@ -19,6 +23,7 @@ public class PlantsTypes {
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
     private static final NewModAPI api = plugin.api;
+    private static final BlockStorage block = api.blockStorage();
     private static final ItemManager item = api.itemManager();
 
     public static final ModItemCategory PLANTS = api.categoryManager().createCategory(new NamespacedKey(FlyFunPlugin.get(), "plants_category"),
@@ -30,4 +35,18 @@ public class PlantsTypes {
     public static final ModItem ACACIA_SEEDS = item.createBuilder(Material.MELON_SEEDS, plugin, "acacia_seeds").displayName("Acacia Seeds", NamedTextColor.DARK_GRAY).category(PLANTS).build();
 
 
+    private static class VanillaSeedlingConsumer implements Consumer<Block> {
+        private final Material set;
+
+        public VanillaSeedlingConsumer(Material set) {
+            this.set = set;
+        }
+
+        @Override
+        public void accept(Block block) {
+            PlantsTypes.block.getBlock(block.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+
+            block.setType(set);
+        }
+    }
 }
