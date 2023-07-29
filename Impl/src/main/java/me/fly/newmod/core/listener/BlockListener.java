@@ -27,8 +27,6 @@ public class BlockListener implements Listener {
 
                     Location location = b.getLocation();
 
-                    System.out.println("ticked: " + location + " at tick number " + event.getTickNumber() + " (" + type + ")");
-
                     //System.out.println(location + ": " + type);
 
                     if (type == null) {

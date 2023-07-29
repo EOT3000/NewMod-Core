@@ -122,6 +122,10 @@ public class ModItemBuilderImpl implements ModItemBuilder {
             category.addItem(item);
         }
 
+        if(block != null) {
+            NewModPlugin.get().blockManager().registerBlock(block);
+        }
+
         NewModPlugin.get().itemManager().registerItem(item);
 
         System.out.println("Item built");
