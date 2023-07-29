@@ -5,6 +5,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
+import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ModItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -42,6 +43,7 @@ public class BlockListener implements Listener {
                             e.printStackTrace();
                         }
                     } else {
+                        NewModPlugin.get().blockStorage().getBlock(b.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
                         NewModPlugin.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") has been purged for block mismatch");
                     }
                 }
@@ -59,6 +61,8 @@ public class BlockListener implements Listener {
 
                 if(b) {
                     NewModPlugin.get().blockManager().setBlock(event.getBlock(), type.getBlock());
+                } else {
+                    event.setCancelled(true);
                 }
             } else {
                 event.setCancelled(true);

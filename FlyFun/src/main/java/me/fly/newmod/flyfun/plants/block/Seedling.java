@@ -7,6 +7,7 @@ import me.fly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 
 import java.util.function.Consumer;
@@ -37,8 +38,8 @@ public class Seedling implements ModBlock {
 
     @Override
     public boolean place(Block block, ModBlockInstance instance) {
-        if(block.getType().equals(Material.MELON_STEM)) {
-            return true;
+        if(block.getRelative(BlockFace.DOWN).getType() != Material.FARMLAND) {
+            return false;
         }
 
         block.setType(Material.MELON_STEM);
@@ -46,21 +47,12 @@ public class Seedling implements ModBlock {
         return true;
     }
 
+    public void grow(Block t) {
+        growFunction.accept(t);
+    }
+
     @Override
     public void tick(int tick, Block block, ModBlockInstance instance) {
-        System.out.println(block.getType());
-        System.out.println(block.getType());
 
-        if(!block.getType().equals(Material.MELON_STEM)) {
-            return;
-        }
-
-        Ageable ageable = (Ageable) block.getBlockData();
-
-        System.out.println(ageable.getAge());
-
-        if(ageable.getAge() == 7) {
-            growFunction.accept(block);
-        }
     }
 }

@@ -1,14 +1,22 @@
 package me.fly.newmod.flyfun.plants.listener;
 
+import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.block.BlockManager;
+import me.fly.newmod.core.api.block.ModBlock;
+import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ModItem;
+import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
+import me.fly.newmod.flyfun.plants.block.Seedling;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,6 +25,9 @@ import java.util.Random;
 
 public class PlantsListener implements Listener {
     private final Random random = new Random();
+    private static final FlyFunPlugin plugin = FlyFunPlugin.get();
+    private static final NewModAPI api = plugin.api;
+    private static final BlockManager block = api.blockManager();
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -58,5 +69,15 @@ public class PlantsListener implements Listener {
 
     private void dropItem(Location block, ItemStack item) {
         block.getWorld().dropItem(block, item);
+    }
+
+    @EventHandler
+    public void onGrow(BlockGrowEvent event) {
+        ModBlock b = block.getType(event.getBlock());
+
+        if(b instanceof Seedling s) {
+            s.grow(event.getBlock());
+            event.setCancelled(true);
+        }
     }
 }
