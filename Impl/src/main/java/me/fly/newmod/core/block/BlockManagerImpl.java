@@ -37,11 +37,17 @@ public class BlockManagerImpl implements BlockManager {
 
         StoredBlock b = storage.getBlock(block.getLocation());
 
+        System.out.println("looked up block " + block.getLocation() + " it is a " + b + " and does it have an ID? " + b.hasData(ID, BlockStorage.StorageType.BLOCK_DATA));
+
         if(!b.hasData(ID, BlockStorage.StorageType.BLOCK_DATA)) {
             return null;
         }
 
         NamespacedKey id = PersistentDataUtil.namespacedKeyFromPrimitive(b.getData(ID, BlockStorage.StorageType.BLOCK_DATA));
+
+        System.out.println("the ID is " + id + ", it is a " + registry.get(id));
+
+        System.out.println();
 
         return registry.get(id);
     }

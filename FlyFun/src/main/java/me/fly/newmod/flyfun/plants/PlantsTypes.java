@@ -6,6 +6,7 @@ import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.fly.newmod.flyfun.plants.block.Seedling;
 import me.fly.newmod.flyfun.plants.block.TreeTap;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,7 +32,7 @@ public class PlantsTypes {
 
     public static final ModItem TREE_TAP = item.createBuilder(Material.TRIPWIRE_HOOK, plugin, "tree_tap").block(new TreeTap()).displayName("Tree Tap", 0xbfb69d).category(PLANTS).build();
 
-    public static final ModItem RED_CHERRIES = item.createBuilder(Material.SWEET_BERRIES, plugin, "red_cherries").displayName("Red Cherries", NamedTextColor.DARK_RED).category(PLANTS).build();
+    public static final ModItem RED_CHERRIES = item.createBuilder(Material.SWEET_BERRIES, plugin, "red_cherries").block(new Seedling("red_cherry_seeds", new VanillaSeedlingConsumer(Material.CHERRY_SAPLING))).displayName("Red Cherries", NamedTextColor.DARK_RED).category(PLANTS).build();
     public static final ModItem ACACIA_SEEDS = item.createBuilder(Material.MELON_SEEDS, plugin, "acacia_seeds").displayName("Acacia Seeds", NamedTextColor.DARK_GRAY).category(PLANTS).build();
 
 
@@ -44,9 +45,17 @@ public class PlantsTypes {
 
         @Override
         public void accept(Block block) {
+            System.out.println("accepted block: " + block.getType());
+            System.out.println("accepted block: " + block.getLocation());
+            System.out.println();
+
             PlantsTypes.block.getBlock(block.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
+            System.out.println("set to " + set);
+
             block.setType(set);
+
+            System.out.println();
         }
     }
 }

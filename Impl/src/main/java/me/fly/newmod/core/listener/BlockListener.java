@@ -27,6 +27,8 @@ public class BlockListener implements Listener {
 
                     Location location = b.getLocation();
 
+                    System.out.println("ticked: " + location + " at tick number " + event.getTickNumber() + " (" + type + ")");
+
                     //System.out.println(location + ": " + type);
 
                     if (type == null) {
@@ -60,6 +62,8 @@ public class BlockListener implements Listener {
                 if(b) {
                     NewModPlugin.get().blockManager().setBlock(event.getBlock(), type.getBlock());
                 }
+            } else {
+                event.setCancelled(true);
             }
         }
     }
