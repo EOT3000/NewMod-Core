@@ -32,7 +32,7 @@ public interface ModBlock {
     boolean place(Block block, ModBlockInstance instance);
 
     /**
-     * Ticks the block. This method should <b>only</b> be used by ticking listeners.
+     * Ticks the block. This method should only be used by ticking listeners.
      *
      * @param tick the tick number.
      * @param block the block to tick.

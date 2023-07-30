@@ -1,6 +1,7 @@
 package me.fly.newmod.core.item.builder;
 
 import me.fly.newmod.core.NewModPlugin;
+import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.builder.ModItemBuilder;
@@ -122,8 +123,10 @@ public class ModItemBuilderImpl implements ModItemBuilder {
             category.addItem(item);
         }
 
-        if(block != null) {
-            NewModPlugin.get().blockManager().registerBlock(block);
+        BlockManager bm = NewModPlugin.get().blockManager();
+
+        if(block != null && bm.getType(block.getId()) != null) {
+            bm.registerBlock(block);
         }
 
         NewModPlugin.get().itemManager().registerItem(item);

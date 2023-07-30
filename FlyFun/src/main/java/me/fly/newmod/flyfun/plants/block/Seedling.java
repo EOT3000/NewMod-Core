@@ -8,13 +8,14 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Ageable;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;
 
 public class Seedling implements ModBlock {
     private final String id;
     private final Consumer<Block> growFunction;
+    public ItemStack drop;
 
     public Seedling(String id, Consumer<Block> growFunction) {
         this.id = id;
