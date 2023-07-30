@@ -142,6 +142,9 @@ public class BooksListener implements Listener {
             book.setItemMeta(meta);
 
             NMSUtil.sendSetItemPacket(event.getPlayer().getInventory().getHeldItemSlot(), book, event.getPlayer().getInventory());
+            Bukkit.getScheduler().runTaskLater(FlyFunPlugin.get(), () -> {
+                NMSUtil.openBook(0, event.getPlayer());
+            }, 1);
         }
     }
 }

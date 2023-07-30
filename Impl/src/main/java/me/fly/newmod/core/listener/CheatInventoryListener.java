@@ -16,7 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class CheatInventoryListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if(event.getCurrentItem() == null) {
+        if(event.getCurrentItem() == null || !event.getCurrentItem().hasItemMeta()) {
             return;
         }
 
