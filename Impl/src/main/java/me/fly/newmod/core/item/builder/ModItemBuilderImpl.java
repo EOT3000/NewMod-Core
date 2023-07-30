@@ -125,7 +125,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
         BlockManager bm = NewModPlugin.get().blockManager();
 
-        if(block != null && bm.getType(block.getId()) != null) {
+        if(block != null && bm.getType(block.getId()) == null) {
             bm.registerBlock(block);
         }
 

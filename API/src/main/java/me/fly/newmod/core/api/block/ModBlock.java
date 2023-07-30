@@ -50,7 +50,7 @@ public interface ModBlock {
      * Checks whether this block should be deleted or not.
      *
      * @param block the block to check.
-     * @return whether the block should be removed, kept, or should this block use the default checking method?
+     * @return whether the block should be removed (DENY), kept (ALLOW), or should this block use the default checking method (DEFAULT)?
      */
     default Event.Result shouldDelete(Block block) {
         return Event.Result.DEFAULT;

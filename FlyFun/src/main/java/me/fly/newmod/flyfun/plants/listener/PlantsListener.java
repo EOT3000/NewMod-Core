@@ -81,6 +81,9 @@ public class PlantsListener implements Listener {
     public void onStructureGrow(StructureGrowEvent event) {
         ModBlock b = block.getType(event.getLocation().getBlock());
 
+        System.out.println(event.getLocation());
+        System.out.println(b);
+
         //TODO: expand this to any bush
         if(b instanceof TeaPlant t) {
             t.nextStage(event.getLocation().getBlock());
@@ -139,6 +142,8 @@ public class PlantsListener implements Listener {
                 if(random.nextBoolean()) {
                     cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
                 }
+
+                cb.setType(Material.OAK_SAPLING);
             } else if(cb.getType() == Material.FLOWERING_AZALEA) {
                 cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
                 cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.TEA_SEEDS.create());
@@ -146,6 +151,8 @@ public class PlantsListener implements Listener {
                 if(random.nextBoolean()) {
                     cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
                 }
+
+                cb.setType(Material.OAK_SAPLING);
             }
         }
     }

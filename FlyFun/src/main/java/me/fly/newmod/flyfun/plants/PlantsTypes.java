@@ -49,10 +49,10 @@ public class PlantsTypes {
     public static final Seedling TEA_SEEDLING = new Seedling("tea_seeds", new ModSeedlingConsumer(TEA_PLANT));
     public static final ModItem TEA_SAPLING = item.createBuilder(Material.OAK_SAPLING, plugin, "tea_sapling").block(TEA_PLANT).displayName("Tea Sapling", NamedTextColor.DARK_GREEN).category(PLANTS).build();
 
-    public static final ModItem UNRIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "unripe_tea_leaf").displayName("Unripe Tea Leaf", 0xaed483).build();
-    public static final ModItem RIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "ripe_tea_leaf").displayName("Ripe Tea Leaf", 0x63c427).build();
+    public static final ModItem UNRIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "unripe_tea_leaf").displayName("Unripe Tea Leaf", 0xaed483).category(PLANTS).build();
+    public static final ModItem RIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "ripe_tea_leaf").displayName("Ripe Tea Leaf", 0x63c427).category(PLANTS).build();
 
-    public static final ModItem TEA_SEEDS = item.createBuilder(Material.BEETROOT_SEEDS, plugin, "tea_seeds").block(TEA_SEEDLING).displayName("Tea Seeds", 0xced98f).build();
+    public static final ModItem TEA_SEEDS = item.createBuilder(Material.BEETROOT_SEEDS, plugin, "tea_seeds").block(TEA_SEEDLING).displayName("Tea Seeds", 0xced98f).category(PLANTS).build();
 
     private static class VanillaSeedlingConsumer implements Consumer<Block> {
         private final Material set;
