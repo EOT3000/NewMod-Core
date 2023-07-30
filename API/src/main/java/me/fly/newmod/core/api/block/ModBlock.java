@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 
 public interface ModBlock {
     /**
@@ -40,15 +41,13 @@ public interface ModBlock {
      */
     void tick(int tick, Block block, ModBlockInstance instance);
 
-    //TODO: use this
     /**
      * Checks whether this block should be deleted or not.
      *
      * @param block the block to check.
-     * @param instance the block's data.
-     * @return true if the block should be deleted, false if it shouldn't.
+     * @return whether the block should be removed, kept, or should this block use the default checking method?
      */
-    default boolean shouldDelete(Block block, ModBlockInstance instance) {
-        return false;
+    default Event.Result shouldDelete(Block block) {
+        return Event.Result.DEFAULT;
     }
 }

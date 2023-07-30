@@ -7,6 +7,7 @@ import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.plants.block.Seedling;
+import me.fly.newmod.flyfun.plants.block.TeaPlant;
 import me.fly.newmod.flyfun.plants.block.TreeTap;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -41,6 +42,8 @@ public class PlantsTypes {
     public static final ModItem CHERRY_SEEDS = item.createBuilder(Material.PUMPKIN_SEEDS, plugin, "cherry_seeds").block(RED_CHERRY_SEEDLING).displayName("Cherry Seeds", NamedTextColor.DARK_RED).category(PLANTS).build();
     public static final ModItem ACACIA_SEEDS = item.createBuilder(Material.MELON_SEEDS, plugin, "acacia_seeds").block(ACACIA_SEEDLING).displayName("Acacia Seeds", NamedTextColor.DARK_GRAY).category(PLANTS).build();
 
+    public static final TeaPlant TEA_PLANT = new TeaPlant();
+    public static final ModItem TEA_SAPLING = item.createBuilder(Material.OAK_SAPLING, plugin, "tea_sapling").block(TEA_PLANT).displayName("Tea Sapling", NamedTextColor.DARK_GREEN).category(PLANTS).build();
 
     private static class VanillaSeedlingConsumer implements Consumer<Block> {
         private final Material set;

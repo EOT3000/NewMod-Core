@@ -9,6 +9,7 @@ import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import me.fly.newmod.flyfun.plants.block.Seedling;
+import me.fly.newmod.flyfun.plants.block.TeaPlant;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -72,6 +74,17 @@ public class PlantsListener implements Listener {
 
     private void dropItem(Location block, ItemStack item) {
         block.getWorld().dropItem(block, item);
+    }
+
+    @EventHandler
+    public void onStructureGrow(StructureGrowEvent event) {
+        ModBlock b = block.getType(event.getLocation().getBlock());
+
+        //TODO: expand this to any bush
+        if(b instanceof TeaPlant t) {
+            t.nextStage(event.getLocation().getBlock());
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

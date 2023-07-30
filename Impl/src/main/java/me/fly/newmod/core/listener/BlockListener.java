@@ -34,7 +34,13 @@ public class BlockListener implements Listener {
                         continue;
                     }
 
-                    if (type.getMaterial().equals(b.getType())) {
+                    boolean keep = switch(type.shouldDelete(b)) {
+                        case DENY -> false;
+                        case DEFAULT -> type.getMaterial().equals(b.getType());
+                        case ALLOW -> true;
+                    };
+
+                    if (keep) {
                         try {
                             type.tick(event.getTickNumber(), b, manager.from(b));
                         } catch (Exception e) {
