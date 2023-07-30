@@ -22,8 +22,10 @@ import java.util.function.Consumer;
 
 public class PlantsTypes {
     public static void init() {
+        //TODO: do better
         RED_CHERRY_SEEDLING.drop = CHERRY_SEEDS.create();
         ACACIA_SEEDLING.drop = ACACIA_SEEDS.create();
+        TEA_SEEDLING.drop = TEA_SEEDS.create();
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();

@@ -14,7 +14,9 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockListener implements Listener {
     @EventHandler
@@ -61,15 +63,9 @@ public class BlockListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         ModItem type = NewModPlugin.get().itemManager().getType(event.getItemInHand());
 
-        System.out.println(type);
-
         if(type != null) {
-            System.out.println(type.getBlock());
-
             if(type.getBlock() != null) {
                 boolean b = type.getBlock().place(event.getBlock(), null);
-
-                System.out.println(b);
 
                 if(b) {
                     NewModPlugin.get().blockManager().setBlock(event.getBlock(), type.getBlock());
@@ -80,7 +76,19 @@ public class BlockListener implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
 
-        System.out.println();
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block bl = event.getBlock();
+        ModBlock type = NewModPlugin.get().blockManager().getType(bl);
+
+        if(type != null) {
+            event.setDropItems(false);
+
+            for(ItemStack stack : type.getDrops(bl, event.getPlayer())) {
+                bl.getWorld().dropItem(bl.getLocation(), stack);
+            }
+        }
     }
 }

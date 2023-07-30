@@ -43,7 +43,11 @@ public class PlantsListener implements Listener {
             return;
         }
 
-        int totalLuck = hand.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS)*2;
+        int totalLuck = 0;
+
+        if(hand.hasItemMeta()) {
+            totalLuck = hand.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS)*2;
+        }
 
         PotionEffect luck = event.getPlayer().getPotionEffect(PotionEffectType.LUCK);
         PotionEffect unluck = event.getPlayer().getPotionEffect(PotionEffectType.UNLUCK);
@@ -80,9 +84,6 @@ public class PlantsListener implements Listener {
     @EventHandler
     public void onStructureGrow(StructureGrowEvent event) {
         ModBlock b = block.getType(event.getLocation().getBlock());
-
-        System.out.println(event.getLocation());
-        System.out.println(b);
 
         //TODO: expand this to any bush
         if(b instanceof TeaPlant t) {
