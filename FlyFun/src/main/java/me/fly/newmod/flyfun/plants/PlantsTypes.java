@@ -1,6 +1,8 @@
 package me.fly.newmod.flyfun.plants;
 
 import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.block.BlockManager;
+import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
@@ -27,6 +29,7 @@ public class PlantsTypes {
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
     private static final NewModAPI api = plugin.api;
     private static final BlockStorage block = api.blockStorage();
+    private static final BlockManager blockManager = api.blockManager();
     private static final ItemManager item = api.itemManager();
 
     public static final ModItemCategory PLANTS = api.categoryManager().createCategory(new NamespacedKey(FlyFunPlugin.get(), "plants_category"),
@@ -43,7 +46,13 @@ public class PlantsTypes {
     public static final ModItem ACACIA_SEEDS = item.createBuilder(Material.MELON_SEEDS, plugin, "acacia_seeds").block(ACACIA_SEEDLING).displayName("Acacia Seeds", NamedTextColor.DARK_GRAY).category(PLANTS).build();
 
     public static final TeaPlant TEA_PLANT = new TeaPlant();
+    public static final Seedling TEA_SEEDLING = new Seedling("tea_seeds", new ModSeedlingConsumer(TEA_PLANT));
     public static final ModItem TEA_SAPLING = item.createBuilder(Material.OAK_SAPLING, plugin, "tea_sapling").block(TEA_PLANT).displayName("Tea Sapling", NamedTextColor.DARK_GREEN).category(PLANTS).build();
+
+    public static final ModItem UNRIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "unripe_tea_leaf").displayName("Unripe Tea Leaf", 0xaed483).build();
+    public static final ModItem RIPE_TEA_LEAF = item.createBuilder(Material.KELP, plugin, "ripe_tea_leaf").displayName("Ripe Tea Leaf", 0x63c427).build();
+
+    public static final ModItem TEA_SEEDS = item.createBuilder(Material.BEETROOT_SEEDS, plugin, "tea_seeds").block(TEA_SEEDLING).displayName("Tea Seeds", 0xced98f).build();
 
     private static class VanillaSeedlingConsumer implements Consumer<Block> {
         private final Material set;
@@ -57,6 +66,22 @@ public class PlantsTypes {
             PlantsTypes.block.getBlock(block.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
             block.setType(set);
+        }
+    }
+
+    private static class ModSeedlingConsumer implements Consumer<Block> {
+        private final ModBlock set;
+
+        public ModSeedlingConsumer(ModBlock set) {
+            this.set = set;
+        }
+
+        @Override
+        public void accept(Block block) {
+            PlantsTypes.block.getBlock(block.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+
+            set.place(block, null);
+            PlantsTypes.blockManager.setBlock(block, set);
         }
     }
 }

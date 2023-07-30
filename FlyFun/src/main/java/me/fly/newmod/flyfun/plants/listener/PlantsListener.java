@@ -20,6 +20,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -121,6 +122,31 @@ public class PlantsListener implements Listener {
             bl.setType(Material.AIR);
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
             bl.getLocation().getWorld().dropItem(bl.getLocation(), s.drop);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Block cb = event.getClickedBlock();
+        ModBlock b = block.getType(cb);
+
+        //TODO: fortune and shears and whatever else
+
+        if(b instanceof TeaPlant t) {
+            if(cb.getType() == Material.AZALEA) {
+                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
+
+                if(random.nextBoolean()) {
+                    cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
+                }
+            } else if(cb.getType() == Material.FLOWERING_AZALEA) {
+                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
+                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.TEA_SEEDS.create());
+
+                if(random.nextBoolean()) {
+                    cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
+                }
+            }
         }
     }
 }

@@ -5,7 +5,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public interface ModBlock {
     /**
@@ -49,5 +54,16 @@ public interface ModBlock {
      */
     default Event.Result shouldDelete(Block block) {
         return Event.Result.DEFAULT;
+    }
+
+    /**
+     * Gets the drops for this block.
+     *
+     * @param block the location this block was broken.
+     * @param breaker the player who broke this block. This may be null.
+     * @return a list of the drops that should be dropped when this block is broken.
+     */
+    default List<ItemStack> getDrops(Block block, Player breaker) {
+        return new ArrayList<>();
     }
 }

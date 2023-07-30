@@ -4,11 +4,16 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.block.ModBlockInstance;
 import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.fly.newmod.flyfun.plants.PlantsTypes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TeaPlant implements ModBlock {
@@ -50,6 +55,32 @@ public class TeaPlant implements ModBlock {
         Material type = block.getType();
 
         return type == Material.OAK_SAPLING || type == Material.AZALEA || type == Material.FLOWERING_AZALEA ? Event.Result.ALLOW : Event.Result.DENY;
+    }
+
+    @Override
+    public List<ItemStack> getDrops(Block block, Player breaker) {
+        List<ItemStack> ret = new ArrayList<>();
+
+        ret.add(PlantsTypes.TEA_SAPLING.create());
+
+        //TODO: player stuff
+
+        if(block.getType() == Material.AZALEA) {
+            ret.add(PlantsTypes.UNRIPE_TEA_LEAF.create());
+
+            if(random.nextBoolean()) {
+                ret.add(PlantsTypes.UNRIPE_TEA_LEAF.create());
+            }
+        } else if(block.getType() == Material.FLOWERING_AZALEA) {
+            ret.add(PlantsTypes.RIPE_TEA_LEAF.create());
+            ret.add(PlantsTypes.TEA_SEEDS.create());
+
+            if(random.nextBoolean()) {
+                ret.add(PlantsTypes.RIPE_TEA_LEAF.create());
+            }
+        }
+
+        return ret;
     }
 
     public void nextStage(Block block) {
