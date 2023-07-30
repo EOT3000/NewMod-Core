@@ -16,6 +16,7 @@ public class NMSUtil {
     public static void sendSetItemPacket(int index, ItemStack item, PlayerInventory inv) {
         if (inv.getHolder() != null) {
             EntityPlayer player = ((CraftPlayer)inv.getHolder()).getHandle();
+
             if (player.c != null) {
                 if (index < net.minecraft.world.entity.player.PlayerInventory.g()) {
                     index += 36;

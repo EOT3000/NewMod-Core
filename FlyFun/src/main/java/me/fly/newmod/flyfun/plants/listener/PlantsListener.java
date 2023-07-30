@@ -97,21 +97,26 @@ public class PlantsListener implements Listener {
         ModBlock b = block.getType(event.getBlock());
 
         if(b instanceof Seedling s) {
-            s.grow(event.getBlock());
-            event.setCancelled(true);
+            Ageable ageable = (Ageable) event.getBlock().getBlockData();
+
+            if(ageable.getAge() >= 6) {
+                s.grow(event.getBlock());
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onFromTo(BlockFromToEvent event) {
-        ModBlock b = block.getType(event.getBlock());
-        Block bl = event.getBlock();
+        Block bl = event.getToBlock();
+        ModBlock b = block.getType(bl);
 
         if(b instanceof Seedling s) {
             event.setCancelled(true);
             bl.setType(Material.AIR);
             //TODO: easier clear data method
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+
             bl.getLocation().getWorld().dropItem(bl.getLocation(), s.drop);
         }
     }
@@ -136,7 +141,7 @@ public class PlantsListener implements Listener {
 
         //TODO: fortune and shears and whatever else
 
-        if(b instanceof TeaPlant t) {
+        if(b instanceof TeaPlant) {
             if(cb.getType() == Material.AZALEA) {
                 cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
 

@@ -5,6 +5,7 @@ import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.ModItemStack;
 import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.fly.newmod.flyfun.books.BooksManager;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -101,7 +102,13 @@ public class BooksUtils {
     }
 
     public static boolean signed(ItemStack stack) {
-        if(!writable(stack)) {
+        if(stack == null || !stack.hasItemMeta()) {
+            return false;
+        }
+
+        ModItem type = item.getType(stack);
+
+        if(type == null || !plugin.getBooksManager().writable(type)) {
             return false;
         }
 
@@ -109,7 +116,13 @@ public class BooksUtils {
     }
 
     public static String[] pages(ItemStack stack) {
-        if(!writable(stack)) {
+        if(stack == null || !stack.hasItemMeta()) {
+            return new String[0];
+        }
+
+        ModItem type = item.getType(stack);
+
+        if(type == null || !plugin.getBooksManager().writable(type)) {
             return new String[0];
         }
 
