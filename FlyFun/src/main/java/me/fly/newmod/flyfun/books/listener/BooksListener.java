@@ -3,6 +3,7 @@ package me.fly.newmod.flyfun.books.listener;
 import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
@@ -133,18 +134,27 @@ public class BooksListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE) || event.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
+            return;
+        }
+
         if(BooksUtils.signed(event.getItem())) {
             ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
             BookMeta meta = (BookMeta) book.getItemMeta();
 
             meta.setPages(BooksUtils.pages(event.getItem()));
+            meta.setAuthor("-");
+            meta.setTitle("Birch Bark");
+            meta.setGeneration(BookMeta.Generation.ORIGINAL);
 
             book.setItemMeta(meta);
 
-            NMSUtil.sendSetItemPacket(event.getPlayer().getInventory().getHeldItemSlot(), book, event.getPlayer().getInventory());
+            event.getPlayer().openBook(book);
+
+            /*NMSUtil.sendSetItemPacket(event.getPlayer().getInventory().getHeldItemSlot(), book, event.getPlayer().getInventory());
             Bukkit.getScheduler().runTaskLater(FlyFunPlugin.get(), () -> {
                 NMSUtil.openBook(0, event.getPlayer());
-            }, 1);
+            }, 1);*/
         }
     }
 }

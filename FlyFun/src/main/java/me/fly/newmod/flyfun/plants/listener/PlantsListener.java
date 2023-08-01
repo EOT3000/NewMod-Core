@@ -17,6 +17,7 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -131,6 +132,13 @@ public class PlantsListener implements Listener {
             bl.setType(Material.AIR);
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
             bl.getLocation().getWorld().dropItem(bl.getLocation(), s.drop);
+        } else if(b instanceof TeaPlant) {
+            event.setWillDrop(false);
+            bl.setType(Material.AIR);
+            blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+            for(ItemStack stack : b.getDrops(bl, null)) {
+                bl.getWorld().dropItem(bl.getLocation(), stack);
+            }
         }
     }
 
@@ -140,6 +148,10 @@ public class PlantsListener implements Listener {
         ModBlock b = block.getType(cb);
 
         //TODO: fortune and shears and whatever else
+
+        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
         if(b instanceof TeaPlant) {
             if(cb.getType() == Material.AZALEA) {

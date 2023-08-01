@@ -85,6 +85,7 @@ public class BlockListener implements Listener {
 
         if(type != null) {
             event.setDropItems(false);
+            NewModPlugin.get().blockStorage().getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
             for(ItemStack stack : type.getDrops(bl, event.getPlayer())) {
                 bl.getWorld().dropItem(bl.getLocation(), stack);
