@@ -27,6 +27,8 @@ public class ItemManagerImpl implements ItemManager {
     @Override
     public void registerItem(ModItem item) {
         registry.put(item.getId(), item);
+
+        NewModPlugin.get().getCategory().addItem(item);
     }
 
     @Override

@@ -3,7 +3,7 @@ package me.fly.newmod.core.api.gear;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Manages durability and armor.
+ * Manages custom durability and armor.
  */
 public interface GearManager {
 

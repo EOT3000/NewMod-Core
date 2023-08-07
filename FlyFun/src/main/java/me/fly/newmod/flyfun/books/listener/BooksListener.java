@@ -1,6 +1,5 @@
 package me.fly.newmod.flyfun.books.listener;
 
-import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

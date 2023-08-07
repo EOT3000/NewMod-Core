@@ -2,6 +2,7 @@ package me.fly.newmod.flyfun;
 
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
+import me.fly.newmod.flyfun.basictools.GoldPanManager;
 import me.fly.newmod.flyfun.books.BooksManager;
 import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
@@ -19,6 +20,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     private static FlyFunPlugin instance;
     private BooksManager books;
+    private GoldPanManager goldPan;
 
     @Override
     public void onLoad() {
@@ -36,6 +38,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     @Override
     public void onEnable() {
         this.books = new BooksManager();
+        this.goldPan = new GoldPanManager();
 
         MetalsTypes.init();
         PlantsTypes.init();
@@ -62,5 +65,9 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     public BooksManager getBooksManager() {
         return books;
+    }
+
+    public GoldPanManager getGoldPanManager() {
+        return goldPan;
     }
 }

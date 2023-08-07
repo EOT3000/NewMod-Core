@@ -6,15 +6,21 @@ import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.category.CategoryManager;
+import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.core.block.BlockManagerImpl;
 import me.fly.newmod.core.blockstorage.BlockStorageImpl;
 import me.fly.newmod.core.command.CheatCommand;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import me.fly.newmod.core.item.category.CategoryManagerImpl;
+import me.fly.newmod.core.item.category.ModItemCategoryImpl;
 import me.fly.newmod.core.listener.BlockListener;
 import me.fly.newmod.core.listener.CheatInventoryListener;
 import me.fly.newmod.core.listener.VanillaReplacementListener;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,6 +37,8 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
 
     private CheatCommand cheatCommand;
 
+    private ModItemCategory category;
+
     @Override
     public void onEnable() {
         this.blockStorage = new BlockStorageImpl();
@@ -44,6 +52,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         Bukkit.getPluginManager().registerEvents(new VanillaReplacementListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
 
+        category = categoryManager.createCategory(new NamespacedKey(instance, "all_items_category"), Material.COMPASS, Component.text("All Items").color(NamedTextColor.GRAY));
     }
 
     @Override
@@ -84,6 +93,10 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     @Override
     public void registerAddon(NewModAddon addon) {
         //nothing yet
+    }
+
+    public ModItemCategory getCategory() {
+        return category;
     }
 
     public static NewModPlugin get() {
