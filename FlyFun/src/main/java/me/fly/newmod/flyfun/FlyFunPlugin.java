@@ -3,6 +3,7 @@ package me.fly.newmod.flyfun;
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
 import me.fly.newmod.flyfun.basictools.GoldPanManager;
+import me.fly.newmod.flyfun.basictools.listener.BasicToolsListener;
 import me.fly.newmod.flyfun.books.BooksManager;
 import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
@@ -49,6 +50,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         Bukkit.getPluginManager().registerEvents(new PlantsListener(), this);
         Bukkit.getPluginManager().registerEvents(new BooksListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
     }
 
     public FlyFunPlugin() {

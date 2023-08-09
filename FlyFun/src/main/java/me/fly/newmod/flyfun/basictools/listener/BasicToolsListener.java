@@ -9,17 +9,19 @@ import me.fly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.fly.newmod.flyfun.basictools.GoldPanManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -28,6 +30,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.Map;
 import java.util.Random;
 
+//TODO: split for all the tools?
 public class BasicToolsListener implements Listener {
     private final Random random = new Random();
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
@@ -70,9 +73,13 @@ public class BasicToolsListener implements Listener {
                 }
             }
         } else if(BasicToolsTypes.BANDAGE.equals(modItem)) {
+            if(event.getHand() != EquipmentSlot.HAND) {
+                return;
+            }
+
             PersistentDataContainer pdc = event.getPlayer().getPersistentDataContainer();
 
-            if (pdc.getOrDefault(BANDAGING, PersistentDataType.INTEGER, 0) == 0) {
+            if (!isBandaging(pdc)) {
                 if(pdc.getOrDefault(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, 0.0) >= 2) {
                     event.getPlayer().sendMessage(Component.text("Started bandaging. Don't move.").color(NamedTextColor.GREEN));
 
@@ -138,25 +145,21 @@ public class BasicToolsListener implements Listener {
                     if(c == 0) {
                         PlayerInventory inv = player.getInventory();
 
-                        if(BasicToolsTypes.BANDAGE.equals(item.getType(inv.getItemInMainHand()))) {
-                            ItemStack itemStack = inv.getItemInMainHand();
-
-                            if(itemStack.getAmount() > 1) {
-                                itemStack.setAmount(itemStack.getAmount()-1);
-                            } else {
-                                inv.setItemInMainHand(null);
-                            }
-                        } else if(BasicToolsTypes.BANDAGE.equals(item.getType(inv.getItemInOffHand()))) {
-                            ItemStack itemStack = inv.getItemInOffHand();
-
-                            if(itemStack.getAmount() > 1) {
-                                itemStack.setAmount(itemStack.getAmount()-1);
-                            } else {
-                                inv.setItemInOffHand(null);
-                            }
-                        } else {
+                        if(noBandage(inv)) {
                             return;
                         }
+
+                        ItemStack bandage = inv.getItemInMainHand();
+
+                        if(bandage.getAmount() > 1) {
+                            bandage.setAmount(bandage.getAmount()-1);
+                        } else {
+                            inv.setItemInMainHand(null);
+                        }
+
+                        pdc.set(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, pdc.getOrDefault(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, 1.0)-1);
+
+                        player.setHealth(player.getHealth()+1);
 
                         player.sendMessage(Component.text("The bandage has been wrapped.").color(NamedTextColor.GREEN));
                     } else {
@@ -165,5 +168,53 @@ public class BasicToolsListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onRegainHealth(EntityRegainHealthEvent event) {
+        if(event.getEntity() instanceof Player player) {
+            PersistentDataContainer pdc = event.getEntity().getPersistentDataContainer();
+
+            if(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()-player.getHealth()-event.getAmount() < pdc.getOrDefault(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, 0.0)) {
+                switch (event.getRegainReason()) {
+                    case SATIATED, EATING, MAGIC_REGEN, MAGIC -> event.setAmount(event.getAmount() / 4);
+                }
+
+                pdc.set(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()-player.getHealth()-event.getAmount());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onHandSwitch(PlayerSwapHandItemsEvent event) {
+        PersistentDataContainer pdc = event.getPlayer().getPersistentDataContainer();
+
+        if(isBandaging(pdc)) {
+            pdc.set(BANDAGING, PersistentDataType.INTEGER, 0);
+            event.getPlayer().sendMessage(Component.text("Cancelled bandaging.").color(NamedTextColor.RED));
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        event.getPlayer().getPersistentDataContainer().set(BANDAGING, PersistentDataType.INTEGER, 0);
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        PersistentDataContainer pdc = event.getWhoClicked().getPersistentDataContainer();
+
+        if(isBandaging(pdc)) {
+            pdc.set(BANDAGING, PersistentDataType.INTEGER, 0);
+            event.getWhoClicked().sendMessage(Component.text("Cancelled bandaging.").color(NamedTextColor.RED));
+        }
+    }
+
+    private boolean noBandage(PlayerInventory inv) {
+        return !BasicToolsTypes.BANDAGE.equals(item.getType(inv.getItemInMainHand()));
+    }
+
+    private boolean isBandaging(PersistentDataContainer pdc) {
+        return pdc.getOrDefault(BANDAGING, PersistentDataType.INTEGER, 0) > 0;
     }
 }
