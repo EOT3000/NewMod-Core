@@ -13,6 +13,7 @@
         <module>Impl</module>
         <module>FlyFun</module>
         <module>Util</module>
+        <module>Villagers</module>
     </modules>
 
     <properties>
