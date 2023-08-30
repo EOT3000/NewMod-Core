@@ -1,6 +1,7 @@
 package me.fly.newmod.flyfun.magic;
 
 import me.fly.newmod.core.api.NewModAPI;
+import me.fly.newmod.core.api.block.BasicBlock;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
@@ -23,6 +24,8 @@ public class MagicTypes {
             Material.BLAZE_POWDER, Component.text("Magic").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false), Component.text(""), Component.text("Magical items").decoration(TextDecoration.ITALIC, false));
 
     public static final ModItem ANCIENT_PEDESTAL = item.createBuilder(Material.DISPENSER, plugin, "ancient_pedestal").block(new AncientPedestal()).displayName("Ancient Pedestal", NamedTextColor.GRAY).category(MAGIC).build();
+
+    public static final ModItem ANCIENT_ALTAR = item.createBuilder(Material.ENCHANTING_TABLE, plugin, "ancient_altar").block(new BasicBlock(plugin, "ancient_altar", Material.ENCHANTING_TABLE)).displayName("Ancient Altar", NamedTextColor.DARK_PURPLE).category(MAGIC).build();
 
     public static final ModItem SOUL_SWORD = item.createBuilder(Material.NETHERITE_SWORD, plugin, "soul_sword").displayName("Soul Sword", 0x502860).category(MAGIC).build();
 }

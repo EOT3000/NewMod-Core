@@ -29,11 +29,7 @@ public class AncientPedestal implements ModBlock {
     }
 
     @Override
-    public void place(Block block) {
-        if(block.getType() != Material.DISPENSER) {
-            block.setType(Material.DISPENSER);
-        }
-
+    public void place0(Block block) {
         Directional data = (Directional) block.getBlockData();
 
         data.setFacing(BlockFace.UP);

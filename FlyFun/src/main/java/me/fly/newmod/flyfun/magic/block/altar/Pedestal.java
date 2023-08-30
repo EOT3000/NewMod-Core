@@ -23,6 +23,28 @@ public final class Pedestal {
     public static final NamespacedKey DISPLAY_ENTITY_ID_LSB = new NamespacedKey(FlyFunPlugin.get(), "display_entity_id_lsb");
     public static final NamespacedKey DISPLAY_ENTITY_ID_MSB = new NamespacedKey(FlyFunPlugin.get(), "display_entity_id_msb");
 
+    public static ItemStack getItem(Location pedestal) {
+        StoredBlock block = FlyFunPlugin.get().api.blockStorage().getBlock(pedestal);
+
+        NamespacedKey lsb_nk = ITEM_ENTITY_ID_LSB;
+        NamespacedKey msb_nk = ITEM_ENTITY_ID_MSB;
+
+        if(block.hasData(msb_nk, BlockStorage.StorageType.BLOCK_DATA) && block.hasData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA)) {
+            String msb = block.getData(msb_nk, BlockStorage.StorageType.BLOCK_DATA);
+            String lsb = block.getData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA);
+
+            UUID uuid = new UUID(Long.getLong(msb), Long.getLong(lsb));
+
+            Entity entity = pedestal.getWorld().getEntity(uuid);
+
+            if(entity instanceof Item) {
+                return ((Item) entity).getItemStack();
+            }
+        }
+
+        return null;
+    }
+
     public static void setItemDisplay(ItemStack stack, Location pedestal) {
         Item item = pedestal.getWorld().dropItem(pedestal.clone().add(0.5, 1.2, 0.5), stack);
 
