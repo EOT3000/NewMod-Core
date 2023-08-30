@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;
@@ -31,14 +32,13 @@ public class Seedling implements ModBlock {
     }
 
     @Override
-    public boolean place(Block block) {
-        if(block.getRelative(BlockFace.DOWN).getType() != Material.FARMLAND) {
-            return false;
-        }
+    public boolean shouldPlace(BlockPlaceEvent event) {
+        return event.getBlock().getRelative(0,-1,0).getType().equals(Material.FARMLAND);
+    }
 
+    @Override
+    public void place(Block block) {
         block.setType(Material.MELON_STEM);
-
-        return true;
     }
 
     public void grow(Block t) {

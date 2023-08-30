@@ -1,10 +1,12 @@
 package me.fly.newmod.core.api.block;
 
+import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -22,13 +24,45 @@ public interface ModBlock {
     Material getMaterial();
 
     /**
+     * Checks if this block should be placed given this event, where a player placed the item linked to this block.
+     *
+     * @param event the place event.
+     * @return true if the block should be placed here, false if not.
+     */
+    default boolean shouldPlace(BlockPlaceEvent event) {
+        return true;
+    }
+
+    /**
+     * Sets the given block
+     *
+     * @param block the block to place at.
+     * @param manager the manager to use.
+     */
+    default void setType(Block block, BlockManager manager) {
+        manager.setBlock(block, this);
+    }
+
+    /**
      * Places this block.
      *
      * @param block the block to place at.
-     * @return whether or not the block was placed successfully. If true, data should be added to the block.
      */
-    default boolean place(Block block) {
-        return true;
+    default void place(Block block) {
+        if(block.getType() != getMaterial()) {
+            block.setType(getMaterial());
+        }
+
+        place0(block);
+    }
+
+    /**
+     * Sets the final block data necessary to place the block.
+     *
+     * @param block the block to place at.
+     */
+    default void place0(Block block) {
+
     }
 
     /**

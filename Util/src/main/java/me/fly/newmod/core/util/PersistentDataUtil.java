@@ -4,6 +4,7 @@ package me.fly.newmod.core.util;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
@@ -79,6 +80,7 @@ public final class PersistentDataUtil {
     };
 
     public static final PersistentDataType<byte[], String[]> STRING_ARRAY = DataType.STRING_ARRAY;
+    public static final PersistentDataType<byte[], Location> LOCATION = DataType.LOCATION;
 
     public static NamespacedKey namespacedKeyFromPrimitive(String s) {
         if(s == null) {

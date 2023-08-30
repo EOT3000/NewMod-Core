@@ -28,9 +28,8 @@ public class TeaPlant implements ModBlock {
     }
 
     @Override
-    public boolean place(Block block) {
+    public void place(Block block) {
         block.setType(Material.OAK_SAPLING);
-        return true;
     }
 
     @Override

@@ -31,7 +31,7 @@ public interface BlockManager {
     ModBlock getType(NamespacedKey key);
 
     /**
-     * Sets the block type of this block. Overrides previous data.
+     * Sets the block type of this block. Overrides previous data. Does not place the block in the world.
      *
      * @param block the block to set.
      * @param type the type to set to.

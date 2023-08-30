@@ -19,8 +19,7 @@ public class TreeTap implements ModBlock {
     }
 
     @Override
-    public boolean place(Block block) {
+    public void place(Block block) {
         //nothing
-        return true;
     }
 }
