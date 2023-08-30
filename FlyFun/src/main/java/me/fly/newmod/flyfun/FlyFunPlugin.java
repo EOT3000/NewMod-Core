@@ -12,6 +12,7 @@ import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
 import me.fly.newmod.flyfun.magic.listener.AltarListener;
+import me.fly.newmod.flyfun.magic.recipe.AltarRecipeManager;
 import me.fly.newmod.flyfun.metals.MetalsTypes;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import me.fly.newmod.flyfun.plants.listener.PlantsListener;
@@ -25,6 +26,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     private static FlyFunPlugin instance;
     private BooksManager books;
     private GoldPanManager goldPan;
+    private AltarRecipeManager altarRecipe;
 
     @Override
     public void onLoad() {
@@ -43,6 +45,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public void onEnable() {
         this.books = new BooksManager();
         this.goldPan = new GoldPanManager();
+        this.altarRecipe = new AltarRecipeManager();
 
         MetalsTypes.init();
         PlantsTypes.init();
@@ -77,5 +80,9 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     public GoldPanManager getGoldPanManager() {
         return goldPan;
+    }
+
+    public AltarRecipeManager getAltarRecipeManager() {
+        return altarRecipe;
     }
 }

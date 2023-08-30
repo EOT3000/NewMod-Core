@@ -5,7 +5,6 @@ import me.fly.newmod.core.api.blockstorage.StoredBlock;
 import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
@@ -34,9 +33,6 @@ public final class Pedestal {
         if(block.hasData(msb_nk, BlockStorage.StorageType.BLOCK_DATA) && block.hasData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA)) {
             String msb = block.getData(msb_nk, BlockStorage.StorageType.BLOCK_DATA);
             String lsb = block.getData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA);
-
-            System.out.println("msb: " + msb);
-            System.out.println("lsb: " + lsb);
 
             UUID uuid = new UUID(Long.parseLong(msb), Long.parseLong(lsb));
 
@@ -101,7 +97,7 @@ public final class Pedestal {
     }
 
     public static void setNameDisplay(Component text, Location pedestal) {
-        ArmorStand stand = (ArmorStand) pedestal.getWorld().spawnEntity(pedestal.clone().add(0.5, 1.2, 0.5), EntityType.ARMOR_STAND);
+        ArmorStand stand = (ArmorStand) pedestal.getWorld().spawnEntity(pedestal.clone().add(0.5, 1.6, 0.5), EntityType.ARMOR_STAND);
 
         stand.setInvisible(true);
         stand.setMarker(true);

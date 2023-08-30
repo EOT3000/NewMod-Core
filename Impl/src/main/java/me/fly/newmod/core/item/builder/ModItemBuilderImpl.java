@@ -1,6 +1,7 @@
 package me.fly.newmod.core.item.builder;
 
 import me.fly.newmod.core.NewModPlugin;
+import me.fly.newmod.core.api.block.BasicBlock;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.item.ModItem;
@@ -17,6 +18,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.*;
@@ -127,6 +129,10 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
         if(block != null && bm.getType(block.getId()) == null) {
             bm.registerBlock(block);
+
+            if(block instanceof BasicBlock) {
+                ((BasicBlock) block).setDrop(item.create());
+            }
         }
 
         NewModPlugin.get().itemManager().registerItem(item);
