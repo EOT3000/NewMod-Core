@@ -33,5 +33,7 @@ public class AncientPedestal implements ModBlock {
         Directional data = (Directional) block.getBlockData();
 
         data.setFacing(BlockFace.UP);
+
+        block.setBlockData(data);
     }
 }

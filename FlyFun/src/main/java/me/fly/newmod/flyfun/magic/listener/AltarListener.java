@@ -24,10 +24,11 @@ public class AltarListener implements Listener {
             if(event.hasItem()) {
                 ModBlock modBlock = block.getType(event.getClickedBlock());
 
-                if (modBlock.equals(MagicTypes.ANCIENT_PEDESTAL.getBlock()) && Pedestal.getItem(event.getClickedBlock().getLocation()) == null) {
+                if (MagicTypes.ANCIENT_PEDESTAL.getBlock().equals(modBlock) && Pedestal.getItem(event.getClickedBlock().getLocation()) == null) {
                     event.setCancelled(true);
 
                     Pedestal.setItemDisplay(event.getItem().asOne(), event.getClickedBlock().getLocation());
+                    Pedestal.setNameDisplay(event.getItem().displayName(), event.getClickedBlock().getLocation());
 
                     ItemStack stack = event.getPlayer().getInventory().getItem(event.getHand());
 
@@ -40,7 +41,7 @@ public class AltarListener implements Listener {
             } else if(!event.hasItem()) {
                 ModBlock modBlock = block.getType(event.getClickedBlock());
 
-                if (modBlock.equals(MagicTypes.ANCIENT_PEDESTAL.getBlock()) && Pedestal.getItem(event.getClickedBlock().getLocation()) != null) {
+                if (MagicTypes.ANCIENT_PEDESTAL.getBlock().equals(modBlock) && Pedestal.getItem(event.getClickedBlock().getLocation()) != null) {
                     event.setCancelled(true);
 
                     ItemStack stack = Pedestal.getItem(event.getClickedBlock().getLocation());

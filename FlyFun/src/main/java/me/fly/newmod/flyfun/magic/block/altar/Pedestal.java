@@ -4,6 +4,7 @@ import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.blockstorage.StoredBlock;
 import me.fly.newmod.core.util.PersistentDataUtil;
 import me.fly.newmod.flyfun.FlyFunPlugin;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -13,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.util.Vector;
 
 import java.util.UUID;
 
@@ -33,7 +35,10 @@ public final class Pedestal {
             String msb = block.getData(msb_nk, BlockStorage.StorageType.BLOCK_DATA);
             String lsb = block.getData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA);
 
-            UUID uuid = new UUID(Long.getLong(msb), Long.getLong(lsb));
+            System.out.println("msb: " + msb);
+            System.out.println("lsb: " + lsb);
+
+            UUID uuid = new UUID(Long.parseLong(msb), Long.parseLong(lsb));
 
             Entity entity = pedestal.getWorld().getEntity(uuid);
 
@@ -60,6 +65,8 @@ public final class Pedestal {
 
         item.setGravity(false);
 
+        item.setVelocity(new Vector());
+
         PersistentDataContainer container = item.getPersistentDataContainer();
 
         container.set(PEDESTAL, PersistentDataUtil.LOCATION, pedestal);
@@ -83,7 +90,7 @@ public final class Pedestal {
             block.removeData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA);
             block.removeData(msb_nk, BlockStorage.StorageType.BLOCK_DATA);
 
-            UUID uuid = new UUID(Long.getLong(msb), Long.getLong(lsb));
+            UUID uuid = new UUID(Long.parseLong(msb), Long.parseLong(lsb));
 
             Entity entity = pedestal.getWorld().getEntity(uuid);
 
@@ -93,7 +100,7 @@ public final class Pedestal {
         }
     }
 
-    public static void setNameDisplay(TextComponent text, Location pedestal) {
+    public static void setNameDisplay(Component text, Location pedestal) {
         ArmorStand stand = (ArmorStand) pedestal.getWorld().spawnEntity(pedestal.clone().add(0.5, 1.2, 0.5), EntityType.ARMOR_STAND);
 
         stand.setInvisible(true);
@@ -126,7 +133,7 @@ public final class Pedestal {
             block.removeData(lsb_nk, BlockStorage.StorageType.BLOCK_DATA);
             block.removeData(msb_nk, BlockStorage.StorageType.BLOCK_DATA);
 
-            UUID uuid = new UUID(Long.getLong(msb), Long.getLong(lsb));
+            UUID uuid = new UUID(Long.parseLong(msb), Long.parseLong(lsb));
 
             Entity entity = pedestal.getWorld().getEntity(uuid);
 

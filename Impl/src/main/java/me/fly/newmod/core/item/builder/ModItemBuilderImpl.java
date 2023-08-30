@@ -131,7 +131,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
         NewModPlugin.get().itemManager().registerItem(item);
 
-        System.out.println("Item built");
+        System.out.println("Item built: " + key.toString());
 
         return item;
     }

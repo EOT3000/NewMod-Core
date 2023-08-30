@@ -12,10 +12,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("unused")
 public class MagicTypes {
+    public static void init() {
+
+    }
+
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
     private static final NewModAPI api = plugin.api;
     private static final ItemManager item = api.itemManager();

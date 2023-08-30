@@ -2,6 +2,7 @@ package me.fly.newmod.flyfun;
 
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
+import me.fly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.fly.newmod.flyfun.basictools.GoldPanManager;
 import me.fly.newmod.flyfun.basictools.listener.BasicToolsListener;
 import me.fly.newmod.flyfun.books.BooksManager;
@@ -9,6 +10,8 @@ import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
 import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
+import me.fly.newmod.flyfun.magic.MagicTypes;
+import me.fly.newmod.flyfun.magic.listener.AltarListener;
 import me.fly.newmod.flyfun.metals.MetalsTypes;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import me.fly.newmod.flyfun.plants.listener.PlantsListener;
@@ -44,6 +47,8 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         MetalsTypes.init();
         PlantsTypes.init();
         BooksTypes.init();
+        BasicToolsTypes.init();
+        MagicTypes.init();
 
         api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemData.class);
         api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemDataImpl.class);
@@ -51,6 +56,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new PlantsListener(), this);
         Bukkit.getPluginManager().registerEvents(new BooksListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
     }
 
     public FlyFunPlugin() {
