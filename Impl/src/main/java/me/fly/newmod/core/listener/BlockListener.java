@@ -44,7 +44,7 @@ public class BlockListener implements Listener {
 
                     if (keep) {
                         try {
-                            type.tick(event.getTickNumber(), b, manager.from(b));
+                            type.tick(event.getTickNumber(), b);
                         } catch (Exception e) {
                             NewModPlugin.get().getLogger().warning("Block " + " (" + location.getX() + "," + location.getY() + "," + location.getZ() + "," + location.getWorld().getName() + ") error:");
 
@@ -65,7 +65,7 @@ public class BlockListener implements Listener {
 
         if(type != null) {
             if(type.getBlock() != null) {
-                boolean b = type.getBlock().place(event.getBlock(), null);
+                boolean b = type.getBlock().place(event.getBlock());
 
                 if(b) {
                     NewModPlugin.get().blockManager().setBlock(event.getBlock(), type.getBlock());

@@ -1,4 +1,8 @@
-package me.fly.newmod.core.api.block.data;
+/**
+ * No longer used
+ */
+
+/*package me.fly.newmod.core.api.block.data;
 
 import me.fly.newmod.core.api.block.ModBlock;
 
@@ -6,18 +10,18 @@ import java.util.Objects;
 
 /**
  * Represents data stored in a mod block.
- */
+ *
 public interface ModBlockData {
     /**
      * @return the mod block type of this data.
-     */
+     *
     ModBlock getType();
 
     /**
      * Clones this data.
      *
      * @return the cloned data.
-     */
+     *
     ModBlockData cloneBlock();
 
     abstract class AbstractModBlockData implements ModBlockData {
@@ -44,4 +48,4 @@ public interface ModBlockData {
             return Objects.equals(type, that.type);
         }
     }
-}
+}*/

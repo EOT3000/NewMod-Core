@@ -1,10 +1,13 @@
-package me.fly.newmod.core.block;
+/**
+ * No longer used
+ */
+
+/*package me.fly.newmod.core.block;
 
 import me.fly.newmod.core.NewModPlugin;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.block.ModBlockInstance;
-import me.fly.newmod.core.api.block.data.ModBlockData;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -103,3 +106,4 @@ public class ModBlockInstanceImpl implements ModBlockInstance {
                 '}';
     }
 }
+*/

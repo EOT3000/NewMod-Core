@@ -1,8 +1,6 @@
 package me.fly.newmod.flyfun.plants.block;
 
 import me.fly.newmod.core.api.block.ModBlock;
-import me.fly.newmod.core.api.block.ModBlockInstance;
-import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import org.bukkit.Material;
@@ -30,18 +28,13 @@ public class TeaPlant implements ModBlock {
     }
 
     @Override
-    public Class<? extends ModBlockData> getDataType() {
-        return null;
-    }
-
-    @Override
-    public boolean place(Block block, ModBlockInstance instance) {
+    public boolean place(Block block) {
         block.setType(Material.OAK_SAPLING);
         return true;
     }
 
     @Override
-    public void tick(int tick, Block block, ModBlockInstance instance) {
+    public void tick(int tick, Block block) {
         if(block.getType().equals(Material.AZALEA)) {
             //TODO: config this
             if(random.nextInt(1000) == 1) {

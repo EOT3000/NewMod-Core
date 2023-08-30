@@ -1,8 +1,6 @@
 package me.fly.newmod.flyfun.plants.block;
 
 import me.fly.newmod.core.api.block.ModBlock;
-import me.fly.newmod.core.api.block.ModBlockInstance;
-import me.fly.newmod.core.api.block.data.ModBlockData;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -21,18 +19,8 @@ public class TreeTap implements ModBlock {
     }
 
     @Override
-    public Class<? extends ModBlockData> getDataType() {
-        return null;
-    }
-
-    @Override
-    public boolean place(Block block, ModBlockInstance instance) {
+    public boolean place(Block block) {
         //nothing
         return true;
-    }
-
-    @Override
-    public void tick(int tick, Block block, ModBlockInstance instance) {
-        //TODO
     }
 }

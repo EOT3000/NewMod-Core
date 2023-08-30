@@ -82,7 +82,7 @@ public class PlantsTypes {
         public void accept(Block block) {
             PlantsTypes.block.getBlock(block.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
-            set.place(block, null);
+            set.place(block);
             PlantsTypes.blockManager.setBlock(block, set);
         }
     }

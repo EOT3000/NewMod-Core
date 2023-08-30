@@ -1,6 +1,9 @@
-package me.fly.newmod.core.api.block;
+/**
+ * No longer used
+ */
 
-import me.fly.newmod.core.api.block.data.ModBlockData;
+/*package me.fly.newmod.core.api.block;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
@@ -12,35 +15,22 @@ public interface ModBlockInstance {
      *
      * @param location the location to create or get the block from.
      * @return the created or gotten block.
-     */
+     *
     Block createOrGet(Location location);
 
     /**
      * Gets if this block exists in-game.
      *
      * @return true if this block exists, false if it doesn't.
-     */
+     *
     boolean exists();
 
     /**
      * Gets this mod block type.
      *
      * @return the mod type of this block.
-     */
+     *
     ModBlock getType();
 
-    /**
-     * Gets the data stored in this block.
-     *
-     * @return the block's data.
-     */
-    ModBlockData getData();
-
-    /**
-     *
-     * @param data
-     */
-    void setData(ModBlockData data);
-
     void update();
-}
+}*/
