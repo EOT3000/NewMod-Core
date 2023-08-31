@@ -34,7 +34,7 @@ public interface ModBlock {
     }
 
     /**
-     * Sets the given block
+     * Sets the given block.
      *
      * @param block the block to place at.
      * @param manager the manager to use.
@@ -44,7 +44,7 @@ public interface ModBlock {
     }
 
     /**
-     * Places this block.
+     * Places this block, without an event.
      *
      * @param block the block to place at.
      */
@@ -54,6 +54,15 @@ public interface ModBlock {
         }
 
         place0(block);
+    }
+
+    /**
+     * Places this block, with an event.
+     *
+     * @param event the event.
+     */
+    default void place(BlockPlaceEvent event) {
+        place(event.getBlock());
     }
 
     /**

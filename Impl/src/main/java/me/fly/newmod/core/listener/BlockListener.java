@@ -68,7 +68,7 @@ public class BlockListener implements Listener {
                 boolean b = type.getBlock().shouldPlace(event);
 
                 if(b) {
-                    type.getBlock().place(event.getBlock());
+                    type.getBlock().place(event);
                     NewModPlugin.get().blockManager().setBlock(event.getBlock(), type.getBlock());
                 } else {
                     event.setCancelled(true);

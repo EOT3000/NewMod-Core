@@ -6,11 +6,23 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 public final class PersistentDataUtil {
+    public static void setString(ItemStack holder, NamespacedKey key, String string) {
+        ItemMeta meta = holder.getItemMeta();
+
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, string);
+
+        holder.setItemMeta(meta);
+    }
+
     public static final PersistentDataType<String, NamespacedKey> NAMESPACED_KEY = new PersistentDataType<>() {
         @Override
         public @NotNull Class<String> getPrimitiveType() {

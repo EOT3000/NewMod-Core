@@ -12,6 +12,7 @@ import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
 import me.fly.newmod.flyfun.magic.listener.AltarListener;
+import me.fly.newmod.flyfun.magic.listener.SoulToolListener;
 import me.fly.newmod.flyfun.magic.recipe.AltarRecipeManager;
 import me.fly.newmod.flyfun.metals.MetalsTypes;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
@@ -60,6 +61,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new BooksListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
     }
 
     public FlyFunPlugin() {
