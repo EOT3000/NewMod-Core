@@ -7,16 +7,25 @@ import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.magic.block.altar.AncientPedestal;
+import me.fly.newmod.flyfun.magic.recipe.AltarRecipe;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+
+import static org.bukkit.Material.*;
 
 @SuppressWarnings("unused")
 public class MagicTypes {
     public static void init() {
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(SOUL_SWORD.create(), plugin, "ancient_pedestal").
+                setRecipe(is(NETHERITE_SWORD), is(SOUL_SAND), is(SAND), is(SOUL_SAND), is(SAND), is(NETHER_STAR), is(SAND), is(SOUL_SAND), is(SAND)));
+    }
 
+    private static ItemStack is(Material material) {
+        return new ItemStack(material);
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();

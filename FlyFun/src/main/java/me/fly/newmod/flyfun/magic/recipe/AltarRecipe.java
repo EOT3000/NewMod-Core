@@ -7,6 +7,11 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * An altar recipe.
+ *
+ * @see AltarRecipeManager
+ */
 public class AltarRecipe implements Recipe, Keyed {
     private final ItemStack result;
     private final NamespacedKey key;
@@ -21,6 +26,16 @@ public class AltarRecipe implements Recipe, Keyed {
         this(result, new NamespacedKey(plugin, key));
     }
 
+    /**
+     * Sets the recipe ingredients. The order is like so:
+     *
+     * 812
+     * 703
+     * 654
+     *
+     * @param ingredients the ingredients to set to.
+     * @return this recipe.
+     */
     public AltarRecipe setRecipe(ItemStack... ingredients) {
         this.ingredients = ingredients;
 

@@ -26,16 +26,17 @@ public class AltarRecipeManager {
     }
 
     /**
-     * Gets the recipes by their center-top item.
+     * Gets the recipes by their center-top and center item.
      *
      * @param head the center-top item of the recipe.
-     * @return the recipes with a matching head.
+     * @param center the center item of the recipe.
+     * @return the recipes with a matching head and center.
      */
-    public Set<AltarRecipe> getRecipes(ItemStack head) {
+    public Set<AltarRecipe> getRecipes(ItemStack head, ItemStack center) {
         Set<AltarRecipe> set = new HashSet<>();
 
         for(AltarRecipe recipe : recipes.values()) {
-            if(head.isSimilar(recipe.getRecipe()[1])) {
+            if(head.isSimilar(recipe.getRecipe()[2]) && center.isSimilar(recipe.getRecipe()[0])) {
                 set.add(recipe);
             }
         }
