@@ -34,9 +34,8 @@ public class AltarRecipeManager {
      */
     public Set<AltarRecipe> getRecipes(ItemStack head, ItemStack center) {
         Set<AltarRecipe> set = new HashSet<>();
-
         for(AltarRecipe recipe : recipes.values()) {
-            if(head.isSimilar(recipe.getRecipe()[2]) && center.isSimilar(recipe.getRecipe()[0])) {
+            if(head.isSimilar(recipe.getRecipe()[1]) && center.isSimilar(recipe.getRecipe()[0])) {
                 set.add(recipe);
             }
         }

@@ -14,11 +14,11 @@ public class AltarRecipeChecker {
 
             items[0] = center;
 
-            Set<AltarRecipe> set = FlyFunPlugin.get().getAltarRecipeManager().getRecipes(items[0], center);
+            Set<AltarRecipe> set = FlyFunPlugin.get().getAltarRecipeManager().getRecipes(items[1], center);
 
             a: for(AltarRecipe recipe : set) {
                 for(int i = 0; i < 9; i++) {
-                    if(!recipe.getRecipe()[i].isSimilar(items[i])) {
+                    if (!recipe.getRecipe()[i].isSimilar(items[i])) {
                         continue a;
                     }
                 }

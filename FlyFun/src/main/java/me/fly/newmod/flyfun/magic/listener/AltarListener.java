@@ -7,6 +7,7 @@ import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.magic.MagicTypes;
 import me.fly.newmod.flyfun.magic.block.altar.Pedestal;
 import me.fly.newmod.flyfun.magic.recipe.AltarRecipeChecker;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -55,10 +56,21 @@ public class AltarListener implements Listener {
                     Recipe recipe = AltarRecipeChecker.checkRecipe(event.getClickedBlock().getLocation(), event.getItem());
 
                     if(recipe != null) {
+                        ItemStack stack = event.getPlayer().getInventory().getItem(event.getHand());
+
+                        if (stack.getAmount() == 1) {
+                            event.getPlayer().getInventory().setItem(event.getHand(), null);
+                        } else {
+                            stack.setAmount(stack.getAmount() - 1);
+                        }
+
                         AltarRecipeChecker.clear(event.getClickedBlock().getLocation());
 
                         Pedestal.setItemDisplay(recipe.getResult(), event.getClickedBlock().getLocation());
                         Pedestal.setNameDisplay(recipe.getResult().displayName(), event.getClickedBlock().getLocation());
+                    } else {
+                        //TODO: make the messages good
+                        event.getPlayer().sendMessage(ChatColor.RED + "I don't recognize this recipe ):");
                     }
                 }
             } else if(!event.hasItem()) {
