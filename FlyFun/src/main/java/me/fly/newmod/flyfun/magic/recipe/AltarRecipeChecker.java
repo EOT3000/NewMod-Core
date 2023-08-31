@@ -18,6 +18,10 @@ public class AltarRecipeChecker {
 
             a: for(AltarRecipe recipe : set) {
                 for(int i = 0; i < 9; i++) {
+                    if(items[i] == null || recipe.getRecipe()[i] == null) {
+                        return null;
+                    }
+
                     if (!recipe.getRecipe()[i].isSimilar(items[i])) {
                         continue a;
                     }
