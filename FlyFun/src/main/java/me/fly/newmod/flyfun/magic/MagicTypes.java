@@ -76,6 +76,6 @@ public class MagicTypes {
 
     public static final ModItem BROKEN_SPAWNER = item.createBuilder(SPAWNER, plugin, "broken_spawner").displayName("Broken Spawner", 0x8da2c4).category(MAGIC).build();
 
-    public static final ModItem REPAIRED_SPAWNER = item.createBuilder(SPAWNER, plugin, "fixed_spawner").displayName("Fixed Spawner", 0x8da2c4).category(MAGIC).build();
+    public static final ModItem REPAIRED_SPAWNER = item.createBuilder(SPAWNER, plugin, "repaired_spawner").displayName("Repaired Spawner", 0x8da2c4).category(MAGIC).build();
 
 }

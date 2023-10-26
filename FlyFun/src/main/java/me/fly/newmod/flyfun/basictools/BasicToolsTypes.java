@@ -11,11 +11,17 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("unused")
 public class BasicToolsTypes {
     public static void init() {
+        plugin.getGoldPanManager().setPanChance(Material.GRAVEL, new ItemStack(Material.FLINT), 1000);
+        plugin.getGoldPanManager().setPanChance(Material.GRAVEL, new ItemStack(Material.IRON_NUGGET), 350);
+        plugin.getGoldPanManager().setPanChance(Material.GRAVEL, new ItemStack(Material.GOLD_NUGGET), 40);
 
+
+        plugin.getGoldPanManager().setPanChance(Material.GOLD_NUGGET, new ItemStack(Material.FLINT), 40);
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
