@@ -1,6 +1,8 @@
 package me.fly.newmod.core.item;
 
 import me.fly.newmod.core.NewModPlugin;
+import me.fly.newmod.core.api.gear.DurabilityController;
+import me.fly.newmod.core.api.gear.GearManager;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.api.item.ModItemStack;
@@ -12,17 +14,23 @@ import me.fly.newmod.core.item.builder.ModItemBuilderImpl;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ItemManagerImpl implements ItemManager {
+public class ItemManagerImpl implements ItemManager, GearManager {
     public static final NamespacedKey ID = new NamespacedKey(NewModPlugin.get(), "id");
+    public static final NamespacedKey MAX_DURA = new NamespacedKey(NewModPlugin.get(), "max_durability");
+    public static final NamespacedKey DAMAGE = new NamespacedKey(NewModPlugin.get(), "damage");
 
     private final Map<Class<? extends ModItemData>, ModItemDataSerializer<?>> serializers = new HashMap<>();
     private final Map<NamespacedKey, ModItem> registry = new LinkedHashMap<>();
+
+    private final Map<ModItem, DurabilityController> durabilityControllers = new HashMap<>();
 
     @Override
     public void registerItem(ModItem item) {
@@ -107,5 +115,61 @@ public class ItemManagerImpl implements ItemManager {
         serializer.applyData(stack, data);
 
         return true;
+    }
+
+    @Override
+    public DurabilityController getController(ModItem item) {
+        return durabilityControllers.get(item);
+    }
+
+    @Override
+    public void setController(ModItem item, DurabilityController controller) {
+        durabilityControllers.put(item, controller);
+    }
+
+    @Override
+    public int getMaxDurability(ItemStack stack) {
+        int md = stack.getItemMeta().getPersistentDataContainer().getOrDefault(MAX_DURA, PersistentDataType.INTEGER, -1);
+
+        if(md == -1) {
+            md = stack.getType().getMaxDurability();
+        }
+
+        if(md <= 0) {
+            return -1;
+        }
+
+        return md;
+    }
+
+    @Override
+    public void setMaxDurability(ItemStack stack, int durability) {
+        stack.getPersistentDataContainer().set(MAX_DURA, PersistentDataType.INTEGER, durability);
+    }
+
+    @Override
+    public int getDamage(ItemStack stack) {
+        int d = stack.getItemMeta().getPersistentDataContainer().getOrDefault(DAMAGE, PersistentDataType.INTEGER, -1);
+
+        if(d == -1 && stack.getItemMeta() instanceof Damageable) {
+            d = ((Damageable) stack.getItemMeta()).getDamage();
+        }
+
+        if(d < 0) {
+            return -1;
+        }
+
+        return d;
+    }
+
+    @Override
+    public void setDamage(ItemStack stack, int damage) {
+        if(stack.getItemMeta().getPersistentDataContainer().has(DAMAGE, PersistentDataType.INTEGER)) {
+            stack.getItemMeta().getPersistentDataContainer().set(DAMAGE, PersistentDataType.INTEGER, damage);
+        }
+
+        double ratio = stack.getType().getMaxDurability()/(double) getMaxDurability(stack);
+
+        stack.setDamage((int) (damage*ratio));
     }
 }

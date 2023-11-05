@@ -4,6 +4,7 @@ import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
+import me.fly.newmod.core.api.gear.GearManager;
 import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.category.CategoryManager;
 import me.fly.newmod.core.api.item.category.ModItemCategory;
@@ -15,6 +16,7 @@ import me.fly.newmod.core.item.category.CategoryManagerImpl;
 import me.fly.newmod.core.item.category.ModItemCategoryImpl;
 import me.fly.newmod.core.listener.BlockListener;
 import me.fly.newmod.core.listener.CheatInventoryListener;
+import me.fly.newmod.core.listener.DurabilityListener;
 import me.fly.newmod.core.listener.VanillaReplacementListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -51,6 +53,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         Bukkit.getPluginManager().registerEvents(new CheatInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new VanillaReplacementListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
 
         category = categoryManager.createCategory(new NamespacedKey(instance, "all_items_category"), Material.COMPASS, Component.text("All Items").color(NamedTextColor.GRAY));
     }
@@ -72,6 +75,11 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
 
     @Override
     public ItemManager itemManager() {
+        return itemManager;
+    }
+
+    @Override
+    public GearManager gearManager() {
         return itemManager;
     }
 

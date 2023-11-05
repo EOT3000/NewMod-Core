@@ -1,6 +1,9 @@
 package me.fly.newmod.core.listener;
 
 import me.fly.newmod.core.NewModPlugin;
+import me.fly.newmod.core.api.gear.DurabilityController;
+import me.fly.newmod.core.api.gear.GearManager;
+import me.fly.newmod.core.api.item.ItemManager;
 import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.core.crafting.ShapedRecipeMatcher;
 import me.fly.newmod.core.crafting.ShapelessRecipeMatcher;
@@ -87,6 +90,20 @@ public class VanillaReplacementListener implements Listener {
         } else if(event.getRecipe() instanceof ShapelessRecipe recipe) {
             if(!ShapelessRecipeMatcher.matches(recipe, event.getInventory().getMatrix())) {
                 event.getInventory().setResult(null);
+            }
+        }
+
+        ItemStack result = event.getInventory().getResult();
+
+        if(result != null) {
+            GearManager gm = NewModPlugin.get().gearManager();
+            ItemManager im = NewModPlugin.get().itemManager();
+            DurabilityController controller = gm.getController(im.getType(result));
+
+            if(controller != null) {
+                gm.setMaxDurability(result, controller.getMaxDurabilityForCraft(result));
+
+                event.getInventory().setResult(result);
             }
         }
     }

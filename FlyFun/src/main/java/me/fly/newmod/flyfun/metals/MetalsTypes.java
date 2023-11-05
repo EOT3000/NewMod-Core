@@ -42,7 +42,4 @@ public class MetalsTypes {
     public static final ModItem ROSE_GOLD_DUST = item.createBuilder(Material.GLOWSTONE_DUST, plugin, "rose_gold_dust").displayName("Rose Gold Dust", 0xeffd2b3).category(METALS).build();
 
     public static final ModItem ROSE_GOLD_INGOT = item.createBuilder(Material.COPPER_INGOT, plugin, "rose_gold_ingot").displayName("Rose Gold Ingot", 0xeffd2b3).category(METALS).build();
-
-    public static final ModItem ROSE_GOLD_PICKAXE = item.createBuilder(Material.GOLDEN_PICKAXE, plugin, "rose_gold_pickaxe").displayName("Rose Gold Pickaxe", 0xeffd2b3).category(METALS).build();
-
 }
