@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -144,7 +145,11 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public void setMaxDurability(ItemStack stack, int durability) {
-        stack.getPersistentDataContainer().set(MAX_DURA, PersistentDataType.INTEGER, durability);
+        ItemMeta meta = stack.getItemMeta();
+
+        meta.getPersistentDataContainer().set(MAX_DURA, PersistentDataType.INTEGER, durability);
+
+        stack.setItemMeta(meta);
     }
 
     @Override
@@ -164,12 +169,21 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public void setDamage(ItemStack stack, int damage) {
-        if(stack.getItemMeta().getPersistentDataContainer().has(DAMAGE, PersistentDataType.INTEGER)) {
-            stack.getItemMeta().getPersistentDataContainer().set(DAMAGE, PersistentDataType.INTEGER, damage);
-        }
+        System.out.println("original damage: " + stack.getDamage());
 
-        double ratio = stack.getType().getMaxDurability()/(double) getMaxDurability(stack);
+        ItemMeta meta = stack.getItemMeta();
 
-        stack.setDamage((int) (damage*ratio));
+        meta.getPersistentDataContainer().set(DAMAGE, PersistentDataType.INTEGER, damage);
+
+        stack.setItemMeta(meta);
+
+        double ratio = stack.getType().getMaxDurability() / (double) getMaxDurability(stack);
+
+        stack.setDamage((int) (damage * ratio));
+
+        System.out.println("new item damage: " + stack.getDamage());
+
+        System.out.println();
+        System.out.println();
     }
 }

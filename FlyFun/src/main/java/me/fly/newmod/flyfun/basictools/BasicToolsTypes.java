@@ -20,14 +20,14 @@ import org.bukkit.inventory.ShapedRecipe;
 @SuppressWarnings("unused")
 public class BasicToolsTypes {
     private static final String[] AXE = new String[]{
-            " II",
-            " SI",
-            " S "};
+            "II",
+            "IS",
+            " S"};
 
     private static final String[] HOE = new String[]{
-            " II",
-            " S ",
-            " S "};
+            "II",
+            " S",
+            " S"};
 
     private static final String[] PICKAXE = new String[]{
             "III",
@@ -35,14 +35,14 @@ public class BasicToolsTypes {
             " S "};
 
     private static final String[] SHOVEL = new String[]{
-            " I ",
-            " S ",
-            " S "};
+            "I",
+            "S",
+            "S"};
 
     private static final String[] SWORD = new String[]{
-            " I ",
-            " I ",
-            " S "};
+            "I",
+            "I",
+            "S"};
 
     public static void init() {
         plugin.getGoldPanManager().setPanChance(Material.GRAVEL, new ItemStack(Material.FLINT), 1000);

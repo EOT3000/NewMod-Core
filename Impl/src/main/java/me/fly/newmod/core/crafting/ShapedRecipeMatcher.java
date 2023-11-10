@@ -7,6 +7,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 
+import java.util.Arrays;
+
 public class ShapedRecipeMatcher {
     public static boolean matches(CraftingInventory inventory) {
         ItemStack[] i = inventory.getMatrix();
