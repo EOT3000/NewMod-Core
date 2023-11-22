@@ -7,6 +7,8 @@ import me.fly.newmod.core.api.item.ModItem;
  */
 public interface FoodManager {
 
+    //TODO: add magic powders and reference Charley Patton's 'Just a Spoonful' in the lore.
+
     /**
      * Gets if this mod item is a food.
      *

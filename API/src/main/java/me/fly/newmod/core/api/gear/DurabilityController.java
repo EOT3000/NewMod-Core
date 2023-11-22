@@ -10,7 +10,7 @@ public interface DurabilityController {
      * Called whenever a registered item is crafted. The return value of this method will be the maximum durability for the item.
      *
      * @param stack the crafted item.
-     * @return the max durability the item shoudl have.
+     * @return the max durability the item should have.
      */
     int getMaxDurabilityForCraft(ItemStack stack);
 }

@@ -169,8 +169,6 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public void setDamage(ItemStack stack, int damage) {
-        System.out.println("original damage: " + stack.getDamage());
-
         ItemMeta meta = stack.getItemMeta();
 
         meta.getPersistentDataContainer().set(DAMAGE, PersistentDataType.INTEGER, damage);
@@ -179,11 +177,6 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
         double ratio = stack.getType().getMaxDurability() / (double) getMaxDurability(stack);
 
-        stack.setDamage((int) (damage * ratio));
-
-        System.out.println("new item damage: " + stack.getDamage());
-
-        System.out.println();
-        System.out.println();
+        stack.setDamage((int) Math.ceil(damage * ratio));
     }
 }

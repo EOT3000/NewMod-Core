@@ -14,4 +14,6 @@ public class DurabilityListener implements Listener {
         GearManager gm = NewModPlugin.get().gearManager();
         gm.setDamage(event.getItem(), gm.getDamage(event.getItem())+changeDura);
     }
+
+    // Crafting durability found in VanillaReplacementListener
 }

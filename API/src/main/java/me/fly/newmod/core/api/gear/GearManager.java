@@ -56,14 +56,22 @@ public interface GearManager {
      */
     void setController(ModItem item, DurabilityController controller);
 
+
+
     /**
      * The four armor sections.
      */
     enum ArmorSection {
-        HELMET,
-        CHESTPLATE,
-        LEGGINGS,
-        BOOTS
+        HELMET(0.3f),
+        CHESTPLATE(0.3f),
+        LEGGINGS(0.25f),
+        BOOTS(0.15f);
+
+        public final float modifier;
+
+        ArmorSection(float modifier) {
+            this.modifier = modifier;
+        }
     }
 
 }
