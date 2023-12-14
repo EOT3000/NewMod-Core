@@ -3,9 +3,9 @@ package me.fly.newmod.core.util;
 import java.util.Objects;
 
 public class Triple<X, Y, Z> {
-    private final X key;
-    private final Y value1;
-    private final Z value2;
+    public final X key;
+    public final Y value1;
+    public final Z value2;
 
     public Triple(X key, Y value1, Z value2) {
         this.key = key;

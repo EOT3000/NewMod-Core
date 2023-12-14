@@ -1,5 +1,6 @@
 package me.fly.newmod.core.api.block;
 
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 
@@ -8,19 +9,27 @@ import org.bukkit.block.Block;
  */
 public interface BlockManager {
     /**
-     * Registers an block to this manager.
+     * Registers a block to this manager.
      *
      * @param block the block to register.
      */
     void registerBlock(ModBlock block);
 
     /**
-     * Attempts to find this BlockStack's ModBlock.
+     * Attempts to find the ModBlock at the provided block.
      *
-     * @param block the BlockStack to check.
+     * @param block the block to check.
      * @return the found ModBlock, or null if none could be found.
      */
     ModBlock getType(Block block);
+
+    /**
+     * Attempts to find the ModBlock at the provided block.
+     *
+     * @param block the block to check.
+     * @return the found ModBlock, or null if none could be found.
+     */
+    ModBlock getType(Location block);
 
     /**
      * Attempts to find the ModBlock of this NamespacedKey
@@ -31,7 +40,7 @@ public interface BlockManager {
     ModBlock getType(NamespacedKey key);
 
     /**
-     * Sets the block type of this block. Overrides previous data. Does not place the block in the world.
+     * Sets the block type of this block. This method overrides previous data and does not physically place the block in the world.
      *
      * @param block the block to set.
      * @param type the type to set to.

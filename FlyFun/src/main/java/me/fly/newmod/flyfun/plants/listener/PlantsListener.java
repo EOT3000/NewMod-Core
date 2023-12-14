@@ -84,7 +84,7 @@ public class PlantsListener implements Listener {
 
     @EventHandler
     public void onStructureGrow(StructureGrowEvent event) {
-        ModBlock b = block.getType(event.getLocation().getBlock());
+        ModBlock b = block.getType(event.getLocation());
 
         //TODO: expand this to any bush
         if(b instanceof TeaPlant t) {

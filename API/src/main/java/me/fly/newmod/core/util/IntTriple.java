@@ -4,12 +4,13 @@ import org.bukkit.Location;
 
 import java.util.Objects;
 
-public class IntTriple {
+public class IntTriple extends Triple<Integer, Integer, Integer> {
     public final int x;
     public final int y;
     public final int z;
 
     public IntTriple(int x, int y, int z) {
+        super(x,y,z);
         this.x = x;
         this.y = y;
         this.z = z;

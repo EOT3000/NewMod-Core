@@ -1,6 +1,7 @@
 package me.fly.newmod.core.api.block;
 
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -103,5 +104,14 @@ public interface ModBlock {
      */
     default List<ItemStack> getDrops(Block block, Player breaker) {
         return new ArrayList<>();
+    }
+
+    /**
+     * Ticks the block.
+     *
+     * @param block the block to tick.
+     */
+    default void tick(Block block) {
+
     }
 }

@@ -6,6 +6,7 @@ import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
 import me.fly.newmod.core.api.blockstorage.StoredBlock;
 import me.fly.newmod.core.util.PersistentDataUtil;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 
@@ -24,13 +25,18 @@ public class BlockManagerImpl implements BlockManager {
 
     @Override
     public ModBlock getType(Block block) {
+        return getType(block.getLocation());
+    }
+
+    @Override
+    public ModBlock getType(Location block) {
         BlockStorage storage = NewModPlugin.get().blockStorage();
 
         if(block == null) {
             return null;
         }
 
-        StoredBlock b = storage.getBlock(block.getLocation());
+        StoredBlock b = storage.getBlock(block);
 
         if(!b.hasData(ID, BlockStorage.StorageType.BLOCK_DATA)) {
             return null;
