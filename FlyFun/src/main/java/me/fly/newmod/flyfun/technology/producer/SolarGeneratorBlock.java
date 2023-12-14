@@ -4,7 +4,6 @@ import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.technology.EnergyComponent;
-import me.fly.newmod.flyfun.technology.link.SolarLinkBlockType;
 import me.fly.newmod.flyfun.technology.util.EnergyUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -81,7 +80,7 @@ public class SolarGeneratorBlock implements ModBlock, EnergyComponent {
 
         EnergyUtil.addCharge(block.getLocation(), (int) Math.round(power), capacity);
 
-        if(bm.getType(block.getLocation().clone().subtract(0, 1, 0)) instanceof SolarLinkBlockType) {
+        if(bm.getType(block.getLocation().clone().subtract(0, 1, 0)) instanceof Object) {
         
         }
     }
