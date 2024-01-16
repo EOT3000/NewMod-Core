@@ -50,7 +50,8 @@ public class BasicToolsTypes {
         plugin.getGoldPanManager().setPanChance(Material.GRAVEL, new ItemStack(Material.GOLD_NUGGET), 40);
 
 
-        plugin.getGoldPanManager().setPanChance(Material.GOLD_NUGGET, new ItemStack(Material.FLINT), 40);
+        //I have no idea what this code means
+        //plugin.getGoldPanManager().setPanChance(Material.GOLD_NUGGET, new ItemStack(Material.FLINT), 40);
 
         addTool(AXE, ROSE_GOLD_AXE, MetalsTypes.ROSE_GOLD_INGOT.create());
         addTool(HOE, ROSE_GOLD_HOE, MetalsTypes.ROSE_GOLD_INGOT.create());
@@ -65,6 +66,8 @@ public class BasicToolsTypes {
         gm.setController(ROSE_GOLD_PICKAXE, (x) -> 180);
         gm.setController(ROSE_GOLD_SHOVEL, (x) -> 180);
         gm.setController(ROSE_GOLD_SWORD, (x) -> 180);
+
+        gm.setMiningLevel(ROSE_GOLD_PICKAXE, 2);
     }
 
     private static void addTool(String[] shape, ModItem result, ItemStack ingredient) {

@@ -59,10 +59,10 @@ public class MagicTypes {
             BLAZE_POWDER, Component.text("Magic").color(NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false), Component.text(""), Component.text("Magical items").decoration(TextDecoration.ITALIC, false));
 
     public static final ModItem ANCIENT_PEDESTAL = item.createBuilder(DISPENSER, plugin, "ancient_pedestal").block(new AncientPedestal()).displayName("Ancient Pedestal", NamedTextColor.GRAY)
-            .addLore(Component.text("")).addLore(Component.text("Created by TheBusyBiscuit for Slimefun").decoration(TextDecoration.ITALIC, false)).category(MAGIC).build();
+            .addLore(Component.text("")).addLore(Component.text("Originally Created by Slimefun Devs").decoration(TextDecoration.ITALIC, false)).category(MAGIC).build();
 
     public static final ModItem ANCIENT_ALTAR = item.createBuilder(ENCHANTING_TABLE, plugin, "ancient_altar").block(new BasicBlock(plugin, "ancient_altar", ENCHANTING_TABLE)).displayName("Ancient Altar", NamedTextColor.DARK_PURPLE)
-            .addLore(Component.text("")).addLore(Component.text("Created by TheBusyBiscuit for Slimefun").decoration(TextDecoration.ITALIC, false)).category(MAGIC).build();
+            .addLore(Component.text("")).addLore(Component.text("Originally Created by Slimefun Devs").decoration(TextDecoration.ITALIC, false)).category(MAGIC).build();
 
     public static final ModItem SOUL_JAR = item.createBuilder(GLASS_BOTTLE, plugin, "soul_jar").displayName("Soul Jar", 0xdfcf3e).category(MAGIC).build();
 

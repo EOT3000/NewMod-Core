@@ -56,7 +56,23 @@ public interface GearManager {
      */
     void setController(ModItem item, DurabilityController controller);
 
+    /**
+     * Sets a mining level for the pickaxe.
+     *
+     * See https://minecraft.wiki/w/Tiers#Mining_level
+     *
+     * @param item the pickaxe to set the level for.
+     * @param level the mining level.
+     */
+    void setMiningLevel(ModItem item, int level);
 
+    /**
+     * Gets the mining level for this pickaxe.
+     *
+     * @param item the pickaxe to check.
+     * @return the mining level of the pickaxe.
+     */
+    int getMiningLevel(ModItem item);
 
     /**
      * The four armor sections.

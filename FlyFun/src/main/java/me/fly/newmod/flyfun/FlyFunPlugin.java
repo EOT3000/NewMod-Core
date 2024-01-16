@@ -10,6 +10,8 @@ import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
 import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
+import me.fly.newmod.flyfun.history.HistoryListener;
+import me.fly.newmod.flyfun.horn.HornListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
 import me.fly.newmod.flyfun.magic.listener.AltarListener;
 import me.fly.newmod.flyfun.magic.listener.SoulToolListener;
@@ -18,8 +20,14 @@ import me.fly.newmod.flyfun.metals.MetalsTypes;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import me.fly.newmod.flyfun.plants.listener.PlantsListener;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public NewModAPI api;
@@ -62,6 +70,14 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
+        Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        HornListener.playAt(new Location(((Player) sender).getWorld(), 0, 64, 0), Sound.ITEM_GOAT_HORN_SOUND_0);
+
+        return true;
     }
 
     public FlyFunPlugin() {

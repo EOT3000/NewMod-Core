@@ -19,6 +19,8 @@ import org.bukkit.inventory.ShapedRecipe;
 
 public class FoodsTypes {
     public static void init() {
+        addBreadRecipe(FLOUR, new ItemStack(Material.BREAD), "bread");
+        addBreadRecipe(WATTLE_FLOUR, WATTLE_BREAD.create(), "wattle_bread");
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
@@ -35,7 +37,7 @@ public class FoodsTypes {
 
     public static final ModItem WATTLE_BREAD = item.createBuilder(Material.BREAD, plugin, "wattle_bread").displayName("Wattle Bread", 0xa88847).category(FOODS).build();
 
-    private void addBreadRecipe(ModItem flour, ItemStack result, String key) {
+    private static void addBreadRecipe(ModItem flour, ItemStack result, String key) {
         ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, key), result);
 
         recipe.shape("FFF");

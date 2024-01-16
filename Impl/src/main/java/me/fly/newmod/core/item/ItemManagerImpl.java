@@ -32,6 +32,7 @@ public class ItemManagerImpl implements ItemManager, GearManager {
     private final Map<NamespacedKey, ModItem> registry = new LinkedHashMap<>();
 
     private final Map<ModItem, DurabilityController> durabilityControllers = new HashMap<>();
+    private final Map<ModItem, Integer> miningLevel = new HashMap<>();
 
     @Override
     public void registerItem(ModItem item) {
@@ -126,6 +127,16 @@ public class ItemManagerImpl implements ItemManager, GearManager {
     @Override
     public void setController(ModItem item, DurabilityController controller) {
         durabilityControllers.put(item, controller);
+    }
+
+    @Override
+    public void setMiningLevel(ModItem item, int level) {
+        miningLevel.put(item, level);
+    }
+
+    @Override
+    public int getMiningLevel(ModItem item) {
+        return miningLevel.get(item);
     }
 
     @Override

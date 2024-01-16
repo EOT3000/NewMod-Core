@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 public class PlantsTypes {
     public static void init() {
         //TODO: do better
+        //added 1/16/2024: maybe seedlings shouldn't drop seeds?
         //RED_CHERRY_SEEDLING.drop = CHERRY_SEEDS.create();
         //ACACIA_SEEDLING.drop = ACACIA_SEEDS.create();
         //TEA_SEEDLING.drop = TEA_SEEDS.create();
