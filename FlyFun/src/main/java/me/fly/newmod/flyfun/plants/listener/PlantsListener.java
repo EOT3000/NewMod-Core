@@ -5,7 +5,6 @@ import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.block.BlockManager;
 import me.fly.newmod.core.api.block.ModBlock;
 import me.fly.newmod.core.api.blockstorage.BlockStorage;
-import me.fly.newmod.core.api.item.ModItem;
 import me.fly.newmod.flyfun.FlyFunPlugin;
 import me.fly.newmod.flyfun.plants.PlantsTypes;
 import me.fly.newmod.flyfun.plants.block.Seedling;
@@ -72,7 +71,7 @@ public class PlantsListener implements Listener {
         }
 
         switch (event.getBlock().getType()) {
-            case ACACIA_LEAVES -> dropItem(event.getBlock().getLocation(), PlantsTypes.ACACIA_SEEDS.create());
+            case ACACIA_LEAVES -> dropItem(event.getBlock().getLocation(), PlantsTypes.WATTLESEED.create());
             case CHERRY_LEAVES -> dropItem(event.getBlock().getLocation(), PlantsTypes.RED_CHERRIES.create());
             case OAK_LEAVES,DARK_OAK_LEAVES -> dropItem(event.getBlock().getLocation(), new ItemStack(Material.APPLE));
         }

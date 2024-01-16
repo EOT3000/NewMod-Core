@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 public class PlantsTypes {
     public static void init() {
         //TODO: do better
-        RED_CHERRY_SEEDLING.drop = CHERRY_SEEDS.create();
-        ACACIA_SEEDLING.drop = ACACIA_SEEDS.create();
-        TEA_SEEDLING.drop = TEA_SEEDS.create();
+        //RED_CHERRY_SEEDLING.drop = CHERRY_SEEDS.create();
+        //ACACIA_SEEDLING.drop = ACACIA_SEEDS.create();
+        //TEA_SEEDLING.drop = TEA_SEEDS.create();
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
@@ -44,8 +44,8 @@ public class PlantsTypes {
 
     public static final ModItem RED_CHERRIES = item.createBuilder(Material.SWEET_BERRIES, plugin, "red_cherries").block(RED_CHERRY_SEEDLING).displayName("Red Cherries", NamedTextColor.DARK_RED).category(PLANTS).build();
 
-    public static final ModItem CHERRY_SEEDS = item.createBuilder(Material.PUMPKIN_SEEDS, plugin, "cherry_seeds").block(RED_CHERRY_SEEDLING).displayName("Cherry Seeds", NamedTextColor.DARK_RED).category(PLANTS).build();
-    public static final ModItem ACACIA_SEEDS = item.createBuilder(Material.MELON_SEEDS, plugin, "acacia_seeds").block(ACACIA_SEEDLING).displayName("Acacia Seeds", NamedTextColor.DARK_GRAY).category(PLANTS).build();
+    //public static final ModItem CHERRY_SEEDS = item.createBuilder(Material.PUMPKIN_SEEDS, plugin, "cherry_seeds").block(RED_CHERRY_SEEDLING).displayName("Cherry Seeds", NamedTextColor.DARK_RED).category(PLANTS).build();
+    public static final ModItem WATTLESEED = item.createBuilder(Material.MELON_SEEDS, plugin, "wattleseed").block(ACACIA_SEEDLING).displayName("Wattleseed", NamedTextColor.DARK_GRAY).category(PLANTS).build();
 
     public static final TeaPlant TEA_PLANT = new TeaPlant();
     public static final Seedling TEA_SEEDLING = new Seedling("tea_seeds", new ModSeedlingConsumer(TEA_PLANT));
