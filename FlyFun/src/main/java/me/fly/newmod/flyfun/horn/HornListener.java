@@ -7,7 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.GenericGameEvent;
 import org.bukkit.inventory.meta.MusicInstrumentMeta;
-import org.bukkit.util.Vector;
 
 import static org.bukkit.MusicInstrument.*;
 import static org.bukkit.MusicInstrument.DREAM;
@@ -36,18 +35,20 @@ public class HornListener implements Listener {
 
     public static void playAt(Location location, Sound horn) {
         for(Player p : location.getNearbyPlayers(1800)) {
-            if(location.distance(p.getLocation()) != 0) {
+            /*if(location.distance(p.getLocation()) != 0) {
                 Vector vector = location.clone().subtract(p.getLocation()).toVector().normalize();
 
                 p.playSound(p.getLocation().add(vector), horn, volumeAtDistance((int) location.distance(p.getLocation())), 1);
             } else {
                 p.playSound(p.getLocation(), horn, volumeAtDistance(1), 1);
-            }
+            }*/
+
+            p.playSound(location, horn, 112, 1);
         }
     }
 
-    private static int volumeAtDistance(int d) {
-        return (int) (5000.0/(d+200.0)-2.5);
+    private static float volumeAtDistance(int d) {
+        return (float) (5000.0/(d+200.0)-2.5)/15;
     }
 
     private static Sound getHorn(Player player) {

@@ -26,21 +26,21 @@ public class VanillaArmorController implements ArmorController {
 
     @Override
     public IntTriple getReducedDamagesEntity(Entity damaged, int rawDamage, EntityDamageEvent.DamageCause type, Entity cause) {
-        return 0;
+        return null;
     }
 
     @Override
     public IntTriple getReducedDamagesBlock(Entity damaged, int rawDamage, EntityDamageEvent.DamageCause type, Block cause, BlockState causeState) {
         return switch (type) {
             //Vanilla armor does not reduce the following damage
-            case VOID, CUSTOM, SUICIDE, STARVATION, SONIC_BOOM -> rawDamage;
-            default -> rawDamage - ReductionUtil.;
+            case VOID, CUSTOM, SUICIDE, STARVATION, SONIC_BOOM -> null;
+            default -> null;
         };
 
     }
 
     @Override
     public IntTriple getReducedDamagesSelf(Entity damaged, int rawDamage, EntityDamageEvent.DamageCause type) {
-        return 0;
+        return null;
     }
 }
