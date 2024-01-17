@@ -14,10 +14,7 @@ import me.fly.newmod.core.command.CheatCommand;
 import me.fly.newmod.core.item.ItemManagerImpl;
 import me.fly.newmod.core.item.category.CategoryManagerImpl;
 import me.fly.newmod.core.item.category.ModItemCategoryImpl;
-import me.fly.newmod.core.listener.BlockListener;
-import me.fly.newmod.core.listener.CheatInventoryListener;
-import me.fly.newmod.core.listener.DurabilityListener;
-import me.fly.newmod.core.listener.VanillaReplacementListener;
+import me.fly.newmod.core.listener.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -54,6 +51,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         Bukkit.getPluginManager().registerEvents(new VanillaReplacementListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MiningLevelListener(), this);
 
         category = categoryManager.createCategory(new NamespacedKey(instance, "all_items_category"), Material.COMPASS, Component.text("All Items").color(NamedTextColor.GRAY));
     }

@@ -25,7 +25,7 @@ public class BlockManagerImpl implements BlockManager {
 
     @Override
     public ModBlock getType(Block block) {
-        return getType(block.getLocation());
+        return block != null ? getType(block.getLocation()) : null;
     }
 
     @Override
