@@ -38,6 +38,11 @@
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.tommyettinger</groupId>
+            <artifactId>colorful</artifactId>
+            <version>0.8.5</version>
+        </dependency>
     </dependencies>
 
 </project>
