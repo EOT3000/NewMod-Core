@@ -65,11 +65,31 @@ public enum MapColor {
     GLOW_LICHEN(61, 8365974);
 
     public final int id, color;
+    public final int var0, var1, var3;
+
+    public static final double VAR0 = 180/255.0;
+    public static final double VAR1 = 220/255.0;
+    public static final double VAR3 = 135/255.0;
 
     MapColor(int id, int color) {
+        int r = toInts(color)[0];
+        int g = toInts(color)[1];
+        int b = toInts(color)[2];
+
         this.id = id;
         this.color = color;
+
+        this.var0 = asInt((int) (r*VAR0), (int) (g*VAR0), (int) (b*VAR0));
+        this.var1 = asInt((int) (r*VAR1), (int) (g*VAR1), (int) (b*VAR1));
+        this.var3 = asInt((int) (r*VAR3), (int) (g*VAR3), (int) (b*VAR3));
     }
 
+    int[] toInts(int intt) {
+        return new int[]{intt >> 16 & 255, intt >> 8 & 255, intt & 255};
+    }
+
+    int asInt(int r, int g, int bl) {
+        return r << 16 | g << 8 | bl;
+    }
 
 }
