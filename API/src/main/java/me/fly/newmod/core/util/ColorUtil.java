@@ -2,6 +2,8 @@ package me.fly.newmod.core.util;
 
 import com.github.tommyettinger.colorful.oklab.ColorTools;
 import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -9,6 +11,28 @@ import java.io.File;
 import java.util.*;
 
 public class ColorUtil {
+    private static List<IntObjectPair<int[]>> colors = new ArrayList<>();
+    private static List<IntObjectPair<double[]>> colorsLab = new ArrayList<>();
+
+    static {
+        for (MapColor color : MapColor.values()) {
+            if (color.equals(MapColor.NONE)) {
+                continue;
+            }
+
+            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 0, toInts(color.var0)));
+            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 1, toInts(color.var1)));
+            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 2, toInts(color.color)));
+            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 3, toInts(color.var3)));
+        }
+
+        for (IntObjectPair<int[]> color : colors) {
+            double[] lab = rgbToOklab(color.second()[0], color.second()[1], color.second()[2]);
+
+            colorsLab.add(new IntObjectImmutablePair<>(color.firstInt(), lab));
+        }
+    }
+
     public static double clamp(double value, double min, double max) {
         return Math.max(Math.min(value, max), min);
     }
@@ -98,13 +122,20 @@ public class ColorUtil {
                 (b1 - b2) * (b1 - b2);
     }
 
-    public static double distanceOkLab(int r1, int g1, int b1, int r2, int g2, int b2) {
+    //TODO: use better color diff algorithm
+    public static double distanceRgbUsingOkLab(int r1, int g1, int b1, int r2, int g2, int b2) {
         double[] first = rgbToOklab(r1, g1, b1);
         double[] secnd = rgbToOklab(r2, g2, b2);
 
         return (first[0] - secnd[0]) * (first[0] - secnd[0]) +
                 (first[1] - secnd[1]) * (first[1] - secnd[1]) * 2 +
                 (first[2] - secnd[2]) * (first[2] - secnd[2]) * 2;
+    }
+
+    public static double distanceSquaredOkLab(double L1, double a1, double b1, double L2, double a2, double b2) {
+        return (L1-L2)*(L1-L2)+
+                (a1-a2)*(a1-a2)+
+                (b1-b2)*(b1-b2);
     }
 
     public static int findBest(int[] input, List<int[]> options, DistanceCalculator calculator) {
@@ -133,6 +164,23 @@ public class ColorUtil {
         }
 
         return result;
+    }
+
+    public static byte findClosestColor(double L, double a, double b) {
+        //Use the naive approach ):
+
+        double closest = 1000000;
+        byte closestColor = 4;
+
+        for(IntObjectPair<double[]> color : colorsLab) {
+            double dist = distanceSquaredOkLab(color.second()[0], color.second()[1], color.second()[2], L, a, b);
+            if(dist < closest) {
+                closest = dist;
+                closestColor = (byte) (color.keyInt()-128);
+            }
+        }
+
+        return closestColor;
     }
 
     public static void main(String[] args) throws Exception {
