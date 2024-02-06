@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import me.fly.newmod.flyfun.camera.texture.TextureDeserializer;
 import me.fly.newmod.flyfun.camera.texture.TexturedBlock;
+import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
 import java.io.File;
@@ -13,11 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Textures {
+    public static final Textures me = new Textures();
+
     public static final TexturedBlock FAILED_TO_LOAD = (x, y, face, data, brightness) -> (x/8+y/8)%2==0
             ? (short) (186)
             : (short) (119);
 
     final Map<String, String> textureDir = new HashMap<>();
+
+    private final Map<Material, TexturedBlock> textures = new HashMap<>();
 
     public static final double[][] DARKNESS_MODIFIERS = {
             {0.139, 0.139, 0.139},
@@ -50,8 +55,10 @@ public class Textures {
 
                 TexturedBlock block = gson.fromJson(reader, TexturedBlock.class);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
+
+            new Material().createBlockData()
         }
     }
 }
