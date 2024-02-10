@@ -20,8 +20,6 @@ public class TopSideBlockModel implements BlockModel {
     public byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
         TextureData16x16 use;
 
-        System.out.println(face);
-
         switch (face) {
             case NORTH:
             case SOUTH:
@@ -34,7 +32,6 @@ public class TopSideBlockModel implements BlockModel {
                 use = end;
                 break;
             default:
-                System.out.println("defaulted");
                 return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
         }
 

@@ -13,7 +13,7 @@ import me.fly.newmod.flyfun.books.listener.BooksListener;
 import me.fly.newmod.flyfun.camera.Camera;
 import me.fly.newmod.flyfun.camera.Textures;
 import me.fly.newmod.flyfun.camera.model.BlockModel;
-import me.fly.newmod.flyfun.camera.model.SixSidedBlockModel;
+import me.fly.newmod.flyfun.camera.model.AllSidesBlockModel;
 import me.fly.newmod.flyfun.history.HistoryListener;
 import me.fly.newmod.flyfun.horn.HornListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
@@ -32,7 +32,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
@@ -41,7 +40,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public NewModAPI api;
@@ -110,7 +108,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
             byte[][] camera = new byte[128][128];
 
-            if(model instanceof SixSidedBlockModel) {
+            if(model instanceof AllSidesBlockModel) {
 
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
@@ -129,11 +127,11 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         for (int b = 0; b < 8; b++) {
-                            camera[b*16+x][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
+                            camera[b*16+x][y] = model.getMapColor(x, y, BlockFace.UP, null, b);
                         }
 
                         for (int b = 0; b < 8; b++) {
-                            camera[b*16+x][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
+                            camera[b*16+x][y+16] = model.getMapColor(x, y, BlockFace.UP, null, b+8);
                         }
 
                         for (int b = 0; b < 8; b++) {

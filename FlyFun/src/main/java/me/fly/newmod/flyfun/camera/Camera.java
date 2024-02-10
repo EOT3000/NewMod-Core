@@ -23,14 +23,14 @@ public class Camera {
 
         for(int x = 0; x < 128; x+=8) {
             for(int y = 0; y < 128; y+=8) {
-                Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, 0, -0.5+y/128.0)).subtract(location.toVector());
+                Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, -0.5+y/128.0, 1)).subtract(location.toVector());
 
                 RayTraceResult result = location.getWorld().rayTraceBlocks(location, vector, 512, FluidCollisionMode.ALWAYS, false);
 
                 if(result != null) {
 
-                    System.out.println("ray " + x + "," + y + "hit!");
-                    System.out.println(result);
+                    //System.out.println("ray " + x + "," + y + "hit!");
+                    //System.out.println(result);
 
                     BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
 
@@ -40,14 +40,14 @@ public class Camera {
 
                     IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted);
 
-                    System.out.println("adjusted coordinate: " + pair.firstInt() + "," + pair.secondInt());
-                    System.out.println("adjusted face: " + adjustedFace);
+                    //System.out.println("adjusted coordinate: " + pair.firstInt() + "," + pair.secondInt());
+                    //System.out.println("adjusted face: " + adjustedFace);
 
                     byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
                             null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
                     data[x][y] = color;
                 } else {
-                    System.out.println("ray " + x + "," + y + "missed");
+                    //System.out.println("ray " + x + "," + y + "missed");
                 }
             }
 
