@@ -30,6 +30,14 @@ public class BlockStates {
         return Textures.FAILED_TO_LOAD_STATES.getState(null);
     }
 
+    public void print() {
+        for(BlockState st : s) {
+            System.out.println(st.x);
+            System.out.println(st.y);
+            System.out.println(st.model);
+        }
+    }
+
     public List<BlockState> getStates() {
         return new ArrayList<>(s);
     }

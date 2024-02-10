@@ -64,28 +64,28 @@ public class GetImagePixel {
 
         switch (face) {
             case UP -> {
-                x1 = (int) ((location.getBlockX()-location.getX())*16.0);
-                y1 = (int) ((location.getBlockZ()-location.getZ())*16.0);
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
             }
             case DOWN -> {
-                x1 = (int) ((location.getBlockX()-location.getX())*16.0);
-                y1 = 16-(int) ((location.getBlockZ()-location.getZ())*16.0);
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = 16-(int) ((location.getZ()-location.getBlockZ())*16.0);
             }
             case NORTH -> {
-                x1 = 16-(int) ((location.getBlockX()-location.getX())*16.0);
-                y1 = 16-(int) ((location.getBlockY()-location.getY())*16.0);
+                x1 = 16-(int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case EAST -> {
-                x1 = 16-(int) ((location.getBlockZ()-location.getZ())*16.0);
-                y1 = 16-(int) ((location.getBlockY()-location.getY())*16.0);
+                x1 = 16-(int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case SOUTH -> {
-                x1 = (int) ((location.getBlockX()-location.getX())*16.0);
-                y1 = 16-(int) ((location.getBlockY()-location.getY())*16.0);
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case WEST -> {
-                x1 = (int) ((location.getBlockZ()-location.getZ())*16.0);
-                y1 = 16-(int) ((location.getBlockY()-location.getY())*16.0);
+                x1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
             }
         }
 

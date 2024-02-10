@@ -67,7 +67,7 @@ public class Textures {
 
                 for(int i = 0; i < 16; i++) {
                     if((x+y)%2 == 0) {
-                        storedColor[i*256+x*16+y] = (byte) (186);
+                        storedColor[i*256+x*16+y] = (byte) (112);
                     } else {
                         storedColor[i*256+x*16+y] = (byte) (119);
                     }
@@ -125,6 +125,8 @@ public class Textures {
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
 
                 this.models.put(model.getName().replace(".json", ""), block);
+
+                //if(block instanceof TOP)
             } catch (Exception e) {
                 e.printStackTrace();
             }

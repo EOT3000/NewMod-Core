@@ -1,6 +1,6 @@
 name: FlyFun
 main: me.fly.newmod.flyfun.FlyFunPlugin
-version: Pre-Alpha_1.1
+version: Pre-Alpha_1.2
 api-version: 1.20
 depend:
   - NewMod-Core

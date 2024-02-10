@@ -176,7 +176,7 @@ public class ColorUtil {
             double dist = distanceSquaredOkLab(color.second()[0], color.second()[1], color.second()[2], L, a, b);
             if(dist < closest) {
                 closest = dist;
-                closestColor = (byte) (color.keyInt()-128);
+                closestColor = (byte) (color.keyInt());
             }
         }
 

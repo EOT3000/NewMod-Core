@@ -23,7 +23,7 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
 
             if (parent.equals("minecraft:block/cube_all")) {
                 return new SixSidedBlockModel(textures.getTexture(texturesObj.get("all").getAsString()));
-            } else if (parent.equals("minecraft:block/cube_column")) {
+            } else if (parent.equals("minecraft:block/cube_column") || parent.equals("minecraft:block/cube_column_horizontal")) {
                 return new TopSideBlockModel(
                         textures.getTexture(texturesObj.get("end").getAsString()),
                         textures.getTexture(texturesObj.get("side").getAsString()));

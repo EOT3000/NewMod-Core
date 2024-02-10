@@ -28,7 +28,7 @@ public class TextureLoadUtil {
                     //If it has more than 25/255 transparency then palette color needs to be recalculated for the individual pixel. Otherwise am not going to bother
                     if(alpha < 230) {
                         for(int i = 0; i < 16; i++) {
-                            storedColor[i*256+x*16+y] = -128;
+                            storedColor[i*256+x*16+y] = 0;
                         }
                     } else {
                         for(int i = 0; i < 16; i++) {
