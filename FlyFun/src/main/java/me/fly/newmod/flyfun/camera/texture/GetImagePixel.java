@@ -32,7 +32,7 @@ public class GetImagePixel {
                         mz = nz;
                     }
 
-                    for(int yy = 0; yy < x; yy++) {
+                    for(int yy = 0; yy < y; yy++) {
                         int nx = mz;
                         int nz = -mx;
 

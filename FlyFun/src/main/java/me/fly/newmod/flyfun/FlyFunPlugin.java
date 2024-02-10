@@ -177,6 +177,8 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         view.addRenderer(new Camera.Renderer(camera));
 
+        view.setLocked(true);
+
         meta.setMapView(view);
 
         stack.setItemMeta(meta);

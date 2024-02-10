@@ -74,6 +74,6 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
             };
         }
 
-        return null;
+        return (j) -> true;
     }
 }

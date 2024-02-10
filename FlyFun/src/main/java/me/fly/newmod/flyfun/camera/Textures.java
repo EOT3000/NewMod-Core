@@ -103,12 +103,14 @@ public class Textures {
 
     public TextureData16x16 getTexture(String name) {
         name = name.replace("minecraft:block/", "");
+        name = name.replace("block/", "");
 
         return textures.getOrDefault(name, FAILED_TO_LOAD_TEXTURE);
     }
 
     public BlockModel getModel(String name) {
         name = name.replace("minecraft:block/", "");
+        name = name.replace("block/", "");
 
         return models.getOrDefault(name, FAILED_TO_LOAD);
     }
