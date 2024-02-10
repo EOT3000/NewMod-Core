@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 public class BlockStates {
     private final List<Function<BlockData, BlockState>> states = new ArrayList<>();
+    private final List<BlockState> s = new ArrayList<>();
 
     public void addState(Predicate<BlockData> predicate, BlockState state) {
         states.add((x) -> predicate.test(x) ? state : null);
@@ -25,6 +26,10 @@ public class BlockStates {
         }
 
         return Textures.FAILED_TO_LOAD_STATES.getState(null);
+    }
+
+    public List<BlockState> getStates() {
+        return new ArrayList<>(s);
     }
 
     public static record BlockState(BlockModel model, int x, int y) {}

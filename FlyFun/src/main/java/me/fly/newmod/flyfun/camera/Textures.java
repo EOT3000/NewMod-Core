@@ -94,7 +94,7 @@ public class Textures {
             try {
                 TextureData16x16 loaded = TextureLoadUtil.load(file);
 
-                textures.put(file.getName().replaceAll("\\.png", ""), loaded);
+                textures.put(file.getName().replace(".png", ""), loaded);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -124,7 +124,7 @@ public class Textures {
 
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
 
-                this.models.put(model.getName().replace("s.json", ""), block);
+                this.models.put(model.getName().replace(".json", ""), block);
             } catch (Exception e) {
                 e.printStackTrace();
             }

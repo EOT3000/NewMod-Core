@@ -12,6 +12,8 @@ import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
 import me.fly.newmod.flyfun.camera.Camera;
 import me.fly.newmod.flyfun.camera.Textures;
+import me.fly.newmod.flyfun.camera.model.BlockModel;
+import me.fly.newmod.flyfun.camera.model.SixSidedBlockModel;
 import me.fly.newmod.flyfun.history.HistoryListener;
 import me.fly.newmod.flyfun.horn.HornListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
@@ -25,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -102,34 +105,85 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(args.length == 1) {
+            BlockModel model = Textures.me.getStates(Material.getMaterial(args[0])).getStates().get(0).model();
+
+            byte[][] camera = new byte[128][128];
+
+            if(model instanceof SixSidedBlockModel) {
+
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < 16; y++) {
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
+                        }
+
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
+                        }
+                    }
+                }
+
+            } else {
+
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 0; y < 16; y++) {
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
+                        }
+
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
+                        }
+
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y+32] = model.getMapColor(x, y, BlockFace.EAST, null, b);
+                        }
+
+                        for (int b = 0; b < 8; b++) {
+                            camera[x*16+b][y+48] = model.getMapColor(x, y, BlockFace.EAST, null, b+8);
+                        }
+                    }
+                }
+
+            }
+            giveToPlayer(camera, sender);
+
+            return true;
+        }
+
         HornListener.playAt(new Location(((Player) sender).getWorld(), 0, 64, 0), Sound.ITEM_GOAT_HORN_SOUND_0);
 
         getLogger().info("Beginning picture capture");
         Bukkit.getScheduler().runTaskLater(this, () -> {
             byte[][] camera = Camera.run(((Player) sender).getLocation());
 
-            ItemStack stack = new ItemStack(Material.FILLED_MAP);
-
-            MapMeta meta = (MapMeta) stack.getItemMeta();
-
-            MapView view = Bukkit.createMap(((Player) sender).getWorld());
-
-            view.setTrackingPosition(false);
-
-            for (MapRenderer renderer : view.getRenderers()) {
-                view.removeRenderer(renderer);
-            }
-
-            view.addRenderer(new Camera.Renderer(camera));
-
-            meta.setMapView(view);
-
-            stack.setItemMeta(meta);
-
-            ((Player) sender).getInventory().addItem(stack);
+            giveToPlayer(camera, sender);
         }, 1);
 
         return true;
+    }
+
+    private void giveToPlayer(byte[][] camera, CommandSender sender) {
+        ItemStack stack = new ItemStack(Material.FILLED_MAP);
+
+        MapMeta meta = (MapMeta) stack.getItemMeta();
+
+        MapView view = Bukkit.createMap(((Player) sender).getWorld());
+
+        view.setTrackingPosition(false);
+
+        for (MapRenderer renderer : view.getRenderers()) {
+            view.removeRenderer(renderer);
+        }
+
+        view.addRenderer(new Camera.Renderer(camera));
+
+        meta.setMapView(view);
+
+        stack.setItemMeta(meta);
+
+        ((Player) sender).getInventory().addItem(stack);
     }
 
     public FlyFunPlugin() {

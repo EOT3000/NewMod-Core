@@ -19,6 +19,8 @@ public class Camera {
     public static byte[][] run(Location location) {
         byte[][] data = new byte[128][128];
 
+        long date = System.currentTimeMillis();
+
         for(int x = 0; x < 128; x++) {
             for(int y = 0; y < 128; y++) {
                 Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, 0, -0.5+y/128.0));
@@ -27,19 +29,23 @@ public class Camera {
 
                 RayTraceResult result = location.getWorld().rayTraceBlocks(location, vector, 512, FluidCollisionMode.ALWAYS, false);
 
-                BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
+                if(result != null) {
+                    BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
 
-                Vector adjusted = GetImagePixel.transform(state.x(), state.y(), result.getHitPosition());
+                    Vector adjusted = GetImagePixel.transform(state.x(), state.y(), result.getHitPosition());
 
-                BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y());
+                    BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y());
 
-                IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted);
+                    IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted);
 
-                byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
-                        null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
-
-                data[x][y] = color;
+                    byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
+                            null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
+                    data[x][y] = color;
+                }
             }
+
+            System.out.println("spent " + (System.currentTimeMillis()-date) + " on layer " + x);
+            date = System.currentTimeMillis();
         }
 
         return data;
