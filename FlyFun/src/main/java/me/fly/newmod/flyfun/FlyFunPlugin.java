@@ -90,10 +90,10 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Textures.me.loadTextures(textureDir);
 
         getLogger().info("Loading models");
-        Textures.me.loadTextures(modelDir);
+        Textures.me.loadModels(modelDir);
 
         getLogger().info("Loading block states");
-        Textures.me.loadTextures(blockStatesDir);
+        Textures.me.loadBlockStates(blockStatesDir);
     }
 
     @Override

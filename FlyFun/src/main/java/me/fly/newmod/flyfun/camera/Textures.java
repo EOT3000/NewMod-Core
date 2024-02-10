@@ -91,9 +91,13 @@ public class Textures {
 
     public void loadTextures(File dir) {
         for(File file : dir.listFiles()) {
-            TextureData16x16 loaded = TextureLoadUtil.load(file);
+            try {
+                TextureData16x16 loaded = TextureLoadUtil.load(file);
 
-            textures.put(file.getName().replaceAll("\\.png", ""), loaded);
+                textures.put(file.getName().replaceAll("\\.png", ""), loaded);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
