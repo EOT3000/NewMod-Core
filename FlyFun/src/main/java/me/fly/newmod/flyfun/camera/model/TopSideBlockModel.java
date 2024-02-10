@@ -18,21 +18,22 @@ public class TopSideBlockModel implements BlockModel {
 
     @Override
     public short getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
-        if(data instanceof Orientable orientable) {
-            TextureData16x16 use;
-            switch (face) {
-                case NORTH:
-                case SOUTH: use = orientable.getAxis().equals(Axis.Z) ? end : side; break;
-                case EAST:
-                case WEST: use = orientable.getAxis().equals(Axis.X) ? end : side; break;
-                case UP:
-                case DOWN: use = orientable.getAxis().equals(Axis.Y) ? end : side; break;
-                default: return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
-            }
-
-            return (short) (use.storedColor()[brightness*256+x*16+y]+128);
+        TextureData16x16 use;
+        switch (face) {
+            case NORTH:
+            case SOUTH:
+            case EAST:
+            case WEST:
+                use = side;
+                break;
+            case UP:
+            case DOWN:
+                use = end;
+                break;
+            default:
+                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
         }
 
-        return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
+        return (short) (use.storedColor()[brightness * 256 + x * 16 + y] + 128);
     }
 }

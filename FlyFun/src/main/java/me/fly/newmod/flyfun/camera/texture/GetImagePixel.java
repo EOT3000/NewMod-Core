@@ -6,7 +6,9 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.util.Vector;
 
-public class GetImagePixelFromRotationAndLocation {
+import java.util.Arrays;
+
+public class GetImagePixel {
     //kms
     private static final BlockFace[][][] transformed = new BlockFace[6][4][4];
 
@@ -42,6 +44,8 @@ public class GetImagePixelFromRotationAndLocation {
                 }
             }
         }
+
+        System.out.println(Arrays.deepToString(transformed));
     }
 
     public static BlockFace getFace(int x, int y, int z) {
@@ -54,7 +58,7 @@ public class GetImagePixelFromRotationAndLocation {
         return null;
     }
 
-    public static IntIntPair getImagePixelFromRotationAndLocation(BlockFace face, Location location) {
+    public static IntIntPair getImagePixelFromFaceAndLocation(BlockFace face, Vector location) {
         int x1 = -1;
         int y1 = -1;
 
@@ -92,7 +96,7 @@ public class GetImagePixelFromRotationAndLocation {
         return new IntIntImmutablePair(x1, y1);
     }
 
-    public Vector transform(int x, int y, Vector location) {
+    public static Vector transform(int x, int y, Vector location) {
         Vector vector = location.clone();
 
         vector.rotateAroundX(-x);
@@ -101,7 +105,7 @@ public class GetImagePixelFromRotationAndLocation {
         return vector;
     }
 
-    public BlockFace getFace(BlockFace original, int x, int y) {
+    public static BlockFace getFace(BlockFace original, int x, int y) {
         return transformed[original.ordinal()][x/90][y/90];
     }
 }
