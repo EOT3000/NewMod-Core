@@ -69,23 +69,23 @@ public class GetImagePixel {
             }
             case DOWN -> {
                 x1 = (int) ((location.getX()-location.getBlockX())*16.0);
-                y1 = 16-(int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = 15-(int) ((location.getZ()-location.getBlockZ())*16.0);
             }
             case NORTH -> {
-                x1 = 16-(int) ((location.getX()-location.getBlockX())*16.0);
-                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
+                x1 = 15-(int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = 15-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case EAST -> {
-                x1 = 16-(int) ((location.getZ()-location.getBlockZ())*16.0);
-                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
+                x1 = 15-(int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = 15-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case SOUTH -> {
                 x1 = (int) ((location.getX()-location.getBlockX())*16.0);
-                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
+                y1 = 15-(int) ((location.getY()-location.getBlockY())*16.0);
             }
             case WEST -> {
                 x1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
-                y1 = 16-(int) ((location.getY()-location.getBlockY())*16.0);
+                y1 = 15-(int) ((location.getY()-location.getBlockY())*16.0);
             }
         }
 
@@ -99,8 +99,8 @@ public class GetImagePixel {
     public static Vector transform(int x, int y, Vector location) {
         Vector vector = location.clone();
 
-        vector.rotateAroundX(-x);
-        vector.rotateAroundY(-y);
+        vector.rotateAroundX(Math.toRadians(-x));
+        vector.rotateAroundY(Math.toRadians(-y));
 
         return vector;
     }

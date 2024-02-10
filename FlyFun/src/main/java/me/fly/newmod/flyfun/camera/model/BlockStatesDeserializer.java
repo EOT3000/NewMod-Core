@@ -49,9 +49,9 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
                 states.addState(createPredicate(variantKeyAndValue[0], variantKeyAndValue[1]), new BlockStates.BlockState(textures.getModel(variantInfo.get("model").getAsString()), x, y));
 
                 states.print();
-
-                return states;
             }
+
+            return states;
         }
 
         return Textures.FAILED_TO_LOAD_STATES;

@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.util.RayTraceResult;
@@ -23,7 +24,7 @@ public class Camera {
 
         for(int x = 0; x < 128; x+=1) {
             for(int y = 0; y < 128; y+=1) {
-                Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, -0.5+y/128.0, 1)).subtract(location.toVector());
+                Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, 0.5-y/128.0, 1)).subtract(location.toVector());
 
                 RayTraceResult result = location.getWorld().rayTraceBlocks(location, vector, 512, FluidCollisionMode.ALWAYS, false);
 
@@ -47,7 +48,11 @@ public class Camera {
                             null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
                     data[x][y] = color;
                 } else {
-                    //System.out.println("ray " + x + "," + y + "missed");
+
+                }
+
+                if(data[x][y] == 0) {
+                    data[x][y] = MapPalette.PALE_BLUE;
                 }
             }
 

@@ -2,6 +2,7 @@ package me.fly.newmod.flyfun;
 
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
+import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.fly.newmod.flyfun.basictools.GoldPanManager;
 import me.fly.newmod.flyfun.basictools.listener.BasicToolsListener;
@@ -103,6 +104,8 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        System.out.println("sky brightness: " + NMSUtil.getSkyBrightness(((Player) sender).getWorld()));
+
         if(args.length == 1) {
             BlockModel model = Textures.me.getStates(Material.getMaterial(args[0])).getStates().get(0).model();
 

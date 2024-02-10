@@ -8,7 +8,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_20_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_20_R3.block.CraftBlock;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 
@@ -88,7 +88,7 @@ public class DamageChecker {
 
                         VoxelShape shape = base.d(((CraftBlock) block).getCraftWorld().getHandle(), new BlockPosition(x,y,z));
 
-                        for(AxisAlignedBB bb : shape.d()) {
+                        for(AxisAlignedBB bb : shape.e()) {
                             BoundingBox part = new BoundingBox(x+bb.a, y+bb.b, z+bb.c,
                                     x+bb.d, y+bb.e, z+bb.f);
 
