@@ -14,6 +14,8 @@ public class BlockStates {
 
     public void addState(Predicate<BlockData> predicate, BlockState state) {
         states.add((x) -> predicate.test(x) ? state : null);
+
+        s.add(state);
     }
 
     public BlockState getState(BlockData data) {
