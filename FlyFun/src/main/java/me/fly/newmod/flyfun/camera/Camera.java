@@ -21,8 +21,8 @@ public class Camera {
 
         long date = System.currentTimeMillis();
 
-        for(int x = 0; x < 128; x+=8) {
-            for(int y = 0; y < 128; y+=8) {
+        for(int x = 0; x < 128; x+=1) {
+            for(int y = 0; y < 128; y+=1) {
                 Vector vector = GeometryUtil.getRelative(location, new Vector(-0.5+x/128.0, -0.5+y/128.0, 1)).subtract(location.toVector());
 
                 RayTraceResult result = location.getWorld().rayTraceBlocks(location, vector, 512, FluidCollisionMode.ALWAYS, false);
