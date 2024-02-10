@@ -115,11 +115,11 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
+                            camera[b*16+x][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
                         }
 
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
+                            camera[b*16+x][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
                         }
                     }
                 }
@@ -129,19 +129,19 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
                 for (int x = 0; x < 16; x++) {
                     for (int y = 0; y < 16; y++) {
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
+                            camera[b*16+x][y] = model.getMapColor(x, y, BlockFace.NORTH, null, b);
                         }
 
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
+                            camera[b*16+x][y+16] = model.getMapColor(x, y, BlockFace.NORTH, null, b+8);
                         }
 
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y+32] = model.getMapColor(x, y, BlockFace.EAST, null, b);
+                            camera[b*16+x][y+32] = model.getMapColor(x, y, BlockFace.EAST, null, b);
                         }
 
                         for (int b = 0; b < 8; b++) {
-                            camera[x*16+b][y+48] = model.getMapColor(x, y, BlockFace.EAST, null, b+8);
+                            camera[b*16+x][y+48] = model.getMapColor(x, y, BlockFace.EAST, null, b+8);
                         }
                     }
                 }

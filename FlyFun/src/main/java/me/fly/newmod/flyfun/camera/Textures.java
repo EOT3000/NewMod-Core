@@ -25,8 +25,8 @@ public class Textures {
     public static final BlockStates FAILED_TO_LOAD_STATES;
 
     public static final BlockModel FAILED_TO_LOAD = (x, y, face, data, brightness) -> (x/8+y/8)%2==0
-            ? (byte) (186-128)
-            : (byte) (119-128);
+            ? (byte) (186)
+            : (byte) (119);
 
     final Map<String, String> textureDir = new HashMap<>();
 
@@ -67,9 +67,9 @@ public class Textures {
 
                 for(int i = 0; i < 16; i++) {
                     if((x+y)%2 == 0) {
-                        storedColor[i*256+x*16+y] = (byte) (186-128);
+                        storedColor[i*256+x*16+y] = (byte) (186);
                     } else {
-                        storedColor[i*256+x*16+y] = (byte) (119-128);
+                        storedColor[i*256+x*16+y] = (byte) (119);
                     }
 
                 }
