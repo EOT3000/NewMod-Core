@@ -124,7 +124,7 @@ public class Textures {
 
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
 
-                this.models.put(model.getName().replace("\\.json", ""), block);
+                this.models.put(model.getName().replace("s.json", ""), block);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,7 +138,7 @@ public class Textures {
 
                 BlockStates block = gson.fromJson(reader, BlockStates.class);
 
-                this.states.put(Material.valueOf(model.getName().replace("\\.json", "").toUpperCase()), block);
+                this.states.put(Material.valueOf(model.getName().replace(".json", "").toUpperCase()), block);
             } catch (Exception e) {
                 e.printStackTrace();
             }

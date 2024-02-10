@@ -47,9 +47,9 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     private GoldPanManager goldPan;
     private AltarRecipeManager altarRecipe;
 
-    private final File textureDir = new File("/plugins/FlyFun/resources/block/textures");
-    private final File modelDir = new File("/plugins/FlyFun/resources/block/models");
-    private final File blockStatesDir = new File("/plugins/FlyFun/resources/block/blockstates");
+    private final File textureDir = new File("plugins/FlyFun/resources/block/textures");
+    private final File modelDir = new File("plugins/FlyFun/resources/block/models");
+    private final File blockStatesDir = new File("plugins/FlyFun/resources/block/blockstates");
 
     @Override
     public void onLoad() {
@@ -85,6 +85,9 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
+
+        System.out.println(new File("").getAbsolutePath());
+        System.out.println(textureDir.getAbsolutePath());
 
         getLogger().info("Loading textures");
         Textures.me.loadTextures(textureDir);

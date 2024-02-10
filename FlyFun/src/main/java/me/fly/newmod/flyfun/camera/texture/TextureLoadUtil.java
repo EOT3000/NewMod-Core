@@ -34,7 +34,7 @@ public class TextureLoadUtil {
                         for(int i = 0; i < 16; i++) {
                             int[] ints = ColorUtil.toInts(rgb);
 
-                            double[] Lab = ColorUtil.rgbToOklab(ints[0]* Textures.DARKNESS_MODIFIERS[0][i], ints[1]*Textures.DARKNESS_MODIFIERS[1][i], ints[2]*Textures.DARKNESS_MODIFIERS[2][i]);
+                            double[] Lab = ColorUtil.rgbToOklab(ints[0]* Textures.DARKNESS_MODIFIERS[i][0], ints[1]*Textures.DARKNESS_MODIFIERS[i][1], ints[2]*Textures.DARKNESS_MODIFIERS[i][2]);
 
                             storedColor[i*256+x*16+y] = ColorUtil.findClosestColor(Lab[0], Lab[1], Lab[2]);
                         }
