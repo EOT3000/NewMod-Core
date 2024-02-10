@@ -1,7 +1,9 @@
 package me.fly.newmod.flyfun.camera;
 
 import me.fly.newmod.core.util.GeometryUtil;
-import me.fly.newmod.flyfun.camera.texture.Textures;
+import me.fly.newmod.flyfun.camera.model.BlockModel;
+import me.fly.newmod.flyfun.camera.model.BlockStates;
+import me.fly.newmod.flyfun.camera.texture.GetImagePixelFromRotationAndLocation;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.util.RayTraceResult;
@@ -25,7 +27,9 @@ public class Camera {
                 int xInt = (int)(x_*16);
                 int yInt = (int)(y_*16);
 
-                short color = Textures.me;
+                BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
+
+                GetImagePixelFromRotationAndLocation.getFace()
             }
         }
     }

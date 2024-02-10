@@ -1,15 +1,17 @@
-package me.fly.newmod.flyfun.camera.texture;
+package me.fly.newmod.flyfun.camera.model;
 
+import me.fly.newmod.flyfun.camera.texture.TextureData16x16;
+import me.fly.newmod.flyfun.camera.Textures;
 import org.bukkit.Axis;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 
-public class OrientableTexturedBlock implements TexturedBlock {
+public class TopSideBlockModel implements BlockModel {
     private final TextureData16x16 end;
     private final TextureData16x16 side;
 
-    public OrientableTexturedBlock(TextureData16x16 end, TextureData16x16 side) {
+    public TopSideBlockModel(TextureData16x16 end, TextureData16x16 side) {
         this.end = end;
         this.side = side;
     }

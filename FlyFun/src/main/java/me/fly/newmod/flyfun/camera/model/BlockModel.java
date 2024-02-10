@@ -1,8 +1,8 @@
-package me.fly.newmod.flyfun.camera.texture;
+package me.fly.newmod.flyfun.camera.model;
 
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 
-public interface TexturedBlock {
+public interface BlockModel {
     short getMapColor(int x, int y, BlockFace face, BlockData data, int brightness);
 }

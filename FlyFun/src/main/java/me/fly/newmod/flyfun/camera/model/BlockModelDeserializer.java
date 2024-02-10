@@ -1,18 +1,20 @@
-package me.fly.newmod.flyfun.camera.texture;
+package me.fly.newmod.flyfun.camera.model;
 
 import com.google.gson.*;
+import me.fly.newmod.flyfun.camera.texture.TextureLoadUtil;
+import me.fly.newmod.flyfun.camera.Textures;
 
 import java.lang.reflect.Type;
 
-public class TextureDeserializer implements JsonDeserializer<TexturedBlock> {
+public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
     private Textures textures;
 
-    TextureDeserializer(Textures textures) {
+    public BlockModelDeserializer(Textures textures) {
         this.textures = textures;
     }
 
     @Override
-    public TexturedBlock deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public BlockModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         JsonObject object = jsonElement.getAsJsonObject();
 
         if (object.has("parent")) {
@@ -20,9 +22,9 @@ public class TextureDeserializer implements JsonDeserializer<TexturedBlock> {
             JsonObject texturesObj = object.getAsJsonObject("textures");
 
             if (parent.equals("minecraft:block/cube_all")) {
-                return new SixSidedTexturedBlock(TextureLoadUtil.load(texturesObj.get("all").getAsString(), textures.textureDir));
+                return new SixSidedBlockModel(TextureLoadUtil.load(texturesObj.get("all").getAsString(), textures.textureDir));
             } else if (parent.equals("minecraft:block/cube_column")) {
-                return new OrientableTexturedBlock(
+                return new TopSideBlockModel(
                         TextureLoadUtil.load(texturesObj.get("end").getAsString(), textures.textureDir),
                         TextureLoadUtil.load(texturesObj.get("side").getAsString(), textures.textureDir));
             }

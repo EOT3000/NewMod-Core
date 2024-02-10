@@ -1,18 +1,18 @@
 package me.fly.newmod.flyfun.camera.texture;
 
 import me.fly.newmod.core.util.ColorUtil;
+import me.fly.newmod.flyfun.camera.Textures;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Map;
 
 public class TextureLoadUtil {
-    public static TextureData16x16 load(String texture, Map<String, String> textureDir) {
+    public static TextureData16x16 load(File file) {
         int[] rawColor = new int[256];
         byte[] storedColor = new byte[4096];
 
-        File file = new File(textureDir.get(texture));
+        //File file = new File(textureDir.get(texture));
 
         try {
             BufferedImage image = ImageIO.read(file);
@@ -34,7 +34,7 @@ public class TextureLoadUtil {
                         for(int i = 0; i < 16; i++) {
                             int[] ints = ColorUtil.toInts(rgb);
 
-                            double[] Lab = ColorUtil.rgbToOklab(ints[0]*Textures.DARKNESS_MODIFIERS[0][i], ints[1]*Textures.DARKNESS_MODIFIERS[1][i], ints[2]*Textures.DARKNESS_MODIFIERS[2][i]);
+                            double[] Lab = ColorUtil.rgbToOklab(ints[0]* Textures.DARKNESS_MODIFIERS[0][i], ints[1]*Textures.DARKNESS_MODIFIERS[1][i], ints[2]*Textures.DARKNESS_MODIFIERS[2][i]);
 
                             storedColor[i*256+x*16+y] = ColorUtil.findClosestColor(Lab[0], Lab[1], Lab[2]);
                         }
@@ -44,7 +44,7 @@ public class TextureLoadUtil {
 
             return new TextureData16x16(rawColor, storedColor);
         } catch (Exception e) {
-            System.err.println("error loading image file " + texture);
+            System.err.println("error loading image file " + file.getPath());
 
             e.printStackTrace();
 
