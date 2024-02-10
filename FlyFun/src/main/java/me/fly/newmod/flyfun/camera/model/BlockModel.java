@@ -4,5 +4,5 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 
 public interface BlockModel {
-    short getMapColor(int x, int y, BlockFace face, BlockData data, int brightness);
+    byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness);
 }

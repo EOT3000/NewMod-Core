@@ -12,7 +12,7 @@ public class SixSidedBlockModel implements BlockModel {
     }
 
     @Override
-    public short getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
-        return (short) (this.data.storedColor()[brightness*256+x*16+y]+128);
+    public byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+        return this.data.storedColor()[brightness*256+x*16+y];
     }
 }

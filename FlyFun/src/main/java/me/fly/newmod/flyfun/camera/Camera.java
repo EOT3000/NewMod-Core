@@ -7,12 +7,17 @@ import me.fly.newmod.flyfun.camera.texture.GetImagePixel;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 public class Camera {
-    public short[][] run(Location location) {
-        short[][] data = new short[128][128];
+    public static byte[][] run(Location location) {
+        byte[][] data = new byte[128][128];
 
         for(int x = 0; x < 128; x++) {
             for(int y = 0; y < 128; y++) {
@@ -30,7 +35,7 @@ public class Camera {
 
                 IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted);
 
-                short color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
+                byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
                         null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
 
                 data[x][y] = color;
@@ -38,5 +43,27 @@ public class Camera {
         }
 
         return data;
+    }
+
+    public static final class Renderer extends MapRenderer {
+        private final byte[][] data;
+
+        public Renderer(byte[][] data) {
+            this.data = data;
+        }
+
+        @Override
+        public void render(@NotNull MapView mapView, @NotNull MapCanvas mapCanvas, @NotNull Player player) {
+            for(int x = 0; x < 128; x++) {
+                for(int y = 0; y < 128; y++) {
+                    mapCanvas.setPixel(x, y, data[x][y]);
+                }
+            }
+        }
+
+        @Override
+        public boolean isExplorerMap() {
+            return false;
+        }
     }
 }

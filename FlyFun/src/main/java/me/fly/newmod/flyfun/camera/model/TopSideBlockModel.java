@@ -17,7 +17,7 @@ public class TopSideBlockModel implements BlockModel {
     }
 
     @Override
-    public short getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+    public byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
         TextureData16x16 use;
         switch (face) {
             case NORTH:
@@ -34,6 +34,6 @@ public class TopSideBlockModel implements BlockModel {
                 return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
         }
 
-        return (short) (use.storedColor()[brightness * 256 + x * 16 + y] + 128);
+        return use.storedColor()[brightness * 256 + x * 16 + y];
     }
 }

@@ -25,8 +25,8 @@ public class Textures {
     public static final BlockStates FAILED_TO_LOAD_STATES;
 
     public static final BlockModel FAILED_TO_LOAD = (x, y, face, data, brightness) -> (x/8+y/8)%2==0
-            ? (short) (186)
-            : (short) (119);
+            ? (byte) (186-128)
+            : (byte) (119-128);
 
     final Map<String, String> textureDir = new HashMap<>();
 
@@ -114,8 +114,6 @@ public class Textures {
     }
 
     public void loadModels(File dir) {
-        File models = new File("/plugins/FlyFun/texture/models");
-
         for(File model : dir.listFiles()) {
             try {
                 JsonReader reader = new JsonReader(new FileReader(model));
