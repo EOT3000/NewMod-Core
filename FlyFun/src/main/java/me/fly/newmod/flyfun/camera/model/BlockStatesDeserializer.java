@@ -28,7 +28,10 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
 
             for(Map.Entry<String, JsonElement> element : variants.asMap().entrySet()) {
                 String variantKey = element.getKey();
-                JsonObject variantInfo = element.getValue().getAsJsonObject();
+
+                JsonElement variantRaw = element.getValue();
+
+                JsonObject variantInfo = variantRaw.isJsonArray() ? variantRaw.getAsJsonArray().get(0).getAsJsonObject() : variantRaw.getAsJsonObject();
 
                 int x = getOrDefaultInt(variantInfo, "x", 0);
                 int y = getOrDefaultInt(variantInfo, "y", 0);
@@ -41,7 +44,7 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
 
                 String[] variantKeyAndValue = variantKey.split("=");
 
-
+                states.addState(createPredicate(variantKeyAndValue[0], variantKeyAndValue[1]), new BlockStates.BlockState(textures.getModel(variantInfo.get("model").getAsString()), x, y));
             }
         }
 

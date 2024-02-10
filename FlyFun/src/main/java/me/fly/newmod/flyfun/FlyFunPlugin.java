@@ -38,6 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public NewModAPI api;
@@ -103,27 +104,30 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         HornListener.playAt(new Location(((Player) sender).getWorld(), 0, 64, 0), Sound.ITEM_GOAT_HORN_SOUND_0);
 
-        byte[][] camera = Camera.run(((Player) sender).getLocation());
+        getLogger().info("Beginning picture capture");
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            byte[][] camera = Camera.run(((Player) sender).getLocation());
 
-        ItemStack stack = new ItemStack(Material.FILLED_MAP);
+            ItemStack stack = new ItemStack(Material.FILLED_MAP);
 
-        MapMeta meta = (MapMeta) stack.getItemMeta();
+            MapMeta meta = (MapMeta) stack.getItemMeta();
 
-        MapView view = Bukkit.createMap(((Player) sender).getWorld());
+            MapView view = Bukkit.createMap(((Player) sender).getWorld());
 
-        view.setTrackingPosition(false);
+            view.setTrackingPosition(false);
 
-        for(MapRenderer renderer : view.getRenderers()) {
-            view.removeRenderer(renderer);
-        }
+            for (MapRenderer renderer : view.getRenderers()) {
+                view.removeRenderer(renderer);
+            }
 
-        view.addRenderer(new Camera.Renderer(camera));
+            view.addRenderer(new Camera.Renderer(camera));
 
-        meta.setMapView(view);
+            meta.setMapView(view);
 
-        stack.setItemMeta(meta);
+            stack.setItemMeta(meta);
 
-        ((Player) sender).getInventory().addItem(stack);
+            ((Player) sender).getInventory().addItem(stack);
+        }, 1);
 
         return true;
     }
