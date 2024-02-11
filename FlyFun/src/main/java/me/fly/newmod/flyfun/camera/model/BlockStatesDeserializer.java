@@ -42,13 +42,13 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
                     return states;
                 }
 
-                System.out.println("Loading block states for " + variantInfo.get("model").getAsString());
+                //System.out.println("Loading block states for " + variantInfo.get("model").getAsString());
 
                 String[] variantKeyAndValue = variantKey.split("=");
 
                 states.addState(createPredicate(variantKeyAndValue[0], variantKeyAndValue[1]), new BlockStates.BlockState(textures.getModel(variantInfo.get("model").getAsString()), x, y));
 
-                states.print();
+                //states.print();
             }
 
             return states;
@@ -63,7 +63,7 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
     }
 
     private static Predicate<BlockData> createPredicate(String key, String value) {
-        System.out.println(key + "," + value);
+        //System.out.println(key + "," + value);
         if(key.equalsIgnoreCase("axis")) {
             return (j) -> {
                 if(j instanceof Orientable orientable) {
