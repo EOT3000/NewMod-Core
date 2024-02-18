@@ -28,16 +28,6 @@ public class GetImagePixel {
                     int my = face.getModY();
                     int mz = face.getModZ();
 
-                    for(int xx = 0; xx < x; xx++) {
-                        int ny = mz;
-                        int nz = -my;
-
-                        my = ny;
-                        mz = nz;
-
-                        System.out.println(xx + " time x: " + getFace(mx, my, mz));
-                    }
-
                     for(int yy = 0; yy < y; yy++) {
                         int nx = mz;
                         int nz = -mx;
@@ -46,6 +36,16 @@ public class GetImagePixel {
                         mz = nz;
 
                         System.out.println(yy + " time y: " + getFace(mx, my, mz));
+                    }
+
+                    for(int xx = 0; xx < x; xx++) {
+                        int ny = mz;
+                        int nz = -my;
+
+                        my = ny;
+                        mz = nz;
+
+                        System.out.println(xx + " time x: " + getFace(mx, my, mz));
                     }
 
                     //Reverse order of x and y?
@@ -70,7 +70,7 @@ public class GetImagePixel {
         return null;
     }
 
-    public static IntIntPair getImagePixelFromFaceAndLocation(BlockFace face, Vector location) {
+    public static IntIntPair getImagePixelFromFaceAndLocation(BlockFace face, Vector location, boolean p) {
         int x1 = -1;
         int y1 = -1;
 
@@ -101,6 +101,11 @@ public class GetImagePixel {
             }
         }
 
+        if(p) {
+            System.out.println("Hit at: " + ((location.getX()-location.getBlockX())*16.0) + "," + ((location.getY()-location.getBlockY())*16.0) + "," + ((location.getZ()-location.getBlockZ())*16.0));
+            System.out.println("Tranformed to: " + x1 + "," + y1);
+        }
+
         if(x1 == -1 || y1 == -1) {
             return null;
         }
@@ -108,16 +113,27 @@ public class GetImagePixel {
         return new IntIntImmutablePair(x1, y1);
     }
 
-    public static Vector transform(int x, int y, Vector location) {
+    public static Vector transform(int x, int y, Vector location, boolean p) {
         Vector vector = location.clone();
 
-        vector.rotateAroundX(Math.toRadians(-x));
         vector.rotateAroundY(Math.toRadians(-y));
+        vector.rotateAroundX(Math.toRadians(-x));
+
+        if(p) {
+            System.out.println("Rotated around y axis: " + -y + " degrees");
+            System.out.println("Rotated around x axis: " + -x + " degrees");
+            System.out.println("New hit location: " + vector.clone().subtract(new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ())));
+        }
 
         return vector;
     }
 
-    public static BlockFace getFace(BlockFace original, int x, int y) {
+    public static BlockFace getFace(BlockFace original, int x, int y, boolean p) {
+        if(p) {
+            System.out.println("Original blockface: " + original);
+            System.out.println("New: " + transformed[original.ordinal()][x/90][y/90]);
+        }
+
         return transformed[original.ordinal()][x/90][y/90];
     }
 }

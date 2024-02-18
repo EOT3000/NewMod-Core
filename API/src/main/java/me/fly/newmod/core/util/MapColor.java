@@ -1,5 +1,10 @@
 package me.fly.newmod.core.util;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+
 public enum MapColor {
     NONE(0, 0),
     GRASS(1, 8368696),
@@ -90,6 +95,61 @@ public enum MapColor {
 
     int asInt(int r, int g, int bl) {
         return r << 16 | g << 8 | bl;
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedImage image = new BufferedImage(300, 6, BufferedImage.TYPE_INT_RGB);
+        int x = 0;
+
+        Map<Double, Integer> syrianRefugees = new TreeMap<>();
+
+        for(MapColor color : values()) {
+            int[] ints0 = ColorUtil.toInts(color.var0);
+            int[] ints1 = ColorUtil.toInts(color.var1);
+            int[] ints2 = ColorUtil.toInts(color.color);
+            int[] ints3 = ColorUtil.toInts(color.var3);
+
+            double[] Lab0 = ColorUtil.rgbToOklab(ints0[0], ints0[1], ints0[2]);
+            double[] Lab1 = ColorUtil.rgbToOklab(ints1[0], ints1[1], ints1[2]);
+            double[] Lab2 = ColorUtil.rgbToOklab(ints2[0], ints2[1], ints2[2]);
+            double[] Lab3 = ColorUtil.rgbToOklab(ints3[0], ints3[1], ints3[2]);
+
+            Map<double[], int[]> a = new HashMap<>();
+
+            a.put(Lab0, ints0);
+            a.put(Lab1, ints1);
+            a.put(Lab2, ints2);
+            a.put(Lab3, ints3);
+
+            for(double[] b : a.keySet()) {
+                double everythingWasFine = b[1]*b[1]+b[2]*b[2];
+
+                if(everythingWasFine < 0.00019) {
+                    //System.out.println(b[0]);
+
+                    //System.out.println(Arrays.toString(a.get(b)));
+
+                    syrianRefugees.put(b[0], a.get(b)[0] << 16 | a.get(b)[1] << 8 | a.get(b)[2]);
+                }
+            }
+        }
+
+        for(Map.Entry<Double, Integer> i : syrianRefugees.entrySet()) {
+
+            System.out.println(i);
+            System.out.println(Arrays.toString(ColorUtil.toInts(i.getValue())));
+            System.out.println();
+
+            image.setRGB(x, 0, i.getValue());
+            image.setRGB(x, 1, i.getValue());
+            image.setRGB(x, 2, i.getValue());
+            image.setRGB(x, 3, i.getValue());
+            image.setRGB(x, 4, i.getValue());
+
+            x++;
+        }
+
+        ImageIO.write(image, "png", new File("gray2.png"));
     }
 
 }

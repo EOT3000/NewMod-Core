@@ -10,10 +10,12 @@ import org.bukkit.block.data.Orientable;
 public class TopSideBlockModel implements BlockModel {
     private final TextureData16x16 end;
     private final TextureData16x16 side;
+    private final boolean horizontal;
 
-    public TopSideBlockModel(TextureData16x16 end, TextureData16x16 side) {
+    public TopSideBlockModel(TextureData16x16 end, TextureData16x16 side, boolean horizontal) {
         this.end = end;
         this.side = side;
+        this.horizontal = horizontal;
     }
 
     @Override
@@ -28,6 +30,9 @@ public class TopSideBlockModel implements BlockModel {
                 use = side;
                 break;
             case UP:
+                if(horizontal) {
+                    return end.storedColor()[brightness * 256 + (15-x) * 16 + (15-y)];
+                }
             case DOWN:
                 use = end;
                 break;

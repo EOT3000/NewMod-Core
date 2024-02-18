@@ -24,12 +24,16 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
 
             if (parent.equals("block/cube_all") || parent.equals("block/leaves")) {
                 return new AllSidesBlockModel(textures.getTexture(texturesObj.get("all").getAsString()));
-            } else if (parent.equals("block/cube_column") || parent.equals("block/cube_column_horizontal")
+            } else if (parent.equals("block/cube_column")
                     //I have no idea what uv_locked means
                     || parent.equals("block/cube_column_uv_locked_x") || parent.equals("block/cube_column_uv_locked_y") || parent.equals("block/cube_column_uv_locked_z")) {
                 return new TopSideBlockModel(
                         textures.getTexture(texturesObj.get("end").getAsString()),
-                        textures.getTexture(texturesObj.get("side").getAsString()));
+                        textures.getTexture(texturesObj.get("side").getAsString()), false);
+            } else if (parent.equals("block/cube_column_horizontal")) {
+                return new TopSideBlockModel(
+                        textures.getTexture(texturesObj.get("end").getAsString()),
+                        textures.getTexture(texturesObj.get("side").getAsString()), true);
             } else if (parent.equals("block/cube")) {
                 return new SixSidedBlockModel(
                         textures.getTexture(texturesObj.get("north").getAsString()),
