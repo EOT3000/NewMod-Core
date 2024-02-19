@@ -36,7 +36,7 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
                 int x = getOrDefaultInt(variantInfo, "x", 0);
                 int y = getOrDefaultInt(variantInfo, "y", 0);
 
-                if(variantKey.isEmpty()) {
+                if(variantKey.isEmpty() || (variantKey.contains("facing") && variantKey.contains("half") && variantKey.contains("shape")) || (variantKey.contains("type"))) {
                     states.addState((j) -> true, new BlockStates.BlockState(textures.getModel(variantInfo.get("model").getAsString()), x, y));
 
                     return states;

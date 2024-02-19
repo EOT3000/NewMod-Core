@@ -2,10 +2,12 @@ package me.fly.newmod.flyfun.camera.texture;
 
 import me.fly.newmod.core.util.ColorUtil;
 import me.fly.newmod.flyfun.camera.Textures;
+import org.bukkit.Color;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 public class TextureLoadUtil {
     public static TextureData16x16 load(File file) {
@@ -17,9 +19,28 @@ public class TextureLoadUtil {
         try {
             BufferedImage image = ImageIO.read(file);
 
+            //System.out.println(image.getType());
+
+            //BufferedImage porters = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
+
             for(int x = 0; x < 16; x++) {
                 for(int y = 0; y < 16; y++) {
                     int rgb = image.getRGB(x, y);
+
+                    if(image.getType() == BufferedImage.TYPE_BYTE_GRAY) {
+                        int g = image.getRaster().getSample(x, y, 0);
+
+                        rgb = ColorUtil.asInt(g,g,g);
+                    }
+
+
+                    /*if(file.getName().equals("stone.png")) {
+                        System.out.println(x + "," + y + " (rgb mine): " + Arrays.toString(ColorUtil.toInts(rgb)));
+                        System.out.println(x + "," + y + " (rgb raw): " + rgb);
+                        System.out.println(x + "," + y + " (rgb bukkit argb): " + Color.fromARGB(rgb).getRed() + "," + Color.fromARGB(rgb).getGreen() + "," + Color.fromARGB(rgb).getBlue());
+                        //System.out.println(x + "," + y + " (rgb bukkit rgb): " + Color.fromRGB(rgb).getRed() + "," + Color.fromRGB(rgb).getGreen() + "," + Color.fromRGB(rgb).getBlue());
+                    }*/
+
 
                     rawColor[x*16+y] = rgb;
 
@@ -35,6 +56,11 @@ public class TextureLoadUtil {
                             int[] ints = ColorUtil.toInts(rgb);
 
                             double[] Lab = ColorUtil.rgbToOklab(ints[0]* Textures.DARKNESS_MODIFIERS[i][0], ints[1]*Textures.DARKNESS_MODIFIERS[i][1], ints[2]*Textures.DARKNESS_MODIFIERS[i][2]);
+
+                            /*if(file.getName().equals("stone.png") && i == 15) {
+                                System.out.println(x + "," + y + " (Lab): " + Arrays.toString(Lab));
+                                System.out.println(x + "," + y + " (rgb): " + ints[0]* Textures.DARKNESS_MODIFIERS[i][0] + "," + ints[1]*Textures.DARKNESS_MODIFIERS[i][1] + "," + ints[2]*Textures.DARKNESS_MODIFIERS[i][2]);
+                            }*/
 
                             storedColor[i*256+x*16+y] = ColorUtil.findClosestColor(Lab[0], Lab[1], Lab[2]);
                         }

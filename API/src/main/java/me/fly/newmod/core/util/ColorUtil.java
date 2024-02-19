@@ -2,8 +2,7 @@ package me.fly.newmod.core.util;
 
 import com.github.tommyettinger.colorful.oklab.ColorTools;
 import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
-import it.unimi.dsi.fastutil.ints.IntObjectPair;
+import it.unimi.dsi.fastutil.ints.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -11,7 +10,7 @@ import java.io.File;
 import java.util.*;
 
 public class ColorUtil {
-    private static List<IntObjectPair<int[]>> colors = new ArrayList<>();
+    private static Int2ObjectMap<int[]> colors = new Int2ObjectArrayMap<>();
     private static List<IntObjectPair<double[]>> colorsLab = new ArrayList<>();
 
     static {
@@ -20,16 +19,20 @@ public class ColorUtil {
                 continue;
             }
 
-            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 0, toInts(color.var0)));
-            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 1, toInts(color.var1)));
-            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 2, toInts(color.color)));
-            colors.add(new IntObjectImmutablePair<>(color.id * 4 + 3, toInts(color.var3)));
+            colors.put(color.id * 4 + 0, toInts(color.var0));
+            colors.put(color.id * 4 + 1, toInts(color.var1));
+            colors.put(color.id * 4 + 2, toInts(color.color));
+            colors.put(color.id * 4 + 3, toInts(color.var3));
         }
 
-        for (IntObjectPair<int[]> color : colors) {
-            double[] lab = rgbToOklab(color.second()[0], color.second()[1], color.second()[2]);
+        for (Int2ObjectMap.Entry<int[]> color : colors.int2ObjectEntrySet()) {
+            double[] lab = rgbToOklab(color.getValue()[0], color.getValue()[1], color.getValue()[2]);
 
-            colorsLab.add(new IntObjectImmutablePair<>(color.firstInt(), lab));
+            colorsLab.add(new IntObjectImmutablePair<>(color.getIntKey(), lab));
+        }
+
+        for(IntObjectPair<double[]> x : colorsLab) {
+            System.out.println(x.firstInt() + " " + idToName(x.keyInt()) + " Lab: " + Arrays.toString(x.value()) + " rgb: " + Arrays.toString(colors.get(x.keyInt())));
         }
     }
 
@@ -170,17 +173,45 @@ public class ColorUtil {
         //Use the naive approach ):
 
         double closest = 1000000;
-        byte closestColor = 4;
+        int closestColor = 4;
+
+        /*if(p) {
+            System.out.println("Trying to find best color for " + L + "," + a + "," + b);
+        }*/
 
         for(IntObjectPair<double[]> color : colorsLab) {
             double dist = distanceSquaredOkLab(color.second()[0], color.second()[1], color.second()[2], L, a, b);
+            /*if(p && dist < 0.003) {
+                System.out.println("Testing " + idToName(color.keyInt())  + " (" + Arrays.toString(color.value()) + ") (rgb:" +
+                        Arrays.toString(colors.get(color.keyInt())) +
+                        ") at distance " + dist);
+            }*/
             if(dist < closest) {
+                /*if(p) {
+                    System.out.println("Old color: " + idToName(closestColor) + " at distance " + closest
+                            + ", replaced with " + idToName(color.keyInt())  + " (Lab:" + Arrays.toString(color.value()) + ") (rgb:" +
+                            Arrays.toString(colors.get(color.keyInt())) +
+                            ") at distance " + dist);
+                }*/
                 closest = dist;
-                closestColor = (byte) (color.keyInt());
+                closestColor = (color.keyInt());
             }
         }
 
-        return closestColor;
+        return (byte) closestColor;
+    }
+
+    public static String idToName(int key) {
+        MapColor color = MapColor.values()[(int) Math.floor(key / 4.0)];
+        int mod = key - color.id * 4;
+
+        return switch (mod) {
+            case 0 -> "Color " + color.name() + " (moderately darkened): ";
+            case 1 -> "Color " + color.name() + " (normal): ";
+            case 2 -> "Color " + color.name() + " (slightly darkened): ";
+            case 3 -> "Color " + color.name() + " (very darkened): ";
+            default -> "error";
+        };
     }
 
     public static void main(String[] args) throws Exception {

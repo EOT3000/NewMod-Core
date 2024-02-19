@@ -42,7 +42,7 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
                         textures.getTexture(texturesObj.get("west").getAsString()),
                         textures.getTexture(texturesObj.get("up").getAsString()),
                         textures.getTexture(texturesObj.get("down").getAsString()));
-            } else if (parent.equals("block/block")) {
+            } else if (parent.equals("block/block") || parent.equals("block/stairs") || parent.equals("block/inner_stairs") || parent.equals("block/outer_stairs") || parent.equals("block/slab") || parent.equals("block/slab_top")) {
                 return new TopBottomSideBlockModel(
                         textures.getTexture(texturesObj.get("top").getAsString()),
                         textures.getTexture(texturesObj.get("bottom").getAsString()),
