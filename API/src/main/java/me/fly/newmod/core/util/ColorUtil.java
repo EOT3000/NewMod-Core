@@ -101,6 +101,14 @@ public class ColorUtil {
         return r << 16 | g << 8 | bl;
     }
 
+    public static int asInt(int r, int g, int b, int a) {
+        //System.out.println("lab: " + L + "," + a + "," + b);
+        //System.out.println("rgb: " + r + "," + g + "," + bl);
+        //System.out.println();
+
+        return a << 24 | r << 16 | g << 8 | b;
+    }
+
     public static int[] toInts(int intt) {
         return new int[]{intt >> 16 & 255, intt >> 8 & 255, intt & 255};
     }

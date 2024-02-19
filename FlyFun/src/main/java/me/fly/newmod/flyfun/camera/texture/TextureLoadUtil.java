@@ -23,16 +23,19 @@ public class TextureLoadUtil {
 
             //BufferedImage porters = new BufferedImage(16, 16, BufferedImage.TYPE_BYTE_GRAY);
 
+            //System.out.println(file.getName() + ": " + image.getType());
+
             for(int x = 0; x < 16; x++) {
                 for(int y = 0; y < 16; y++) {
                     int rgb = image.getRGB(x, y);
 
                     if(image.getType() == BufferedImage.TYPE_BYTE_GRAY) {
-                        int g = image.getRaster().getSample(x, y, 0);
+                        byte[] g = (byte[]) image.getRaster().getDataElements(x, y, null);
 
-                        rgb = ColorUtil.asInt(g,g,g);
+                        //rgb = ColorUtil.asInt(g[0]&0xff,g[0]&0xff,g[0]&0xff, 255);
+
+                        //System.out.println(file.getName() + " " + Arrays.toString(g) + " (g), " + rgb + " (rgb) , " + Arrays.toString(ColorUtil.toInts(rgb)) + " (rgb array) " + ((rgb >> 24) & 0xff) + " (alpha)");
                     }
-
 
                     /*if(file.getName().equals("stone.png")) {
                         System.out.println(x + "," + y + " (rgb mine): " + Arrays.toString(ColorUtil.toInts(rgb)));
