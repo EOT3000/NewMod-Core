@@ -9,14 +9,18 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Orientable;
+import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.joml.AxisAngle4f;
+import org.joml.Vector3f;
 
 import java.util.Random;
 
@@ -53,9 +57,26 @@ public class Camera {
                         }
                     }
 
+                    if(x == 64 && y == 64) {
+                        BlockDisplay display = location.getWorld().spawn(result.getHitPosition().toLocation(location.getWorld()), BlockDisplay.class);
+
+                        display.setBlock(Material.STONE.createBlockData());
+                        display.setTransformation(new Transformation(new Vector3f(0, 0, 0), new AxisAngle4f(), new Vector3f(0.05f, 0.05f, 0.05f), new AxisAngle4f()));
+                    }
+
                     BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
 
-                    Vector adjusted = GetImagePixel.transform(state.x(), state.y(), result.getHitPosition(), p);
+                    Vector adjusted = GetImagePixel.transform(state.x(), state.y(), result.getHitPosition().clone().subtract(result.getHitBlock().getLocation().toVector())
+                            .subtract(new Vector(0.5,0.5,0.5)), p).add(new Vector(0.5,0.5,0.5));
+
+                    //
+
+                    if(x == 64 && y == 64) {
+                        BlockDisplay display2 = location.getWorld().spawn(adjusted.toLocation(location.getWorld()).add(result.getHitBlock().getLocation().toVector()), BlockDisplay.class);
+
+                        display2.setBlock(Material.GOLD_BLOCK.createBlockData());
+                        display2.setTransformation(new Transformation(new Vector3f(0, 0, 0), new AxisAngle4f(), new Vector3f(0.05f, 0.05f, 0.05f), new AxisAngle4f()));
+                    }
 
                     BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y(), p);
 

@@ -22,7 +22,7 @@ public class GetImagePixel {
 
             for(int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
-                    System.out.println("Rotating back " + x + " x and " + y + " y");
+                    System.out.println("Rotating forward " + x + " x and " + y + " y");
 
                     int mx = face.getModX();
                     int my = face.getModY();
@@ -39,8 +39,8 @@ public class GetImagePixel {
                     }
 
                     for(int xx = 0; xx < x; xx++) {
-                        int ny = mz;
-                        int nz = -my;
+                        int ny = -mz;
+                        int nz = my;
 
                         my = ny;
                         mz = nz;
@@ -101,6 +101,33 @@ public class GetImagePixel {
             }
         }
 
+        /*switch (face) {
+            case UP -> {
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
+            }
+            case DOWN -> {
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
+            }
+            case NORTH -> {
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = (int) ((location.getY()-location.getBlockY())*16.0);
+            }
+            case EAST -> {
+                x1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = (int) ((location.getY()-location.getBlockY())*16.0);
+            }
+            case SOUTH -> {
+                x1 = (int) ((location.getX()-location.getBlockX())*16.0);
+                y1 = (int) ((location.getY()-location.getBlockY())*16.0);
+            }
+            case WEST -> {
+                x1 = (int) ((location.getZ()-location.getBlockZ())*16.0);
+                y1 = (int) ((location.getY()-location.getBlockY())*16.0);
+            }
+        }*/
+
         if(p) {
             System.out.println("Hit at: " + ((location.getX()-location.getBlockX())*16.0) + "," + ((location.getY()-location.getBlockY())*16.0) + "," + ((location.getZ()-location.getBlockZ())*16.0));
             System.out.println("Tranformed to: " + x1 + "," + y1);
@@ -116,12 +143,12 @@ public class GetImagePixel {
     public static Vector transform(int x, int y, Vector location, boolean p) {
         Vector vector = location.clone();
 
-        vector.rotateAroundY(Math.toRadians(-y));
-        vector.rotateAroundX(Math.toRadians(-x));
+        vector.rotateAroundY(Math.toRadians(y));
+        vector.rotateAroundX(Math.toRadians(x));
 
         if(p) {
-            System.out.println("Rotated around y axis: " + -y + " degrees");
-            System.out.println("Rotated around x axis: " + -x + " degrees");
+            System.out.println("Rotated around y axis: " + y + " degrees");
+            System.out.println("Rotated around x axis: " + x + " degrees");
             System.out.println("New hit location: " + vector.clone().subtract(new Vector(vector.getBlockX(), vector.getBlockY(), vector.getBlockZ())));
         }
 

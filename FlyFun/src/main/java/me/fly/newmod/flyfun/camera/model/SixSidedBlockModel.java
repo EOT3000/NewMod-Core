@@ -28,8 +28,8 @@ public class SixSidedBlockModel implements BlockModel {
 
         switch (face) {
             case NORTH: use = north; break;
-            case SOUTH: use = east; break;
-            case EAST: use = south; break;
+            case EAST: use = east; break;
+            case SOUTH: use = south; break;
             case WEST: use = west; break;
             case UP: use = up; break;
             case DOWN: use = down; break;

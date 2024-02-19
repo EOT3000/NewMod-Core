@@ -29,8 +29,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.BlockDisplay;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.MapMeta;
@@ -38,7 +41,11 @@ import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Transformation;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.joml.AxisAngle4f;
+import org.joml.Vector3f;
 
 import java.io.File;
 
@@ -104,6 +111,35 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(args.length == 5) {
+            Player p = (Player) sender;
+
+            Location loc = new Location(p.getWorld(),
+                    Double.parseDouble(args[0]),
+                    Double.parseDouble(args[1]),
+                    Double.parseDouble(args[2])
+            );
+
+            BlockDisplay display = p.getWorld().spawn(loc, BlockDisplay.class);
+
+            display.setBlock(Material.STONE.createBlockData());
+            display.setTransformation(new Transformation(new Vector3f(0,0,0), new AxisAngle4f(), new Vector3f(0.1f,0.1f,0.1f), new AxisAngle4f()));
+
+            Vector vec = loc.toVector().subtract(new Vector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())).subtract(new Vector(0.5f,0.5f,0.5f));
+
+            vec.rotateAroundY(Math.toRadians(-Integer.parseInt(args[4])));
+            vec.rotateAroundX(Math.toRadians(-Integer.parseInt(args[3])));
+
+            vec.add(new Vector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())).subtract(new Vector(0.5f,0.5f,0.5f));
+
+            BlockDisplay display2 = p.getWorld().spawn(new Location(p.getWorld(), vec.getX(), vec.getY(), vec.getZ()), BlockDisplay.class);
+
+            display2.setBlock(Material.GOLD_BLOCK.createBlockData());
+            display2.setTransformation(new Transformation(new Vector3f(0,0,0), new AxisAngle4f(), new Vector3f(0.1f,0.1f,0.1f), new AxisAngle4f()));
+
+            return true;
+        }
+
         System.out.println("sky brightness: " + NMSUtil.getSkyBrightness(((Player) sender).getWorld()));
 
         if(args.length == 1) {
@@ -157,7 +193,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         getLogger().info("Beginning picture capture");
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            byte[][] camera = Camera.run(((Player) sender).getLocation());
+            byte[][] camera = Camera.run(((Player) sender).getEyeLocation());
 
             giveToPlayer(camera, sender);
         }, 1);
