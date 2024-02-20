@@ -32,7 +32,7 @@ public class TextureLoadUtil {
                     if(image.getType() == BufferedImage.TYPE_BYTE_GRAY) {
                         byte[] g = (byte[]) image.getRaster().getDataElements(x, y, null);
 
-                        //rgb = ColorUtil.asInt(g[0]&0xff,g[0]&0xff,g[0]&0xff, 255);
+                        rgb = ColorUtil.asInt(g[0]&0xff,g[0]&0xff,g[0]&0xff, 255);
 
                         //System.out.println(file.getName() + " " + Arrays.toString(g) + " (g), " + rgb + " (rgb) , " + Arrays.toString(ColorUtil.toInts(rgb)) + " (rgb array) " + ((rgb >> 24) & 0xff) + " (alpha)");
                     }
