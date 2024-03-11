@@ -27,7 +27,7 @@ import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 
 public class VillagerBehavior extends Behavior<EntityVillager> {
-    protected static final Map<WorldServer, World> converted = new HashMap<>();
+    protected final static Map<WorldServer, World> converted = new HashMap<>();
 
     private WorldVillagerTimeConsumer start = null;
     private WorldVillagerTimeConsumer tick = null;
@@ -134,7 +134,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Start
     @Override
-    protected void d(WorldServer world, EntityVillager entity, long time) {
+    protected final void d(WorldServer world, EntityVillager entity, long time) {
         if (start != null) {
             start.accept(converted.get(world), new CraftVillager((CraftServer) Bukkit.getServer(), entity), time);
         } else {
@@ -144,7 +144,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Tick
     @Override
-    protected void c(WorldServer world, EntityVillager entity, long time) {
+    protected final void c(WorldServer world, EntityVillager entity, long time) {
         if (tick != null) {
             tick.accept(converted.get(world), new CraftVillager((CraftServer) Bukkit.getServer(), entity), time);
         } else {
@@ -154,7 +154,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Stop
     @Override
-    protected void b(WorldServer world, EntityVillager entity, long time) {
+    protected final void b(WorldServer world, EntityVillager entity, long time) {
         if (stop != null) {
             stop.accept(converted.get(world), new CraftVillager((CraftServer) Bukkit.getServer(), entity), time);
         } else {
@@ -164,7 +164,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Can Still Use?
     @Override
-    protected boolean a(WorldServer world, EntityVillager entity, long time) {
+    protected final boolean a(WorldServer world, EntityVillager entity, long time) {
         if (canStillUse != null) {
             return canStillUse.test(converted.get(world), new CraftVillager((CraftServer) Bukkit.getServer(), entity), time);
         } else {
@@ -174,7 +174,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Is Timed Out?
     @Override
-    protected boolean a(long time) {
+    protected final boolean a(long time) {
         if (isTimedOut != null) {
             return isTimedOut.test(time);
         } else {
@@ -184,7 +184,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Has Extra Start Conditions?
     @Override
-    protected boolean a(WorldServer world, EntityVillager entity) {
+    protected final boolean a(WorldServer world, EntityVillager entity) {
         if (hasExtraStartConditions != null) {
             return hasExtraStartConditions.test(converted.get(world), new CraftVillager((CraftServer) Bukkit.getServer(), entity));
         } else {
@@ -194,7 +194,7 @@ public class VillagerBehavior extends Behavior<EntityVillager> {
 
     //Has Required Memories?
     @Override
-    protected boolean a(EntityVillager entity) {
+    protected final boolean a(EntityVillager entity) {
         if (hasRequiredMemories != null) {
             return hasRequiredMemories.test(new CraftVillager((CraftServer) Bukkit.getServer(), entity));
         } else {
