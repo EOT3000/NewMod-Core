@@ -96,4 +96,6 @@ public class BasicToolsTypes {
     public static final ModItem ROSE_GOLD_PICKAXE = item.createBuilder(Material.GOLDEN_PICKAXE, plugin, "rose_gold_pickaxe").displayName("Rose Gold Pickaxe", 0xeffd2b3).category(BASIC_TOOLS).build();
     public static final ModItem ROSE_GOLD_SHOVEL = item.createBuilder(Material.GOLDEN_SHOVEL, plugin, "rose_gold_shovel").displayName("Rose Gold Shovel", 0xeffd2b3).category(BASIC_TOOLS).build();
     public static final ModItem ROSE_GOLD_SWORD = item.createBuilder(Material.GOLDEN_SWORD, plugin, "rose_gold_sword").displayName("Rose Gold Sword", 0xeffd2b3).category(BASIC_TOOLS).build();
+
+    //public static final ModItem RAID_HORN = item.createBuilder(Material.GOAT_HORN, plugin, "raid_horn").displayName("Raid Horn", 0x808080).category(BASIC_TOOLS).build();
 }

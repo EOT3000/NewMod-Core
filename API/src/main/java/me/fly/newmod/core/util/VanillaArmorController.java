@@ -3,7 +3,6 @@ package me.fly.newmod.core.util;
 import me.fly.newmod.core.api.gear.ArmorController;
 import me.fly.newmod.core.api.gear.ArmorMaterial;
 import me.fly.newmod.core.api.gear.GearManager;
-import me.fly.newmod.core.util.DamageChecker;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;

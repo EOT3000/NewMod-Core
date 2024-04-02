@@ -1,4 +1,4 @@
-package me.fly.newmod.core.util;
+/*package me.fly.newmod.core.util;
 
 import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
 import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
@@ -37,11 +37,11 @@ public class NMSUtil {
                 player.c.a(new PacketPlayOutSetSlot(player.bQ.j, player.bQ.j() + 1 & 32767, index, CraftItemStack.asNMSCopy(item)));
             }
         }
-    }*/
+    }/
 
     public static void openBook(int hand, Player player) {
         PacketPlayOutOpenBook book = new PacketPlayOutOpenBook(EnumHand.values()[hand]);
 
         ((CraftPlayer) player).getHandle().c.a(book);
     }
-}
+}*/
