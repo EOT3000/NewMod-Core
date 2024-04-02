@@ -46,4 +46,8 @@ public class FortuneDistributions {
     public static void addDrop(Material block, Material item, FortuneDistribution distribution) {
         distributions.put(block, new Pair<>(item, distribution));
     }
+
+    public static Material getDropItem(Material block) {
+        return distributions.get(block).getKey();
+    }
 }
