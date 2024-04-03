@@ -59,7 +59,7 @@ public interface GearManager {
     /**
      * Sets a mining level for the pickaxe.
      *
-     * See https://minecraft.wiki/w/Tiers#Mining_level
+     * See <a href="https://minecraft.wiki/w/Tiers#Mining_level">https://minecraft.wiki/w/Tiers#Mining_level</a>
      *
      * @param item the pickaxe to set the level for.
      * @param level the mining level.

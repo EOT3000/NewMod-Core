@@ -19,6 +19,6 @@ public class FortuneListener implements Listener {
             return;
         }
 
-        event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), FortuneDistributions.createDrop(event.getBlock().getType(), event.getPlayer().getInventory().getItemInMainHand().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS)));
+        event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), FortuneDistributions.createDrop(event.getBlock().getType(), event.getPlayer().getInventory().getItemInMainHand().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS)));
     }
 }
