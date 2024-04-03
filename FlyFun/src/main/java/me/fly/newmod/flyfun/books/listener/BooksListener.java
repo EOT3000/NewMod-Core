@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,7 +22,7 @@ public class BooksListener implements Listener {
 
     // The base behaviours - add a book when the paper or bark is in your hand, remove it when it's not, and apply data when it's finished
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onHotbarSwitch(PlayerItemHeldEvent event) {
         PlayerInventory inv = event.getPlayer().getInventory();
 
@@ -34,7 +35,7 @@ public class BooksListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBookEdit(PlayerEditBookEvent event) {
         if(event.getNewBookMeta().getPersistentDataContainer().getOrDefault(BooksUtils.OFFHAND_ONLY, PersistentDataType.BOOLEAN, false)) {
             PlayerInventory inv = event.getPlayer().getInventory();
@@ -131,7 +132,7 @@ public class BooksListener implements Listener {
         event.getDrops().removeIf(BooksUtils::isBook);
     }
 
-    @EventHandler
+    @EventHandler()
     public void onInteract(PlayerInteractEvent event) {
         if(event.getPlayer().getGameMode().equals(GameMode.CREATIVE) || event.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
             return;

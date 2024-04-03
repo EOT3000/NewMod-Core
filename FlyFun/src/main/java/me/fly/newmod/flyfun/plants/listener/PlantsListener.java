@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -35,7 +36,7 @@ public class PlantsListener implements Listener {
     private static final BlockManager block = api.blockManager();
     private static final BlockStorage blockStore = api.blockStorage();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         ItemStack hand = event.getPlayer().getInventory().getItemInMainHand();
 
@@ -71,14 +72,14 @@ public class PlantsListener implements Listener {
         }
 
         switch (event.getBlock().getType()) {
-            case ACACIA_LEAVES -> dropItem(event.getBlock().getLocation(), PlantsTypes.WATTLESEED.create());
-            case CHERRY_LEAVES -> dropItem(event.getBlock().getLocation(), PlantsTypes.RED_CHERRIES.create());
-            case OAK_LEAVES,DARK_OAK_LEAVES -> dropItem(event.getBlock().getLocation(), new ItemStack(Material.APPLE));
+            case ACACIA_LEAVES -> dropItemNaturally(event.getBlock().getLocation(), PlantsTypes.WATTLESEED.create());
+            case CHERRY_LEAVES -> dropItemNaturally(event.getBlock().getLocation(), PlantsTypes.RED_CHERRIES.create());
+            case OAK_LEAVES,DARK_OAK_LEAVES -> dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.APPLE));
         }
     }
 
-    private void dropItem(Location block, ItemStack item) {
-        block.getWorld().dropItem(block, item);
+    private void dropItemNaturally(Location block, ItemStack item) {
+        block.getWorld().dropItemNaturally(block, item);
     }
 
     @EventHandler
@@ -117,7 +118,7 @@ public class PlantsListener implements Listener {
             //TODO: easier clear data method
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
-            bl.getLocation().getWorld().dropItem(bl.getLocation(), s.drop);
+            dropItemNaturally(bl.getLocation(), s.drop);
         }
     }
 
@@ -130,13 +131,13 @@ public class PlantsListener implements Listener {
             event.setWillDrop(false);
             bl.setType(Material.AIR);
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
-            bl.getLocation().getWorld().dropItem(bl.getLocation(), s.drop);
+            dropItemNaturally(bl.getLocation(), s.drop);
         } else if(b instanceof TeaPlant) {
             event.setWillDrop(false);
             bl.setType(Material.AIR);
             blockStore.getBlock(bl.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
             for(ItemStack stack : b.getDrops(bl, null)) {
-                bl.getWorld().dropItem(bl.getLocation(), stack);
+                dropItemNaturally(bl.getLocation(), stack);
             }
         }
     }
@@ -154,19 +155,19 @@ public class PlantsListener implements Listener {
 
         if(b instanceof TeaPlant) {
             if(cb.getType() == Material.AZALEA) {
-                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
+                dropItemNaturally(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
 
                 if(random.nextBoolean()) {
-                    cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
+                    dropItemNaturally(cb.getLocation(), PlantsTypes.UNRIPE_TEA_LEAF.create());
                 }
 
                 cb.setType(Material.OAK_SAPLING);
             } else if(cb.getType() == Material.FLOWERING_AZALEA) {
-                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
-                cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.TEA_SEEDS.create());
+                dropItemNaturally(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
+                dropItemNaturally(cb.getLocation(), PlantsTypes.TEA_SEEDS.create());
 
                 if(random.nextBoolean()) {
-                    cb.getWorld().dropItem(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
+                    dropItemNaturally(cb.getLocation(), PlantsTypes.RIPE_TEA_LEAF.create());
                 }
 
                 cb.setType(Material.OAK_SAPLING);

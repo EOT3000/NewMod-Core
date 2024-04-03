@@ -13,7 +13,7 @@ import static org.bukkit.MusicInstrument.DREAM;
 import static org.bukkit.Sound.*;
 
 public class HornListener implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEvent(GenericGameEvent event) {
         if(event.getEvent().equals(GameEvent.HIT_GROUND) ||
                 event.getEvent().equals(GameEvent.STEP) ||

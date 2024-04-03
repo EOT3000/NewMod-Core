@@ -24,7 +24,7 @@ public class MiningLevelListener implements Listener {
     private static final ItemManager item = api.itemManager();
     private static final GearManager gear = api.gearManager();
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockBreakLowest(BlockBreakEvent event) {
         ItemStack main = event.getPlayer().getInventory().getItemInMainHand();
         ModItem type = item.getType(main);
@@ -39,7 +39,7 @@ public class MiningLevelListener implements Listener {
 
     //TODO: generalize to all items, not jsut golden pickaxes.
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreakMonitor(BlockBreakEvent event) {
         ItemStack main = event.getPlayer().getInventory().getItemInMainHand();
         ModItem type = item.getType(main);
