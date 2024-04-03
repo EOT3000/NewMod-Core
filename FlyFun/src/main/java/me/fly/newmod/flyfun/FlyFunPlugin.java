@@ -14,6 +14,7 @@ import me.fly.newmod.flyfun.camera.Camera;
 import me.fly.newmod.flyfun.camera.Textures;
 import me.fly.newmod.flyfun.camera.model.BlockModel;
 import me.fly.newmod.flyfun.camera.model.AllSidesBlockModel;
+import me.fly.newmod.flyfun.fortunefix.FortuneListener;
 import me.fly.newmod.flyfun.history.HistoryListener;
 import me.fly.newmod.flyfun.horn.HornListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
@@ -94,6 +95,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
 
         System.out.println(new File("").getAbsolutePath());
         System.out.println(textureDir.getAbsolutePath());

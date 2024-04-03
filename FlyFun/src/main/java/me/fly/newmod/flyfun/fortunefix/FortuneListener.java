@@ -11,7 +11,13 @@ import org.bukkit.event.block.BlockDropItemEvent;
 public class FortuneListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockDropItemEvent event) {
-        event.getItems().removeIf(item -> item.getItemStack().getType().equals(FortuneDistributions.getDropItem(event.getBlock().getType())));
+        if(FortuneDistributions.getDropItem(event.getBlock().getType()) == null) {
+            return;
+        }
+
+        if(!event.getItems().removeIf(item -> item.getItemStack().getType().equals(FortuneDistributions.getDropItem(event.getBlock().getType())))) {
+            return;
+        }
 
         event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), FortuneDistributions.createDrop(event.getBlock().getType(), event.getPlayer().getInventory().getItemInMainHand().getEnchantLevel(Enchantment.LOOT_BONUS_BLOCKS)));
     }

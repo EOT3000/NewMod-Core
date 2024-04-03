@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FortuneDistributions {
+    //TODO: make this not a static class, make it a singleton or something
     static {
         addDrop(Material.DIAMOND_ORE, Material.DIAMOND, FortuneDistribution.oneOrTwo);
         addDrop(Material.DEEPSLATE_DIAMOND_ORE, Material.DIAMOND, FortuneDistribution.oneOrTwo);
