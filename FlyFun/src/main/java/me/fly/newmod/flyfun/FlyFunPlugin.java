@@ -10,6 +10,7 @@ import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
 import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
+import me.fly.newmod.flyfun.books.listener.TreeBarkListener;
 import me.fly.newmod.flyfun.camera.Camera;
 import me.fly.newmod.flyfun.camera.Textures;
 import me.fly.newmod.flyfun.camera.model.BlockModel;
@@ -96,6 +97,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TreeBarkListener(), this);
 
         System.out.println(new File("").getAbsolutePath());
         System.out.println(textureDir.getAbsolutePath());
