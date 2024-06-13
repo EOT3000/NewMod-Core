@@ -12,6 +12,7 @@ import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Furnace;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BrewingStartEvent;
 import org.bukkit.event.inventory.*;
@@ -157,7 +158,7 @@ public class VanillaReplacementListener implements Listener {
         inventory.setResult(null);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAnvil(PrepareAnvilEvent event) {
         event.getInventory().setRepairCost((int) Math.ceil(Math.tanh(event.getInventory().getRepairCost()/39.0)*39));
     }

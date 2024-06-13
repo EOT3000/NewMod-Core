@@ -2,7 +2,6 @@ package me.fly.newmod.flyfun;
 
 import me.fly.newmod.core.api.NewModAPI;
 import me.fly.newmod.core.api.addon.NewModAddon;
-import me.fly.newmod.core.util.NMSUtil;
 import me.fly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.fly.newmod.flyfun.basictools.GoldPanManager;
 import me.fly.newmod.flyfun.basictools.listener.BasicToolsListener;
@@ -11,10 +10,12 @@ import me.fly.newmod.flyfun.books.BooksTypes;
 import me.fly.newmod.flyfun.books.data.WritableItemData;
 import me.fly.newmod.flyfun.books.data.WritableItemDataImpl;
 import me.fly.newmod.flyfun.books.listener.BooksListener;
+import me.fly.newmod.flyfun.books.listener.TreeBarkListener;
 import me.fly.newmod.flyfun.camera.Camera;
 import me.fly.newmod.flyfun.camera.Textures;
 import me.fly.newmod.flyfun.camera.model.BlockModel;
 import me.fly.newmod.flyfun.camera.model.AllSidesBlockModel;
+import me.fly.newmod.flyfun.fortunefix.FortuneListener;
 import me.fly.newmod.flyfun.history.HistoryListener;
 import me.fly.newmod.flyfun.horn.HornListener;
 import me.fly.newmod.flyfun.magic.MagicTypes;
@@ -95,6 +96,8 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TreeBarkListener(), this);
 
         System.out.println(new File("").getAbsolutePath());
         System.out.println(textureDir.getAbsolutePath());
@@ -140,7 +143,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
             return true;
         }
 
-        System.out.println("sky brightness: " + NMSUtil.getSkyBrightness(((Player) sender).getWorld()));
+        //System.out.println("sky brightness: " + NMSUtil.getSkyBrightness(((Player) sender).getWorld()));
 
         if(args.length == 1) {
             BlockModel model = Textures.me.getStates(Material.getMaterial(args[0])).getStates().get(0).model();

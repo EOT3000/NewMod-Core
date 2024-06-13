@@ -1,4 +1,4 @@
-package me.fly.newmod.core.util;
+/*package me.fly.newmod.core.util;
 
 import me.fly.newmod.core.api.gear.GearManager;
 import net.minecraft.core.BlockPosition;
@@ -140,4 +140,4 @@ public class DamageChecker {
     }
 
 
-}
+}*/

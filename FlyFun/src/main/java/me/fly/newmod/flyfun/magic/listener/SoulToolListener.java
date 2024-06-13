@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -22,7 +23,7 @@ public class SoulToolListener implements Listener {
     private static final NewModAPI api = plugin.api;
     private static final ItemManager item = api.itemManager();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onHit(EntityDamageByEntityEvent event) {
         if(event.getEntity() instanceof LivingEntity && event.getDamager() instanceof Player) {
             LivingEntity e = (LivingEntity) event.getEntity();
@@ -51,7 +52,7 @@ public class SoulToolListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.hasBlock()) {
             ItemStack offItem = event.getPlayer().getInventory().getItemInOffHand();

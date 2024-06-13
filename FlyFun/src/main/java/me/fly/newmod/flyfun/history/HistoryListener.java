@@ -8,6 +8,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
 import org.bukkit.block.sign.SignSide;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +29,7 @@ public class HistoryListener implements Listener {
     public static NamespacedKey FRONT_NAMESPACE = new NamespacedKey(plugin, "front");
     public static NamespacedKey BACK_NAMESPACE = new NamespacedKey(plugin, "back");
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         //TODO: silk touch only
         if(Tag.ALL_SIGNS.isTagged(event.getBlock().getType())) {
@@ -50,7 +51,7 @@ public class HistoryListener implements Listener {
 
             stack.setItemMeta(meta);
 
-            event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), stack);
+            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), stack);
         }
     }
 
