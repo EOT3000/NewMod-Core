@@ -2,7 +2,7 @@ package me.bergenfly.newmod.flyfun.magic.block.altar;
 
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.MagicTypes;
+import me.bergenfly.newmod.flyfun.magic.MagicTypes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;

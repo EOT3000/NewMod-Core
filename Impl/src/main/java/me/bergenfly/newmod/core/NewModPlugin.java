@@ -14,7 +14,6 @@ import me.bergenfly.newmod.core.command.CheatCommand;
 import me.bergenfly.newmod.core.item.category.CategoryManagerImpl;
 import me.bergenfly.newmod.core.listener.*;
 import me.bergenfly.newmod.core.item.ItemManagerImpl;
-import me.fly.newmod.core.listener.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;

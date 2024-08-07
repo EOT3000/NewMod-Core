@@ -1,7 +1,7 @@
-package me.fly.newmod.flyfun.magic.recipe;
+package me.bergenfly.newmod.flyfun.magic.recipe;
 
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.block.altar.Pedestal;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.magic.block.altar.Pedestal;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 

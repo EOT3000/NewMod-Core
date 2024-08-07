@@ -2,7 +2,7 @@ package me.bergenfly.newmod.flyfun.camera;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import me.fly.newmod.flyfun.camera.model.BlockModel;
+import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
 import me.bergenfly.newmod.flyfun.camera.model.BlockModelDeserializer;
 import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
 import me.bergenfly.newmod.flyfun.camera.model.BlockStatesDeserializer;

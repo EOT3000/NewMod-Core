@@ -6,7 +6,7 @@ import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.metals.MetalsTypes;
+import me.bergenfly.newmod.flyfun.metals.MetalsTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;

@@ -1,7 +1,7 @@
 package me.bergenfly.newmod.flyfun.camera.model;
 
 import com.google.gson.*;
-import me.fly.newmod.flyfun.camera.Textures;
+import me.bergenfly.newmod.flyfun.camera.Textures;
 
 import java.lang.reflect.Type;
 

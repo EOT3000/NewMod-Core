@@ -1,7 +1,7 @@
 package me.bergenfly.newmod.flyfun.camera.texture;
 
 import me.bergenfly.newmod.core.util.ColorUtil;
-import me.fly.newmod.flyfun.camera.Textures;
+import me.bergenfly.newmod.flyfun.camera.Textures;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

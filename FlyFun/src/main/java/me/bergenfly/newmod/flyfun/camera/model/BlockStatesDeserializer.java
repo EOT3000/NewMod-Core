@@ -1,8 +1,8 @@
 package me.bergenfly.newmod.flyfun.camera.model;
 
 import com.google.gson.*;
-import me.fly.newmod.flyfun.camera.Textures;
-import me.fly.newmod.flyfun.camera.texture.TextureLoadUtil;
+import me.bergenfly.newmod.flyfun.camera.Textures;
+import me.bergenfly.newmod.flyfun.camera.texture.TextureLoadUtil;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 

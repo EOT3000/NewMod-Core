@@ -1,6 +1,6 @@
 package me.bergenfly.newmod.flyfun.camera.model;
 
-import me.fly.newmod.flyfun.camera.Textures;
+import me.bergenfly.newmod.flyfun.camera.Textures;
 import org.bukkit.block.data.BlockData;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package me.fly.newmod.flyfun.camera.model;
+package me.bergenfly.newmod.flyfun.camera.model;
 
-import me.fly.newmod.flyfun.camera.Textures;
-import me.fly.newmod.flyfun.camera.texture.TextureData16x16;
+import me.bergenfly.newmod.flyfun.camera.Textures;
+import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 

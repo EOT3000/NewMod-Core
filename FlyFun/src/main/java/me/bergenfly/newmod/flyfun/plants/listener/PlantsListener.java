@@ -47,7 +47,7 @@ public class PlantsListener implements Listener {
         int totalLuck = 0;
 
         if(hand.hasItemMeta()) {
-            totalLuck = hand.getEnchantLevel(Enchantment.LOOT_BONUS_MOBS)*2;
+            totalLuck = hand.getEnchantLevel(Enchantment.LOOTING)*2;
         }
 
         PotionEffect luck = event.getPlayer().getPotionEffect(PotionEffectType.LUCK);

@@ -9,7 +9,7 @@ import org.bukkit.event.world.GenericGameEvent;
 import org.bukkit.inventory.meta.MusicInstrumentMeta;
 
 import static org.bukkit.MusicInstrument.*;
-import static org.bukkit.MusicInstrument.DREAM;
+import static org.bukkit.MusicInstrument.DREAM_GOAT_HORN;
 import static org.bukkit.Sound.*;
 
 public class HornListener implements Listener {
@@ -62,21 +62,21 @@ public class HornListener implements Listener {
             instrument = null;
         }
 
-        if(PONDER.equals(instrument)) {
+        if(PONDER_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_0;
-        } else if(SING.equals(instrument)) {
+        } else if(SING_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_1;
-        } else if(SEEK.equals(instrument)) {
+        } else if(SEEK_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_2;
-        } else if(FEEL.equals(instrument)) {
+        } else if(FEEL_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_3;
-        } else if(ADMIRE.equals(instrument)) {
+        } else if(ADMIRE_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_4;
-        } else if(CALL.equals(instrument)) {
+        } else if(CALL_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_5;
-        } else if(YEARN.equals(instrument)) {
+        } else if(YEARN_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_6;
-        } else if(DREAM.equals(instrument)) {
+        } else if(DREAM_GOAT_HORN.equals(instrument)) {
             return ITEM_GOAT_HORN_SOUND_7;
         }
 
