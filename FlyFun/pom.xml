@@ -3,12 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>NewMod-Core</artifactId>
-        <groupId>me.bergenfly.newmod.core</groupId>
+        <artifactId>NewEarth-Plugins</artifactId>
+        <groupId>me.bergenfly</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>me.bergenfly.flyfun</groupId>
     <artifactId>FlyFun</artifactId>
 
     <properties>
@@ -27,13 +28,7 @@
     <dependencies>
         <dependency>
             <groupId>me.bergenfly.newmod.core</groupId>
-            <artifactId>API</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.bergenfly.newmod.core</groupId>
-            <artifactId>Util</artifactId>
+            <artifactId>NewMod-API</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

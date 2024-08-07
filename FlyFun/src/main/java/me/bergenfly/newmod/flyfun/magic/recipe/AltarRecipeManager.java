@@ -14,7 +14,7 @@ import java.util.Set;
  * @see me.bergenfly.newmod.flyfun.magic.block.altar.AncientPedestal
  */
 public class AltarRecipeManager {
-    private Map<NamespacedKey, AltarRecipe> recipes = new HashMap<>();
+    private final Map<NamespacedKey, AltarRecipe> recipes = new HashMap<>();
 
     /**
      * Adds an altar recipe.
