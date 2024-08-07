@@ -1,6 +1,6 @@
-package me.fly.newmod.flyfun.technology;
+package me.bergenfly.newmod.flyfun.technology;
 
-import me.fly.newmod.flyfun.technology.util.ComponentAccess;
+import me.bergenfly.newmod.flyfun.technology.util.ComponentAccess;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

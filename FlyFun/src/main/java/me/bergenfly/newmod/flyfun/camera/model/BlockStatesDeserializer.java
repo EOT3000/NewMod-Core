@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.camera.model;
+package me.bergenfly.newmod.flyfun.camera.model;
 
 import com.google.gson.*;
 import me.fly.newmod.flyfun.camera.Textures;

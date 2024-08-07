@@ -1,6 +1,6 @@
-package me.fly.newmod.flyfun.history;
+package me.bergenfly.newmod.flyfun.history;
 
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;

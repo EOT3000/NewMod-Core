@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.horn;
+package me.bergenfly.newmod.flyfun.horn;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;

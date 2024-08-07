@@ -1,12 +1,12 @@
-package me.fly.newmod.flyfun.basictools.listener;
+package me.bergenfly.newmod.flyfun.basictools.listener;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.basictools.BasicToolsTypes;
-import me.fly.newmod.flyfun.basictools.GoldPanManager;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.basictools.BasicToolsTypes;
+import me.bergenfly.newmod.flyfun.basictools.GoldPanManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;

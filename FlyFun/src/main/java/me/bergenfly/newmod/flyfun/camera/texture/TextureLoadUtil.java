@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.camera.texture;
+package me.bergenfly.newmod.flyfun.camera.texture;
 
 import me.bergenfly.newmod.core.util.ColorUtil;
 import me.fly.newmod.flyfun.camera.Textures;

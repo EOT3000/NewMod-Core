@@ -1,6 +1,6 @@
-package me.fly.newmod.flyfun.books.listener;
+package me.bergenfly.newmod.flyfun.books.listener;
 
-import me.fly.newmod.flyfun.books.BooksTypes;
+import me.bergenfly.newmod.flyfun.books.BooksTypes;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

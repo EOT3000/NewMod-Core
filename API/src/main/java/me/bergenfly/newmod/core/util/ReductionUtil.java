@@ -33,11 +33,11 @@ public class ReductionUtil {
     public static double magicModifier(double damage, double armor, Map<Enchantment, Integer> enchantments, DamageCause type) {
         damage = damage-armor;
 
-        double protection = reductionProtection(damage, enchantments.getOrDefault(Enchantment.PROTECTION_ENVIRONMENTAL, 0));
-        double protectionFire = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.PROTECTION_FIRE, 0));
-        double protectionProj = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.PROTECTION_PROJECTILE, 0));
-        double protectionBlas = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.PROTECTION_EXPLOSIONS, 0));
-        double protectionFall = reductionFeatherFalling(damage, enchantments.getOrDefault(Enchantment.PROTECTION_FALL, 0));
+        double protection = reductionProtection(damage, enchantments.getOrDefault(Enchantment.PROTECTION, 0));
+        double protectionFire = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.FIRE_PROTECTION, 0));
+        double protectionProj = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.PROJECTILE_PROTECTION, 0));
+        double protectionBlas = reductionBodySpecialProtection(damage, enchantments.getOrDefault(Enchantment.BLAST_PROTECTION, 0));
+        double protectionFall = reductionFeatherFalling(damage, enchantments.getOrDefault(Enchantment.FEATHER_FALLING, 0));
 
         if(resistanceImmune.contains(type)) {
             protection = 0;
@@ -65,8 +65,8 @@ public class ReductionUtil {
     public static double resistanceModifier(double damage, double armor, double magic, LivingEntity entity, DamageCause type) {
         damage = damage-armor-magic;
 
-        double resistance = reductionResistance(damage, entity.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)
-                ? entity.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE).getAmplifier()
+        double resistance = reductionResistance(damage, entity.hasPotionEffect(PotionEffectType.RESISTANCE)
+                ? entity.getPotionEffect(PotionEffectType.RESISTANCE).getAmplifier()
                 : 0);
 
         if(resistanceImmune.contains(type)) {

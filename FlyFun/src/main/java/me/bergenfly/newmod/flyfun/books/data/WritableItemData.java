@@ -1,7 +1,7 @@
-package me.fly.newmod.flyfun.books.data;
+package me.bergenfly.newmod.flyfun.books.data;
 
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.NamespacedKey;
 
 /**

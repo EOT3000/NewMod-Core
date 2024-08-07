@@ -1,13 +1,13 @@
-package me.fly.newmod.flyfun.camera;
+package me.bergenfly.newmod.flyfun.camera;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import me.fly.newmod.flyfun.camera.model.BlockModel;
-import me.fly.newmod.flyfun.camera.model.BlockModelDeserializer;
-import me.fly.newmod.flyfun.camera.model.BlockStates;
-import me.fly.newmod.flyfun.camera.model.BlockStatesDeserializer;
-import me.fly.newmod.flyfun.camera.texture.TextureData16x16;
-import me.fly.newmod.flyfun.camera.texture.TextureLoadUtil;
+import me.bergenfly.newmod.flyfun.camera.model.BlockModelDeserializer;
+import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
+import me.bergenfly.newmod.flyfun.camera.model.BlockStatesDeserializer;
+import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
+import me.bergenfly.newmod.flyfun.camera.texture.TextureLoadUtil;
 import org.bukkit.Color;
 import org.bukkit.Material;
 

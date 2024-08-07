@@ -1,14 +1,14 @@
-package me.fly.newmod.flyfun.magic;
+package me.bergenfly.newmod.flyfun.magic;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BasicBlock;
 import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.block.altar.AncientPedestal;
-import me.fly.newmod.flyfun.magic.block.spawner.RepairedSpawner;
-import me.fly.newmod.flyfun.magic.recipe.AltarRecipe;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.magic.block.altar.AncientPedestal;
+import me.bergenfly.newmod.flyfun.magic.block.spawner.RepairedSpawner;
+import me.bergenfly.newmod.flyfun.magic.recipe.AltarRecipe;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;

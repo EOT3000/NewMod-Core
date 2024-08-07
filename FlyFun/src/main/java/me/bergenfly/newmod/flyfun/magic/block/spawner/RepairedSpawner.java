@@ -1,9 +1,9 @@
-package me.fly.newmod.flyfun.magic.block.spawner;
+package me.bergenfly.newmod.flyfun.magic.block.spawner;
 
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.core.util.PersistentDataUtil;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.MagicTypes;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.magic.MagicTypes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;

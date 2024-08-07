@@ -1,9 +1,9 @@
-package me.fly.newmod.flyfun.technology.util;
+package me.bergenfly.newmod.flyfun.technology.util;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.blockstorage.BlockStorage;
 import me.bergenfly.newmod.core.util.IntUtil;
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 

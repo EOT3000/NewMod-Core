@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.basictools;
+package me.bergenfly.newmod.flyfun.basictools;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

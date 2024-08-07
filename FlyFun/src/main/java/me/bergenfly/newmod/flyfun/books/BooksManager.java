@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.books;
+package me.bergenfly.newmod.flyfun.books;
 
 import me.bergenfly.newmod.core.api.item.ModItem;
 

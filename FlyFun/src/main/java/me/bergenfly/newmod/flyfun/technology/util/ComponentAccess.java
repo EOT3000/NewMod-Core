@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.technology.util;
+package me.bergenfly.newmod.flyfun.technology.util;
 
 import org.bukkit.Location;
 

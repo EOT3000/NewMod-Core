@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.magic.recipe;
+package me.bergenfly.newmod.flyfun.magic.recipe;
 
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;

@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.camera.texture;
+package me.bergenfly.newmod.flyfun.camera.texture;
 
 import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;

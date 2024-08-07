@@ -1,12 +1,12 @@
-package me.fly.newmod.flyfun.magic.listener;
+package me.bergenfly.newmod.flyfun.magic.listener;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BlockManager;
 import me.bergenfly.newmod.core.api.block.ModBlock;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.MagicTypes;
-import me.fly.newmod.flyfun.magic.block.altar.Pedestal;
-import me.fly.newmod.flyfun.magic.recipe.AltarRecipeChecker;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.magic.MagicTypes;
+import me.bergenfly.newmod.flyfun.magic.block.altar.Pedestal;
+import me.bergenfly.newmod.flyfun.magic.recipe.AltarRecipeChecker;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

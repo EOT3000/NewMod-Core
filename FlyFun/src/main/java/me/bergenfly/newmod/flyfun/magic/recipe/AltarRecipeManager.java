@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.magic.recipe;
+package me.bergenfly.newmod.flyfun.magic.recipe;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Manages altar recipes.
  *
- * @see me.fly.newmod.flyfun.magic.block.altar.AncientPedestal
+ * @see me.bergenfly.newmod.flyfun.magic.block.altar.AncientPedestal
  */
 public class AltarRecipeManager {
     private Map<NamespacedKey, AltarRecipe> recipes = new HashMap<>();

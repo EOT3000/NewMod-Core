@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.camera.model;
+package me.bergenfly.newmod.flyfun.camera.model;
 
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;

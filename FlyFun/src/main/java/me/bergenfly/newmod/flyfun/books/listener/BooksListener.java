@@ -1,6 +1,6 @@
-package me.fly.newmod.flyfun.books.listener;
+package me.bergenfly.newmod.flyfun.books.listener;
 
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;

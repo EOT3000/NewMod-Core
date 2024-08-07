@@ -1,10 +1,10 @@
-package me.fly.newmod.flyfun.books.data;
+package me.bergenfly.newmod.flyfun.books.data;
 
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.api.item.data.ModItemDataSerializer;
 import me.bergenfly.newmod.core.util.PersistentDataUtil;
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;

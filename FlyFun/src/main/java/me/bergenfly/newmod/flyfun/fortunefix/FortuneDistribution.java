@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.fortunefix;
+package me.bergenfly.newmod.flyfun.fortunefix;
 
 import java.util.Random;
 

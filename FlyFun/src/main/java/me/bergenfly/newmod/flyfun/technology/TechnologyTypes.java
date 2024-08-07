@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.technology;
+package me.bergenfly.newmod.flyfun.technology;
 
 public class TechnologyTypes {
 }

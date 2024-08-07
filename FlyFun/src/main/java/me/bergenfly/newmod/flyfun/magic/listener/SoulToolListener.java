@@ -1,9 +1,9 @@
-package me.fly.newmod.flyfun.magic.listener;
+package me.bergenfly.newmod.flyfun.magic.listener;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.item.ItemManager;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.magic.MagicTypes;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.magic.MagicTypes;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -1,9 +1,9 @@
-package me.fly.newmod.flyfun.camera;
+package me.bergenfly.newmod.flyfun.camera;
 
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import me.bergenfly.newmod.core.util.GeometryUtil;
-import me.fly.newmod.flyfun.camera.model.BlockStates;
-import me.fly.newmod.flyfun.camera.texture.GetImagePixel;
+import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
+import me.bergenfly.newmod.flyfun.camera.texture.GetImagePixel;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;

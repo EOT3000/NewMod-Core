@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.fortunefix;
+package me.bergenfly.newmod.flyfun.fortunefix;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;

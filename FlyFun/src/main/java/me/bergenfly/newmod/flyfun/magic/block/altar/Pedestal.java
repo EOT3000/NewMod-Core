@@ -1,9 +1,9 @@
-package me.fly.newmod.flyfun.magic.block.altar;
+package me.bergenfly.newmod.flyfun.magic.block.altar;
 
 import me.bergenfly.newmod.core.api.blockstorage.BlockStorage;
 import me.bergenfly.newmod.core.api.blockstorage.StoredBlock;
 import me.bergenfly.newmod.core.util.PersistentDataUtil;
-import me.fly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;

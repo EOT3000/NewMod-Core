@@ -1,10 +1,10 @@
-package me.fly.newmod.flyfun.technology.producer;
+package me.bergenfly.newmod.flyfun.technology.producer;
 
 import me.bergenfly.newmod.core.api.block.BlockManager;
 import me.bergenfly.newmod.core.api.block.ModBlock;
-import me.fly.newmod.flyfun.FlyFunPlugin;
-import me.fly.newmod.flyfun.technology.EnergyComponent;
-import me.fly.newmod.flyfun.technology.util.EnergyUtil;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.technology.EnergyComponent;
+import me.bergenfly.newmod.flyfun.technology.util.EnergyUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
