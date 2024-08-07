@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>NewMod-Core</artifactId>
-        <groupId>me.fly.newmod.core</groupId>
+        <groupId>me.bergenfly.newmod.core</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -57,11 +57,11 @@
                     <relocations>
                         <relocation>
                             <pattern>com.jeff_media.morepersistentdatatypes</pattern>
-                            <shadedPattern>me.fly.newmod.core.morepersistentdatatypes</shadedPattern>
+                            <shadedPattern>me.bergenfly.newmod.core.morepersistentdatatypes</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.jeff_media.customblockdata</pattern>
-                            <shadedPattern>me.fly.newmod.core.customblockdata</shadedPattern>
+                            <shadedPattern>me.bergenfly.newmod.core.customblockdata</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -79,13 +79,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.fly.newmod.core</groupId>
+            <groupId>me.bergenfly.newmod.core</groupId>
             <artifactId>API</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.fly.newmod.core</groupId>
+            <groupId>me.bergenfly.newmod.core</groupId>
             <artifactId>Util</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
