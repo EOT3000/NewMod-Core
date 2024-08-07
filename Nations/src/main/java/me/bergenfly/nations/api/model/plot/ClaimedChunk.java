@@ -1,5 +1,6 @@
-package me.bergenfly.nations.api.model;
+package me.bergenfly.nations.api.model.plot;
 
+import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
