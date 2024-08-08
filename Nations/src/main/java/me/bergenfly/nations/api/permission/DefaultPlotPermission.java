@@ -1,6 +1,5 @@
-package me.bergenfly.nations.api.model.permission;
+package me.bergenfly.nations.api.permission;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanFunction;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public enum DefaultPlotPermission implements PlotPermission {
     BUILD;

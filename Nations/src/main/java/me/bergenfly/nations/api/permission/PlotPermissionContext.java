@@ -1,4 +1,4 @@
-package me.bergenfly.nations.api.model.permission;
+package me.bergenfly.nations.api.permission;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;

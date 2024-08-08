@@ -1,4 +1,4 @@
-package me.bergenfly.nations.api.model.permission;
+package me.bergenfly.nations.api.permission;
 
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.plot.PlotSection;
