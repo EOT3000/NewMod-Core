@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class RequirementCheckers {
-    private static int CURRENT_LOCATION = NationsCommand.CURRENT_LOCATION;
-    private static int MEMBERSHIP = NationsCommand.MEMBERSHIP;
-    private static int SELF = NationsCommand.SELF;
+    private static int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
+    private static int MEMBERSHIP = CommandFlower.MEMBERSHIP;
+    private static int SELF = CommandFlower.SELF;
 
     private static Registry<Nation, String> NATIONS = null;
     private static Registry<Settlement, String> SETTLEMENTS = null;

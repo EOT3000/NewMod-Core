@@ -3,6 +3,7 @@ package me.bergenfly.nations.api.model;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,4 +41,6 @@ public interface User extends LandPermissionHolder {
     void setAdminMode(boolean adminMode);
 
     void updateName();
+
+    OfflinePlayer getPlayer();
 }

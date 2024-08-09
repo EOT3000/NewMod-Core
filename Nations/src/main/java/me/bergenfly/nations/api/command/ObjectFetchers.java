@@ -1,7 +1,6 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -9,15 +8,13 @@ import me.bergenfly.nations.api.registry.Registry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class ObjectFetchers {
-    private static int CURRENT_LOCATION = NationsCommand.CURRENT_LOCATION;
-    private static int MEMBERSHIP = NationsCommand.MEMBERSHIP;
-    private static int SELF = NationsCommand.SELF;
+    private static int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
+    private static int MEMBERSHIP = CommandFlower.MEMBERSHIP;
+    private static int SELF = CommandFlower.SELF;
 
     private static Registry<Nation, String> NATIONS = null;
     private static Registry<Settlement, String> SETTLEMENTS = null;

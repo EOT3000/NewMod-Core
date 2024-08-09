@@ -1,19 +1,22 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
-import me.bergenfly.nations.api.registry.Registry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
-public class NationsCommand {
+public class CommandFlower {
+
+    protected static final Pattern pattern = Pattern.compile("^((?!([a-z]|[A-Z]|[0-9]|_)).)*$|__");
 
     static {
         // When changing change in check method too
@@ -26,6 +29,7 @@ public class NationsCommand {
     public static final int MEMBERSHIP;
     public static final int SELF;
 
+    private Predicate<NationsCommandInvocation> command;
 
     private final IntArrayList nations = new IntArrayList();
     private final IntArrayList settlements = new IntArrayList();
@@ -37,41 +41,70 @@ public class NationsCommand {
     public final IntArrayList nationsNotExist = new IntArrayList();
     public final IntArrayList settlementsNotExist = new IntArrayList();
 
-    public NationsCommand() {
+    public final IntArrayList cleanName = new IntArrayList();
+
+    public Function<NationsCommandInvocation, String> successBroadcast = null;
+    public Function<NationsCommandInvocation, String> successMessage = null;
+    public Function<NationsCommandInvocation, String> failureMessage = null;
+
+    public CommandFlower() {
 
     }
 
-    public NationsCommand addNation(int i) {
+    public CommandFlower addNation(int i) {
         nations.add(i);
         return this;
     }
-    public NationsCommand addSettlement(int i) {
+    public CommandFlower addSettlement(int i) {
         settlements.add(i);
         return this;
     }
-    public NationsCommand addUser(int i) {
+    public CommandFlower addUser(int i) {
         users.add(i);
         return this;
     }
-    public NationsCommand addInt(int i) {
+    public CommandFlower addInt(int i) {
         ints.add(i);
         return this;
     }
-    public NationsCommand addFloat(int i) {
+    public CommandFlower addFloat(int i) {
         floats.add(i);
         return this;
     }
-    public NationsCommand addBoolean(int i) {
+    public CommandFlower addBoolean(int i) {
         booleans.add(i);
         return this;
     }
 
-    public NationsCommand nationDoesNotExist(int i) {
+    public CommandFlower nationDoesNotExist(int i) {
         nationsNotExist.add(i);
         return this;
     }
-    public NationsCommand settlementDoesNotExist(int i) {
+    public CommandFlower settlementDoesNotExist(int i) {
         settlementsNotExist.add(i);
+        return this;
+    }
+
+    public CommandFlower cleanName(int i) {
+        cleanName.add(i);
+        return this;
+    }
+
+    public CommandFlower command(Predicate<NationsCommandInvocation> command) {
+        this.command = command;
+        return this;
+    }
+
+    public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function) {
+        this.successBroadcast = function;
+        return this;
+    }
+    public CommandFlower successMessage(Function<NationsCommandInvocation, String> function) {
+        this.successMessage = function;
+        return this;
+    }
+    public CommandFlower failureMessage(Function<NationsCommandInvocation, String> function) {
+        this.failureMessage = function;
         return this;
     }
 
