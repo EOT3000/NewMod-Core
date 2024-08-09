@@ -1,7 +1,7 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -21,18 +21,20 @@ public class NationsCommand {
         // When changing change in check method too
         CURRENT_LOCATION = -10;
         MEMBERSHIP = -20;
+        SELF = -20;
     }
 
     public static final int CURRENT_LOCATION;
     public static final int MEMBERSHIP;
+    public static final int SELF;
 
 
-    private final IntList nations = new IntArrayList();
-    private final IntList settlements = new IntArrayList();
-    private final IntList users = new IntArrayList();
-    private final IntList ints = new IntArrayList();
-    private final IntList floats = new IntArrayList();
-    private final IntList booleans = new IntArrayList();
+    private final IntArrayList nations = new IntArrayList();
+    private final IntArrayList settlements = new IntArrayList();
+    private final IntArrayList users = new IntArrayList();
+    private final IntArrayList ints = new IntArrayList();
+    private final IntArrayList floats = new IntArrayList();
+    private final IntArrayList booleans = new IntArrayList();
 
     public NationsCommand() {
 
@@ -71,13 +73,29 @@ public class NationsCommand {
         private BiFunction<Player, String[], float[]> floats = (_, _) -> null;
         private BiFunction<Player, String[], boolean[]> booleans = (_, _) -> null;
 
-        private NationsCommandInvocationBuilder(IntList nations_, IntList settlements_, IntList users_, IntList ints_, IntList floats_, IntList booleans_) {
+        private NationsCommandInvocationBuilder(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
-                nations = (a,b) -> {
-                    Nation[] r = new Nation[];
+                nations = ObjectFetchers.createNationFetcher(nations_);
+            }
 
+            if(!settlements_.isEmpty()) {
+                settlements = ObjectFetchers.createSettlementFetcher(settlements_);
+            }
 
-                };
+            if(!users_.isEmpty()) {
+                users = ObjectFetchers.createUserFetcher(users_);
+            }
+
+            if(!ints_.isEmpty()) {
+                ints = ObjectFetchers.createIntFetcher(ints_);
+            }
+
+            if(!floats_.isEmpty()) {
+                floats = ObjectFetchers.createFloatFetcher(floats_);
+            }
+
+            if(!booleans_.isEmpty()) {
+                booleans = ObjectFetchers.createBooleanFetcher(booleans_);
             }
         }
     }

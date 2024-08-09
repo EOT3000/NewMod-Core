@@ -34,23 +34,27 @@ public class TranslatableString {
     }
 
     private static void addTranslations() {
-        translations.put("nations.command.error.membership.nation", new TranslatableString("&cYou must be a resident of a nation do run that command"));
-        translations.put("nations.command.error.location.nation", new TranslatableString("&cYou must be within a nation's territory to run that command"));
-        translations.put("nations.command.error.argument.nation", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
+        translations.put("nations.command.error.nation.membership", new TranslatableString("&cYou must be a resident of a nation do run that command"));
+        translations.put("nations.command.error.nation.location", new TranslatableString("&cYou must be within a nation's territory to run that command"));
+        translations.put("nations.command.error.nation.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
 
-        translations.put("nations.command.error.membership.settlement", new TranslatableString("You must be a resident of a settlement do run that command"));
-        translations.put("nations.command.error.territory.settlement", new TranslatableString("You must be within a territories of a settlement to run that command"));
-        translations.put("nations.command.error.argument.settlement", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
+        translations.put("nations.command.error.settlement.membership", new TranslatableString("You must be a resident of a settlement do run that command"));
+        translations.put("nations.command.error.settlement.territory", new TranslatableString("You must be within a territories of a settlement to run that command"));
+        translations.put("nations.command.error.settlement.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
 
-        translations.put("nations.command.error.argument.player", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a player"));
+        translations.put("nations.command.error.player.argument", new TranslatableString("&4{2}&c is not a valid player (&7{1o} &cargument)"));
 
-        translations.put("nations.command.error.argument.boolean", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be either &7true &cor &7false"));
+        translations.put("nations.command.error.boolean.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be either &7true &cor &7false"));
 
         //If a float is passed to an int parameter, float will be rounded to an int, only one number type needed
-        translations.put("nations.command.error.argument.number.general", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
+        translations.put("nations.command.error.number.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
     }
 
     private static final Map<String, TranslatableString> translations;
+
+    public static String translate(String key) {
+        return translations.get(key).input;
+    }
 
     public static String translate(String key, String param1) {
         TranslatableString translatableString = translations.get(key);
