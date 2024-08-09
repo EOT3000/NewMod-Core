@@ -15,8 +15,6 @@ import java.util.function.BiFunction;
 
 public class NationsCommand {
 
-    private static Registry<Nation, String> NATIONS = null;
-
     static {
         // When changing change in check method too
         CURRENT_LOCATION = -10;
@@ -65,7 +63,7 @@ public class NationsCommand {
         return false;
     }
 
-    private class NationsCommandInvocationBuilder {
+    private class NationsCommandInvocationMaker {
         private BiFunction<Player, String[], Nation[]> nations = (_, _) -> null;
         private BiFunction<Player, String[], Settlement[]> settlements = (_, _) -> null;
         private BiFunction<Player, String[], User[]> users = (_, _) -> null;
@@ -73,7 +71,7 @@ public class NationsCommand {
         private BiFunction<Player, String[], float[]> floats = (_, _) -> null;
         private BiFunction<Player, String[], boolean[]> booleans = (_, _) -> null;
 
-        private NationsCommandInvocationBuilder(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
+        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
                 nations = ObjectFetchers.createNationFetcher(nations_);
             }
@@ -98,10 +96,36 @@ public class NationsCommand {
                 booleans = ObjectFetchers.createBooleanFetcher(booleans_);
             }
         }
+
+        private NationsCommandInvocation make(Player player, String[] strings) {
+            Nation[] nations = this.nations.apply(player, strings);
+            Settlement[] settlements = this.settlements.apply(player, strings);
+            User[] users = this.users.apply(player, strings);
+            int[] ints = this.ints.apply(player, strings);
+            float[] floats = this.floats.apply(player, strings);
+            boolean[] booleans = this.booleans.apply(player, strings);
+
+            boolean valid = true;
+
+            //If any of the arrays are length 0, means there was an error, in ObjectFetchers, so mark as invalid. If array is null, just means that
+            if(nations != null && nations.length == 0) {
+                valid = false;
+            } else if(settlements != null && settlements.length == 0) {
+                valid = false;
+            } else if(users != null && users.length == 0) {
+                valid = false;
+            } else if(ints != null && ints.length == 0) {
+                valid = false;
+            } else if(floats != null && floats.length != 0) {
+                valid = false;
+            } else if(booleans != null && booleans.length != 0) {
+                valid = false;
+            }
+
+            return new NationsCommandInvocation(player, strings, valid, nations, settlements, users, ints, floats, booleans);
+        }
     }
 
-    public static final record NationsCommandInvocation(@NotNull Player invoker, @NotNull String[] args, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {
-
-    }
+    public static final record NationsCommandInvocation(@NotNull Player invoker, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {}
 
 }
