@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.model;
 
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
+import me.bergenfly.nations.api.model.organization.Settlement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,8 @@ public interface User extends LandPermissionHolder {
     void sendMessage(String s);
 
     @Nullable Nation getNation();
+
+    @Nullable Settlement getSettlement();
 
     /**
      * Sets the user's faction. Also removes itself from the old faction's member list, and adds itself to the new faction member list
