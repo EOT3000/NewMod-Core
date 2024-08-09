@@ -34,27 +34,45 @@ public class NationsCommand {
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
 
+    public final IntArrayList nationsNotExist = new IntArrayList();
+    public final IntArrayList settlementsNotExist = new IntArrayList();
+
     public NationsCommand() {
 
     }
 
-    public void addNation(int i) {
+    public NationsCommand addNation(int i) {
         nations.add(i);
+        return this;
     }
-    public void addSettlement(int i) {
+    public NationsCommand addSettlement(int i) {
         settlements.add(i);
+        return this;
     }
-    public void addUser(int i) {
+    public NationsCommand addUser(int i) {
         users.add(i);
+        return this;
     }
-    public void addInt(int i) {
+    public NationsCommand addInt(int i) {
         ints.add(i);
+        return this;
     }
-    public void addFloat(int i) {
+    public NationsCommand addFloat(int i) {
         floats.add(i);
+        return this;
     }
-    public void addBoolean(int i) {
+    public NationsCommand addBoolean(int i) {
         booleans.add(i);
+        return this;
+    }
+
+    public NationsCommand nationDoesNotExist(int i) {
+        nationsNotExist.add(i);
+        return this;
+    }
+    public NationsCommand settlementDoesNotExist(int i) {
+        settlementsNotExist.add(i);
+        return this;
     }
 
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -121,6 +139,9 @@ public class NationsCommand {
             } else if(booleans != null && booleans.length != 0) {
                 valid = false;
             }
+
+            // If still valid, then check the NOT requirements
+            valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, player, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, player, strings);
 
             return new NationsCommandInvocation(player, strings, valid, nations, settlements, users, ints, floats, booleans);
         }

@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,20 +35,28 @@ public class TranslatableString {
     }
 
     private static void addTranslations() {
-        translations.put("nations.command.error.nation.membership", new TranslatableString("&cYou must be a resident of a nation do run that command"));
-        translations.put("nations.command.error.nation.location", new TranslatableString("&cYou must be within a nation's territory to run that command"));
-        translations.put("nations.command.error.nation.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
+        translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
+        translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to run that command"));
+        translations.put("nations.command.error.nation.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
 
-        translations.put("nations.command.error.settlement.membership", new TranslatableString("You must be a resident of a settlement do run that command"));
-        translations.put("nations.command.error.settlement.territory", new TranslatableString("You must be within a territories of a settlement to run that command"));
-        translations.put("nations.command.error.settlement.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
+        translations.put("nations.command.error.nation.is_member", new TranslatableString("&cYou must leave your nation to do that"));
+        translations.put("nations.command.error.nation.is_in_territory", new TranslatableString("&cYou cannot be within a nation's territory to do that"));
+        translations.put("nations.command.error.nation.is_argument", new TranslatableString("&cThe nation &4{1}&c already exists")); //TODO: alternative message for when a nation exists (not "already"). Current message only really works for the create command
 
-        translations.put("nations.command.error.player.argument", new TranslatableString("&4{2}&c is not a valid player (&7{1o} &cargument)"));
+        translations.put("nations.command.error.settlement.not_member", new TranslatableString("You must be a resident of a settlement to do that"));
+        translations.put("nations.command.error.settlement.not_in_territory", new TranslatableString("You must be within a territory of a settlement to do that"));
+        translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
 
-        translations.put("nations.command.error.boolean.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be either &7true &cor &7false"));
+        translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must be a resident of a settlement to do that"));
+        translations.put("nations.command.error.settlement.is_in_territory", new TranslatableString("You cannot be within a settlement's territory to do that"));
+        translations.put("nations.command.error.settlement.is_argument", new TranslatableString("&cThe settlement &4{1}&c already exists")); //TODO same as above
+
+        translations.put("nations.command.error.player.not_argument", new TranslatableString("&4{2}&c is not a valid player (&7{1o} &cargument)"));
+
+        translations.put("nations.command.error.boolean.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be either &7true &cor &7false"));
 
         //If a float is passed to an int parameter, float will be rounded to an int, only one number type needed
-        translations.put("nations.command.error.number.argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
+        translations.put("nations.command.error.number.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
     }
 
     private static final Map<String, TranslatableString> translations;
@@ -114,7 +123,7 @@ public class TranslatableString {
             input = input.replace("{3}", param3);
         }
 
-        return input;
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 
     public static String translate(String key, String... params) {
