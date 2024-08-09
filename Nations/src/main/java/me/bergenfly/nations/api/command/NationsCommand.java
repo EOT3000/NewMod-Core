@@ -1,24 +1,89 @@
 package me.bergenfly.nations.api.command;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.registry.Registry;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+import java.util.function.BiFunction;
 
 public class NationsCommand {
 
+    private static Registry<Nation, String> NATIONS = null;
 
-    public static final class NationsCommandInvocation {
-        public final Nation[] nations;
-        public final Settlement[] settlements;
-        public final User[] users;
-
-        public final int[] ints;
-        public final float[] floats;
-
-        public final boolean[] booleans;
-
-        public final String[] strings;
+    static {
+        // When changing change in check method too
+        CURRENT_LOCATION = -10;
+        MEMBERSHIP = -20;
     }
+
+    public static final int CURRENT_LOCATION;
+    public static final int MEMBERSHIP;
+
+
+    private final IntList nations = new IntArrayList();
+    private final IntList settlements = new IntArrayList();
+    private final IntList users = new IntArrayList();
+    private final IntList ints = new IntArrayList();
+    private final IntList floats = new IntArrayList();
+    private final IntList booleans = new IntArrayList();
+
+    public NationsCommand() {
+
+    }
+
+    public void addNation(int i) {
+        nations.add(i);
+    }
+    public void addSettlement(int i) {
+        settlements.add(i);
+    }
+    public void addUser(int i) {
+        users.add(i);
+    }
+    public void addInt(int i) {
+        ints.add(i);
+    }
+    public void addFloat(int i) {
+        floats.add(i);
+    }
+    public void addBoolean(int i) {
+        booleans.add(i);
+    }
+
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+
+
+        return false;
+    }
+
+    private class NationsCommandInvocationBuilder {
+        private BiFunction<Player, String[], Nation[]> nations = (_, _) -> null;
+        private BiFunction<Player, String[], Settlement[]> settlements = (_, _) -> null;
+        private BiFunction<Player, String[], User[]> users = (_, _) -> null;
+        private BiFunction<Player, String[], int[]> ints = (_, _) -> null;
+        private BiFunction<Player, String[], float[]> floats = (_, _) -> null;
+        private BiFunction<Player, String[], boolean[]> booleans = (_, _) -> null;
+
+        private NationsCommandInvocationBuilder(IntList nations_, IntList settlements_, IntList users_, IntList ints_, IntList floats_, IntList booleans_) {
+            if(!nations_.isEmpty()) {
+                nations = (a,b) -> {
+                    Nation[] r = new Nation[];
+
+
+                };
+            }
+        }
+    }
+
+    public static final record NationsCommandInvocation(@NotNull Player invoker, @NotNull String[] args, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {
+
+    }
+
 }
