@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>API</module>
-        <module>Impl</module>
+        <module>NewMod-API</module>
+        <module>NewMod-Impl</module>
         <module>FlyFun</module>
         <module>Util</module>
         <module>Villagers</module>

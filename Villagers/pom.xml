@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>me.bergenfly.newmod.core</groupId>
-            <artifactId>API</artifactId>
+            <artifactId>NewMod-API</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

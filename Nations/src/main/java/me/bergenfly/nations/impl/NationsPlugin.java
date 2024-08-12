@@ -8,6 +8,7 @@ import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI {
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
 
-        new SettlementCommand();
+        Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
     }
 
     @Override

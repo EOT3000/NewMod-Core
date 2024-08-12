@@ -5,12 +5,14 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -54,8 +56,9 @@ public class CommandFlower {
     public Function<NationsCommandInvocation, String> successMessage = null;
     public Function<NationsCommandInvocation, String> failureMessage = null;
 
-    public CommandFlower() {
+    private NationsCommandInvocationMaker maker;
 
+    public CommandFlower() {
     }
 
     public CommandFlower addNation(int i) {
@@ -120,19 +123,42 @@ public class CommandFlower {
         return this;
     }
 
+    public CommandFlower make() {
+        maker = new NationsCommandInvocationMaker(nations, settlements, users, ints, floats, booleans);
+        return this;
+    }
+
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        System.out.println(Arrays.toString(strings));
 
+        NationsCommandInvocation made = maker.make((Player) commandSender, strings);
 
-        return false;
+        if(!made.valid) {
+            return false;
+        }
+
+        if(this.command.test(made)) {
+            String send = successBroadcast.apply(made);
+
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(send);
+            }
+
+            commandSender.sendMessage(successMessage.apply(made));
+            return true;
+        } else {
+            commandSender.sendMessage(failureMessage.apply(made));
+            return false;
+        }
     }
 
     private class NationsCommandInvocationMaker {
-        private BiFunction<Player, String[], Nation[]> nations = (_, _) -> null;
-        private BiFunction<Player, String[], Settlement[]> settlements = (_, _) -> null;
-        private BiFunction<Player, String[], User[]> users = (_, _) -> null;
-        private BiFunction<Player, String[], int[]> ints = (_, _) -> null;
-        private BiFunction<Player, String[], float[]> floats = (_, _) -> null;
-        private BiFunction<Player, String[], boolean[]> booleans = (_, _) -> null;
+        private BiFunction<Player, String[], Nation[]> nations = (a, b) -> null;
+        private BiFunction<Player, String[], Settlement[]> settlements = (a, b) -> null;
+        private BiFunction<Player, String[], User[]> users = (a, b) -> null;
+        private BiFunction<Player, String[], int[]> ints = (a, b) -> null;
+        private BiFunction<Player, String[], float[]> floats = (a, b) -> null;
+        private BiFunction<Player, String[], boolean[]> booleans = (a, b) -> null;
 
         private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {

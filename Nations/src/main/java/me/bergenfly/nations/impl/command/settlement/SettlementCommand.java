@@ -22,6 +22,7 @@ public class SettlementCommand extends CommandRoot {
                 .player()
                 .command((a) -> SettlementImpl.tryCreate(a.args()[0], a.invokerUser()) != null)
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.settlement", a.invoker().getName(), a.args()[0]))
-                .failureMessage((_) -> TranslatableString.translate("nations.general.failure")));
+                .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
+                .make());
     }
 }
