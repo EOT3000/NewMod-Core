@@ -1,26 +1,42 @@
 package me.bergenfly.nations.impl.model;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class SettlementImpl implements Settlement {
+public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
     private final String firstName;
     private final long creationTime;
 
+    private User leader;
+
     private String name;
 
-    public SettlementImpl(String name) {
-        this(name, name, System.currentTimeMillis());
+    private Set<PlotSection> land = new HashSet<>();
+
+    private SettlementImpl(String name, User leader) {
+        this(leader, name, name, System.currentTimeMillis());
     }
 
-    public SettlementImpl(String name, String firstName, long creationTime) {
+    private SettlementImpl(User leader, String name, String firstName, long creationTime) {
+        this.leader = leader;
         this.name = name;
         this.firstName = firstName;
         this.creationTime = creationTime;
+    }
+
+    public static SettlementImpl tryCreate(String name, User leader) {
+        //TODO checks and register
+
+        return new SettlementImpl(name, leader);
     }
 
     @Override
@@ -34,22 +50,22 @@ public class SettlementImpl implements Settlement {
     }
 
     @Override
-    public void broadcastString(String s) {
-
-    }
-
-    @Override
-    public Set<User> getMembers() {
-        return Set.of();
-    }
-
-    @Override
-    public Set<User> getOnlineMembers() {
-        return Set.of();
-    }
-
-    @Override
     public boolean register() {
         return false;
+    }
+
+    @Override
+    public User getLeader() {
+        return leader;
+    }
+
+    @Override
+    public void setLeader(User leader) {
+        this.leader = leader;
+    }
+
+    @Override
+    public Set<PlotSection> getLand() {
+        return new HashSet<>(land);
     }
 }

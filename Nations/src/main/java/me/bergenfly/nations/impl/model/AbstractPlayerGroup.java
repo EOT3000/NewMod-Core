@@ -34,4 +34,9 @@ public abstract class AbstractPlayerGroup implements PlayerGroup {
     public Set<User> getOnlineMembers() {
         return members.stream().filter((a) -> a.getPlayer().isOnline()).collect(Collectors.toSet());
     }
+
+    @Override
+    public void addMember(User user) {
+        members.add(user);
+    }
 }

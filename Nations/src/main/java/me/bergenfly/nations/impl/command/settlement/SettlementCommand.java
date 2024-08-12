@@ -14,7 +14,8 @@ public class SettlementCommand extends CommandRoot {
                 .settlementDoesNotExist(MEMBERSHIP)
                 .settlementDoesNotExist(0)
                 .cleanName(0)
-                .command((a) -> new SettlementImpl(a.args()[0]).register())
+                .player()
+                .command((a) -> SettlementImpl.tryCreate(a.args()[0], a.invokerUser()) != null)
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.settlement", a.invoker().getName(), a.args()[0]))
                 .failureMessage((_) -> TranslatableString.translate("nations.general.failure"))));
     }

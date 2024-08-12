@@ -67,11 +67,21 @@ public class TranslatableString {
     private static final Map<String, TranslatableString> translations;
 
     public static String translate(String key) {
-        return translations.get(key).input;
+        TranslatableString translatableString = translations.get(key);
+
+        if(translatableString == null) {
+            return key;
+        }
+
+        return translatableString.input;
     }
 
     public static String translate(String key, String param1) {
         TranslatableString translatableString = translations.get(key);
+
+        if(translatableString == null) {
+            return key;
+        }
 
         IntList ordinals = translatableString.ordinals;
         String input = translatableString.input;
@@ -85,6 +95,10 @@ public class TranslatableString {
 
     public static String translate(String key, String param1, String param2) {
         TranslatableString translatableString = translations.get(key);
+
+        if(translatableString == null) {
+            return key;
+        }
 
         IntList ordinals = translatableString.ordinals;
         String input = translatableString.input;
@@ -106,6 +120,10 @@ public class TranslatableString {
 
     public static String translate(String key, String param1, String param2, String param3) {
         TranslatableString translatableString = translations.get(key);
+
+        if(translatableString == null) {
+            return key;
+        }
 
         IntList ordinals = translatableString.ordinals;
         String input = translatableString.input;
@@ -133,6 +151,10 @@ public class TranslatableString {
 
     public static String translate(String key, String... params) {
         TranslatableString translatableString = translations.get(key);
+
+        if(translatableString == null) {
+            return key;
+        }
 
         IntList ordinals = translatableString.ordinals;
         String input = translatableString.input;

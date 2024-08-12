@@ -4,11 +4,14 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.registry.Registry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -29,6 +32,8 @@ public class CommandFlower {
     public static final int MEMBERSHIP;
     public static final int SELF;
 
+    private static Registry<User, UUID> USERS = null;
+
     private Predicate<NationsCommandInvocation> command;
 
     private final IntArrayList nations = new IntArrayList();
@@ -38,10 +43,12 @@ public class CommandFlower {
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
 
-    public final IntArrayList nationsNotExist = new IntArrayList();
-    public final IntArrayList settlementsNotExist = new IntArrayList();
+    private final IntArrayList nationsNotExist = new IntArrayList();
+    private final IntArrayList settlementsNotExist = new IntArrayList();
 
-    public final IntArrayList cleanName = new IntArrayList();
+    private final IntArrayList cleanName = new IntArrayList();
+
+    private boolean mustBePlayer = false;
 
     public Function<NationsCommandInvocation, String> successBroadcast = null;
     public Function<NationsCommandInvocation, String> successMessage = null;
@@ -105,6 +112,11 @@ public class CommandFlower {
     }
     public CommandFlower failureMessage(Function<NationsCommandInvocation, String> function) {
         this.failureMessage = function;
+        return this;
+    }
+
+    public CommandFlower player() {
+        this.mustBePlayer = true;
         return this;
     }
 
@@ -176,10 +188,10 @@ public class CommandFlower {
             // If still valid, then check the NOT requirements
             valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, player, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, player, strings);
 
-            return new NationsCommandInvocation(player, strings, valid, nations, settlements, users, ints, floats, booleans);
+            return new NationsCommandInvocation(player, USERS.get(player.getUniqueId()), strings, valid, nations, settlements, users, ints, floats, booleans);
         }
     }
 
-    public static final record NationsCommandInvocation(@NotNull Player invoker, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {}
+    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {}
 
 }
