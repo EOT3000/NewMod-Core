@@ -10,15 +10,24 @@ public class CommandStem {
     protected int MEMBERSHIP = CommandFlower.MEMBERSHIP;
     protected int SELF = CommandFlower.SELF;
 
-    private final Map<String, CommandStem> branches = new HashMap<>();
+    final Map<String, CommandStem> branches = new HashMap<>();
     public final CommandFlower flower;
 
-    public CommandStem(@Nullable CommandFlower flower) {
-        this.flower = flower;
+    final String key;
+    final CommandStem parent;
+
+    protected CommandStem(@Nullable CommandFlower flower, CommandStem parent, String key) {
+        this.flower = flower == null ? new HelpCommandFlower(this) : flower;
+        this.key = key;
+        this.parent = parent;
     }
 
-    public void addBranch(String s, CommandStem c) {
-        branches.put(s, c);
+    public CommandStem addBranch(String s) {
+        return branches.put(s, new CommandStem(null, this, s));
+    }
+
+    public CommandStem addBranch(String s, CommandFlower flower) {
+        return branches.put(s, new CommandStem(flower, this, s));
     }
 
     public CommandStem next(String strings) {

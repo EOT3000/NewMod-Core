@@ -25,12 +25,11 @@ public interface User extends LandPermissionHolder {
     @Nullable Settlement getSettlement();
 
     /**
-     * Sets the user's faction. Also removes itself from the old faction's member list, and adds itself to the new faction member list
+     * Sets the user's settlement. Also removes itself from the old settlement's member list, and adds itself to the new settlement's member list
      *
-     * @param faction the faction that the user will be joining
+     * @param settlement the settlement that the user will be joining
      */
-
-    void setFaction(Nation faction);
+    void setSettlement(Settlement settlement);
 
     Collection<Nation> getInvites();
     void addInvite(Nation faction);

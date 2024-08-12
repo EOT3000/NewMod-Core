@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
+import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +41,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
+
+        new SettlementCommand();
     }
 
     @Override
@@ -55,5 +58,9 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI {
     @Override
     public Registry<User, UUID> usersRegistry() {
         return USERS;
+    }
+
+    public static NationsPlugin getInstance() {
+        return instance;
     }
 }

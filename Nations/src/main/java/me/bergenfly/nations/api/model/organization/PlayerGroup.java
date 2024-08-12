@@ -13,7 +13,11 @@ public interface PlayerGroup {
      *
      * @param s the message to send.
      */
-    void broadcastString(String s);
+    default void broadcastString(String s) {
+        for(User user : getOnlineMembers()) {
+            user.sendMessage(s);
+        }
+    }
 
     //TODO: void broadcastTranslatable(String s);
 
@@ -41,6 +45,17 @@ public interface PlayerGroup {
      * @param user the user to add to the group.
      */
     default void addMember(User user) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Removes a member from this group.
+     *
+     * @throws UnsupportedOperationException if this group does not support member removals.
+     *
+     * @param user the user to remove from the group.
+     */
+    default void removeMember(User user) {
         throw new UnsupportedOperationException();
     }
 }

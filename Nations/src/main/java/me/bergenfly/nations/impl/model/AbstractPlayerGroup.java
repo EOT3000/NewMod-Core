@@ -19,13 +19,6 @@ public abstract class AbstractPlayerGroup implements PlayerGroup {
     }
 
     @Override
-    public void broadcastString(String s) {
-        for(User user : members) {
-            user.sendMessage(s);
-        }
-    }
-
-    @Override
     public Set<User> getMembers() {
         return new HashSet<>(members);
     }
@@ -38,5 +31,10 @@ public abstract class AbstractPlayerGroup implements PlayerGroup {
     @Override
     public void addMember(User user) {
         members.add(user);
+    }
+
+    @Override
+    public void removeMember(User user) {
+        members.remove(user);
     }
 }
