@@ -6,14 +6,20 @@ import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
+import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
-public class NationsPlugin extends JavaPlugin implements NationsAPI {
+public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
     private static NationsPlugin instance = null;
 
@@ -39,11 +45,19 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI {
 
         this.enabled = true;
 
+        Logger logger = getLogger();
+
+        logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
+        logger.info(ChatColor.RED + "Starting Factionals!");
+        logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
+
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
+
+        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -63,5 +77,19 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI {
 
     public static NationsPlugin getInstance() {
         return instance;
+    }
+
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        
+        User user = USERS.get(uuid);
+
+        if(user == null) {
+            USERS.set(uuid, new UserImpl(uuid));
+        } else {
+            user.updateName();
+        }
     }
 }

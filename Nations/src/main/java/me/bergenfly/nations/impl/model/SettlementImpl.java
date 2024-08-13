@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
-    private static Registry<Settlement, String> SETTLEMENTS = null;
+    private static Registry<Settlement, String> SETTLEMENTS;
 
     private final String firstName;
     private final long creationTime;

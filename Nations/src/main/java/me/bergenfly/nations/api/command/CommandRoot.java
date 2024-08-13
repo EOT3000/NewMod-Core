@@ -18,6 +18,8 @@ public abstract class CommandRoot implements CommandExecutor {
 
     public CommandRoot(String s) {
         this.root = new FirstCommandStem(s);
+
+        loadSubcommands();
     }
 
     public CommandStem addBranch(String s) {

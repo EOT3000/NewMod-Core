@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
+import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,9 +17,9 @@ public class ObjectFetchers {
     private static int MEMBERSHIP = CommandFlower.MEMBERSHIP;
     private static int SELF = CommandFlower.SELF;
 
-    private static Registry<Nation, String> NATIONS = null;
-    private static Registry<Settlement, String> SETTLEMENTS = null;
-    private static Registry<User, UUID> USERS = null;
+    private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
+    private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
+    private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
     public static BiFunction<Player, String[], Nation[]> createNationFetcher(IntArrayList list) {
         int len = list.size();
