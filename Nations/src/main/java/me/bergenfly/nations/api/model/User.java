@@ -42,4 +42,8 @@ public interface User extends LandPermissionHolder {
     void updateName();
 
     OfflinePlayer getPlayer();
+
+    default boolean isOnline() {
+        return getPlayer().isOnline();
+    }
 }

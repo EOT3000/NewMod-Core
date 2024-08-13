@@ -28,12 +28,14 @@ public class CommandFlower {
     static {
         // When changing change in check method too
         CURRENT_LOCATION = -10;
-        MEMBERSHIP = -20;
+        INVOKER_MEMBER = -20;
+        INVOKER_LEADER = -30;
         SELF = -20;
     }
 
     public static final int CURRENT_LOCATION;
-    public static final int MEMBERSHIP;
+    public static final int INVOKER_MEMBER;
+    public static final int INVOKER_LEADER;
     public static final int SELF;
 
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();

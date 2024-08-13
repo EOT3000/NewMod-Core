@@ -8,9 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CommandRoot implements CommandExecutor {
-    protected int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
-    protected int MEMBERSHIP = CommandFlower.MEMBERSHIP;
-    protected int SELF = CommandFlower.SELF;
 
     public abstract void loadSubcommands();
 

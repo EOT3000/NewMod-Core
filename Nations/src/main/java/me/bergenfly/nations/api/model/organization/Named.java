@@ -16,4 +16,8 @@ public interface Named {
      * @return the name of this object.
      */
     @NotNull String getName();
+
+    default void setName(String name) {
+        throw new UnsupportedOperationException();
+    }
 }

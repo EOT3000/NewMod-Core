@@ -12,7 +12,8 @@ import java.util.UUID;
 
 public class RequirementCheckers {
     private static int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
-    private static int MEMBERSHIP = CommandFlower.MEMBERSHIP;
+    private static int INVOKER_MEMBER = CommandFlower.INVOKER_MEMBER;
+    private static int INVOKER_LEADER = CommandFlower.INVOKER_LEADER;
     private static int SELF = CommandFlower.SELF;
 
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
@@ -21,11 +22,18 @@ public class RequirementCheckers {
 
     public static boolean checkNationsNotExist(IntList list, Player player, String[] strings) {
         for(int i : list) {
-            if(i == MEMBERSHIP) {
+            if(i == INVOKER_MEMBER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getNation() != null) {
                     player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_member"));
+                    return false;
+                }
+            } else if(i == INVOKER_LEADER) {
+                User user = USERS.get(player.getUniqueId());
+
+                if(user.getNation() != null && user.getNation().getLeader() == user) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
                     return false;
                 }
             } else if(i == CURRENT_LOCATION) {
@@ -51,14 +59,21 @@ public class RequirementCheckers {
 
     public static boolean checkSettlementsNotExist(IntList list, Player player, String[] strings) {
         for(int i : list) {
-            if(i == MEMBERSHIP) {
+            if(i == INVOKER_MEMBER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getSettlement() != null) {
                     player.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_member"));
                     return false;
                 }
-            } else if(i == CURRENT_LOCATION) {
+            } else if(i == INVOKER_LEADER) {
+                User user = USERS.get(player.getUniqueId());
+
+                if(user.getSettlement() != null && user.getSettlement().getLeader() == user) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
+                    return false;
+                }
+            }  else if(i == CURRENT_LOCATION) {
                 //TODO
             } else {
                 if(i >= strings.length) {

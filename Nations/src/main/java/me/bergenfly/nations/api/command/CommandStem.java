@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommandStem {
-    protected int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
-    protected int MEMBERSHIP = CommandFlower.MEMBERSHIP;
-    protected int SELF = CommandFlower.SELF;
 
     final Map<String, CommandStem> branches = new HashMap<>();
     public final CommandFlower flower;

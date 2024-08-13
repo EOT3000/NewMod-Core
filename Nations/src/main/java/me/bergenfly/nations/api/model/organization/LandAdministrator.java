@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public interface LandAdministrator extends Named {
     /**
-     * Gets all land that this administrator administrates.
+     * Gets all land that this administrator administrates. For nations, includes both nation and settlement land.
      *
      * @return a set of all the {@link PlotSection}s that this administrator administrates.
      */

@@ -13,8 +13,9 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class ObjectFetchers {
-    private static int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
-    private static int MEMBERSHIP = CommandFlower.MEMBERSHIP;
+    private static final int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
+    private static final int INVOKER_MEMBER = CommandFlower.INVOKER_MEMBER;
+    private static final int INVOKER_LEADER = CommandFlower.INVOKER_LEADER;
     private static int SELF = CommandFlower.SELF;
 
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
@@ -35,11 +36,19 @@ public class ObjectFetchers {
                         player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_in_territory"));
                         return new Nation[0];
                     }
-                } else if (list.getInt(i) == MEMBERSHIP) {
+                } else if(list.getInt(i) == INVOKER_MEMBER) {
                     r[i] = USERS.get(player.getUniqueId()).getNation();
 
                     if(r[i] == null) {
                         player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_member"));
+                        return new Nation[0];
+                    }
+                } else if(list.getInt(i) == INVOKER_LEADER) {
+                    User user = USERS.get(player.getUniqueId());
+                    r[i] = user.getNation();
+
+                    if(r[i] == null || r[i].getLeader() != user) {
+                        player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_leader"));
                         return new Nation[0];
                     }
                 } else {
@@ -76,11 +85,19 @@ public class ObjectFetchers {
                         player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_in_territory"));
                         return new Settlement[0];
                     }
-                } else if (list.getInt(i) == MEMBERSHIP) {
+                } else if (list.getInt(i) == INVOKER_MEMBER) {
                     r[i] = USERS.get(player.getUniqueId()).getSettlement();
 
                     if(r[i] == null) {
                         player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_member"));
+                        return new Settlement[0];
+                    }
+                }  else if(list.getInt(i) == INVOKER_LEADER) {
+                    User user = USERS.get(player.getUniqueId());
+                    r[i] = user.getSettlement();
+
+                    if(r[i] == null || r[i].getLeader() != user) {
+                        player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_leader"));
                         return new Settlement[0];
                     }
                 } else {

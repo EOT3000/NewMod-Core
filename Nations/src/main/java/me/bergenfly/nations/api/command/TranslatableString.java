@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.bukkit.ChatColor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class TranslatableString {
         TranslatableString translatableString = translations.get(key);
 
         if(translatableString == null) {
-            return key;
+            return key + ": " + param1;
         }
 
         IntList ordinals = translatableString.ordinals;
@@ -97,7 +98,7 @@ public class TranslatableString {
         TranslatableString translatableString = translations.get(key);
 
         if(translatableString == null) {
-            return key;
+            return key + ": " + param1 + "," + param2;
         }
 
         IntList ordinals = translatableString.ordinals;
@@ -122,7 +123,7 @@ public class TranslatableString {
         TranslatableString translatableString = translations.get(key);
 
         if(translatableString == null) {
-            return key;
+            return key + ": " + param1 + "," + param2 + "," + param3;
         }
 
         IntList ordinals = translatableString.ordinals;
@@ -153,7 +154,7 @@ public class TranslatableString {
         TranslatableString translatableString = translations.get(key);
 
         if(translatableString == null) {
-            return key;
+            return key + ": " + Arrays.toString(params);
         }
 
         IntList ordinals = translatableString.ordinals;

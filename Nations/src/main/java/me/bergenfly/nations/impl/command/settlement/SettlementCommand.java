@@ -16,7 +16,7 @@ public class SettlementCommand extends CommandRoot {
     @Override
     public void loadSubcommands() {
         addBranch("create", new CommandFlower()
-                .settlementDoesNotExist(MEMBERSHIP)
+                .settlementDoesNotExist(CommandFlower.INVOKER_MEMBER)
                 .settlementDoesNotExist(0)
                 .cleanName(0)
                 .player()
@@ -27,6 +27,7 @@ public class SettlementCommand extends CommandRoot {
 
         addBranch("info", new CommandFlower()
                 .addSettlement(0)
-                .commandAlwaysSuccess((a) -> a.settlements()[0].sendInfo(a.invokerUser())));
+                .commandAlwaysSuccess((a) -> a.settlements()[0].sendInfo(a.invokerUser()))
+                .make());
     }
 }

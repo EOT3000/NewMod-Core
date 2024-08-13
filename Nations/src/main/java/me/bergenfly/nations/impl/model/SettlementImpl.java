@@ -74,11 +74,6 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     }
 
     @Override
-    public boolean register() {
-        return false;
-    }
-
-    @Override
     public User getLeader() {
         return leader;
     }
@@ -100,6 +95,16 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
     @Override
     public void setNation(Nation nation) {
+        this.nation = nation;
+
+        if(this.nation != null) {
+            this.nation.removeSettlement(this);
+        }
+
+        if(nation != null) {
+            nation.addSettlement(this);
+        }
+
         this.nation = nation;
     }
 
@@ -128,5 +133,14 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
         user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.AQUA + members);
         user.sendMessage(ChatColor.DARK_AQUA + "Online Members: " + ChatColor.AQUA + membersOnline);
+    }
+
+    @Override
+    public void setName(String name) {
+        SETTLEMENTS.set(this.name, null);
+
+        this.name = name;
+
+        SETTLEMENTS.set(name, this);
     }
 }
