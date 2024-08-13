@@ -74,7 +74,7 @@ public class UserImpl implements User {
 
     @Override
     public @Nullable Settlement getSettlement() {
-        return null;
+        return settlement;
     }
 
     @Override

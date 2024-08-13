@@ -87,10 +87,10 @@ public class TranslatableString {
         String input = translatableString.input;
 
         if(ordinals.contains(1)) {
-            return input.replace("{1}", EnglishIntToOrdinal.ordinal(Integer.parseInt(param1)));
+            return ChatColor.translateAlternateColorCodes('&', input.replace("{1}", EnglishIntToOrdinal.ordinal(Integer.parseInt(param1))));
         }
 
-        return input.replace("{1}", param1);
+        return ChatColor.translateAlternateColorCodes('&', input.replace("{1}", param1));
     }
 
     public static String translate(String key, String param1, String param2) {
@@ -115,7 +115,7 @@ public class TranslatableString {
             input = input.replace("{2}", param2);
         }
 
-        return input;
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 
     public static String translate(String key, String param1, String param2, String param3) {
@@ -167,7 +167,7 @@ public class TranslatableString {
             }
         }
 
-        return input;
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 
 }

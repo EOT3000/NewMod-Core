@@ -31,7 +31,13 @@ public class RequirementCheckers {
             } else if(i == CURRENT_LOCATION) {
                 //TODO
             } else {
-                Nation nation = NATIONS.get(strings[list.getInt(i)]);
+                if(i >= strings.length) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return false;
+                }
+
+                Nation nation = NATIONS.get(strings[i]);
 
                 if(nation != null) {
                     player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_argument", nation.getName()));
@@ -55,7 +61,13 @@ public class RequirementCheckers {
             } else if(i == CURRENT_LOCATION) {
                 //TODO
             } else {
-                Settlement settlement = SETTLEMENTS.get(strings[list.getInt(i)]);
+                if(i >= strings.length) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return false;
+                }
+
+                Settlement settlement = SETTLEMENTS.get(strings[i]);
 
                 if(settlement != null) {
                     player.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_argument", settlement.getName()));

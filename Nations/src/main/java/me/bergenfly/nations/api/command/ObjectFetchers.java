@@ -43,6 +43,12 @@ public class ObjectFetchers {
                         return new Nation[0];
                     }
                 } else {
+                    if(list.getInt(i) >= strings.length) {
+                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                        return new Nation[0];
+                    }
+
                     r[i] = NATIONS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
@@ -78,6 +84,11 @@ public class ObjectFetchers {
                         return new Settlement[0];
                     }
                 } else {
+                    if(list.getInt(i) >= strings.length) {
+                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                        return new Settlement[0];
+                    }
                     r[i] = SETTLEMENTS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
@@ -101,6 +112,11 @@ public class ObjectFetchers {
                 if (list.getInt(i) == SELF) {
                     r[i] = USERS.get(player.getUniqueId());
                 } else {
+                    if(list.getInt(i) >= strings.length) {
+                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                        return new User[0];
+                    }
                     Player p = Bukkit.getPlayer(strings[list.getInt(i)]);
 
                     if(p == null) {
@@ -123,6 +139,11 @@ public class ObjectFetchers {
             int[] r = new int[len];
 
             for (int i = 0; i < len; i++) {
+                if(list.getInt(i) >= strings.length) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new int[0];
+                }
                 try {
                     r[i] = (int) Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
@@ -143,6 +164,11 @@ public class ObjectFetchers {
             float[] r = new float[len];
 
             for (int i = 0; i < len; i++) {
+                if(list.getInt(i) >= strings.length) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new float[0];
+                }
                 try {
                     r[i] = Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
@@ -163,6 +189,12 @@ public class ObjectFetchers {
             boolean[] r = new boolean[len];
 
             for (int i = 0; i < len; i++) {
+                if(list.getInt(i) >= strings.length) {
+                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new boolean[0];
+                }
+
                 if(strings[list.getInt(i)].equalsIgnoreCase("true")) {
                     r[i] = true;
                 } else if(strings[list.getInt(i)].equalsIgnoreCase("false")) {

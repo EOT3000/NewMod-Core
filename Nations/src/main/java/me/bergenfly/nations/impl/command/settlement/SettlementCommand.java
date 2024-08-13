@@ -24,5 +24,9 @@ public class SettlementCommand extends CommandRoot {
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.settlement", a.invoker().getName(), a.args()[0]))
                 .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
                 .make());
+
+        addBranch("info", new CommandFlower()
+                .addSettlement(0)
+                .commandAlwaysSuccess((a) -> a.settlements()[0].sendInfo(a.invokerUser())));
     }
 }

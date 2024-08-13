@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
+import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -34,7 +36,7 @@ public class CommandFlower {
     public static final int MEMBERSHIP;
     public static final int SELF;
 
-    private static Registry<User, UUID> USERS = null;
+    private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
     private Predicate<NationsCommandInvocation> command;
 
@@ -105,6 +107,14 @@ public class CommandFlower {
         return this;
     }
 
+    public CommandFlower commandAlwaysSuccess(Consumer<NationsCommandInvocation> command) {
+        this.command = (a) -> {
+            command.accept(a);
+            return true;
+        };
+        return this;
+    }
+
     public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function) {
         this.successBroadcast = function;
         return this;
@@ -138,16 +148,18 @@ public class CommandFlower {
         }
 
         if(this.command.test(made)) {
-            String send = successBroadcast.apply(made);
+            if(successBroadcast != null) {
+                String send = successBroadcast.apply(made);
 
-            for(Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(send);
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendMessage(send);
+                }
             }
 
-            commandSender.sendMessage(successMessage.apply(made));
+            if(successMessage != null) commandSender.sendMessage(successMessage.apply(made));
             return true;
         } else {
-            commandSender.sendMessage(failureMessage.apply(made));
+            if(failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
             return false;
         }
     }

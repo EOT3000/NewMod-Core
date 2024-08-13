@@ -23,6 +23,8 @@ public interface PlayerGroup {
 
     //TODO: void broadcastComponent();
 
+    void sendInfo(User user);
+
     /**
      * Gets all the members of this group, including those offline.
      *

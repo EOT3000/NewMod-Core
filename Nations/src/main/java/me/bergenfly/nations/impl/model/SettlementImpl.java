@@ -8,6 +8,7 @@ import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -100,5 +101,32 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     @Override
     public void setNation(Nation nation) {
         this.nation = nation;
+    }
+
+    @Override
+    public void sendInfo(User user) {
+        //TODO convert to translation keys
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
+        user.sendMessage(ChatColor.DARK_AQUA + "Nation" + (nation == null ? "less" : ": " + ChatColor.AQUA + nation.getName()));
+
+        String members = "Leader " + leader.getName();
+
+        for(User member : getMembers()) {
+            if(!member.equals(leader)) {
+                members += (", " + member.getName());
+            }
+        }
+
+        String membersOnline = "Leader " + leader.getName();
+
+        for(User member : getOnlineMembers()) {
+            if(!member.equals(leader)) {
+                membersOnline += (", " + member.getName());
+            }
+        }
+
+        user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.AQUA + members);
+        user.sendMessage(ChatColor.DARK_AQUA + "Online Members: " + ChatColor.AQUA + membersOnline);
     }
 }
