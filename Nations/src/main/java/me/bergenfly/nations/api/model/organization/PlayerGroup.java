@@ -1,6 +1,7 @@
 package me.bergenfly.nations.api.model.organization;
 
 import me.bergenfly.nations.api.model.User;
+import org.bukkit.command.CommandSender;
 
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public interface PlayerGroup {
 
     //TODO: void broadcastComponent();
 
-    void sendInfo(User user);
+    void sendInfo(CommandSender user);
 
     /**
      * Gets all the members of this group, including those offline.

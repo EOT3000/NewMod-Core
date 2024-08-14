@@ -28,7 +28,8 @@ public class NationCommand extends CommandRoot {
 
         addBranch("info", new CommandFlower()
                 .addNation(0)
-                .commandAlwaysSuccess((a) -> a.nations()[0].sendInfo(a.invokerUser()))
+                .player()
+                .commandAlwaysSuccess((a) -> a.nations()[0].sendInfo(a.invoker()))
                 .make());
 
         addBranch("claim", new CommandFlower()

@@ -10,6 +10,7 @@ import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -120,7 +121,7 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     }
 
     @Override
-    public void sendInfo(User user) {
+    public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
         user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());

@@ -9,6 +9,7 @@ import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -70,7 +71,7 @@ public class NationImpl implements Nation {
     }
 
     @Override
-    public void sendInfo(User user) {
+    public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
         user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
@@ -83,7 +84,8 @@ public class NationImpl implements Nation {
             }
         }
 
-        user.sendMessage(ChatColor.DARK_AQUA + "Settlement: " + ChatColor.AQUA + settlements);
+        user.sendMessage(ChatColor.DARK_AQUA + "Settlements: " + ChatColor.AQUA + settlements);
+        user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + nationLand.size());
     }
 
     @Override
