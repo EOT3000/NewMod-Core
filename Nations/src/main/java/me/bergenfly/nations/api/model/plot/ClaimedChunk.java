@@ -45,5 +45,12 @@ public interface ClaimedChunk {
      */
     @NotNull World getWorld();
 
+    /**
+     * Gets the divisions of the chunk (how many times the side is divided in half). {@code 0} means the chunk is undivided, {@code 1} means the chunk is split 2x2, etc.
+     *
+     * @return the divisions of the chunk.
+     */
+    int getDivision();
+
     void unclaim();
 }

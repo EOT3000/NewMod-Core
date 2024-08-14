@@ -103,7 +103,7 @@ public class UserImpl implements User {
 
     @Override
     public @NotNull String getId() {
-        return getUniqueId().toString();
+        return "user_" + getUniqueId();
     }
 
     @Override

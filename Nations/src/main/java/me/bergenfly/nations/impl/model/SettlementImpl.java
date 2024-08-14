@@ -161,4 +161,12 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     public PlotSection createEmptyPlotSection() {
         return new PermissiblePlotSectionImpl(this);
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public long getCreationTime() {
+        return creationTime;
+    }
 }

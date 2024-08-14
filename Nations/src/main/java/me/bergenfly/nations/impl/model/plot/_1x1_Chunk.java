@@ -43,6 +43,11 @@ public class _1x1_Chunk implements ClaimedChunk {
     }
 
     @Override
+    public int getDivision() {
+        return 0;
+    }
+
+    @Override
     public void unclaim() {
         data = null;
     }

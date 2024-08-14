@@ -189,5 +189,15 @@ public class NationImpl implements Nation {
         return new PlotSectionImpl(this);
     }
 
+    @Override
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
+
     //TODO organize method order in similar classes
 }

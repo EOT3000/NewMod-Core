@@ -56,4 +56,8 @@ public class NationsLandManager {
 
         return true;
     }
+
+    public Registry<ClaimedChunk, Integer> getPLOTS() {
+        return PLOTS;
+    }
 }

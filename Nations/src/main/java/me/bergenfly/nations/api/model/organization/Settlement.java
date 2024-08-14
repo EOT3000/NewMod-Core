@@ -22,4 +22,8 @@ public interface Settlement extends PlayerGroup, Named, LandAdministrator, Led, 
     default void addMember(User user) {
         PlayerGroup.super.addMember(user);
     }
+
+    long getCreationTime();
+
+    String getFirstName();
 }

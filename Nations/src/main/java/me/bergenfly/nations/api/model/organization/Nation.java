@@ -31,4 +31,8 @@ public interface Nation extends LandAdministrator, PlayerGroup, Named, Led {
      */
     @Deprecated
     void removeSettlement(Settlement settlement);
+
+    long getCreationTime();
+
+    String getFirstName();
 }

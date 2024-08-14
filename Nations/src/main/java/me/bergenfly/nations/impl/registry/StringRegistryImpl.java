@@ -3,6 +3,7 @@ package me.bergenfly.nations.impl.registry;
 import me.bergenfly.nations.api.registry.Registry;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public class StringRegistryImpl<V> implements Registry<V, String> {
     }
 
     @Override
-    public Collection<V> list() {
+    public List<V> list() {
         return registry.list();
     }
 

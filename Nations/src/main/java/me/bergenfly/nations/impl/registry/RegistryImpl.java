@@ -2,10 +2,7 @@ package me.bergenfly.nations.impl.registry;
 
 import me.bergenfly.nations.api.registry.Registry;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RegistryImpl<V, K> implements Registry<V, K> {
     private Map<K, V> map = new HashMap<>();
@@ -31,7 +28,7 @@ public class RegistryImpl<V, K> implements Registry<V, K> {
     }
 
     @Override
-    public Collection<V> list() {
+    public List<V> list() {
         return new ArrayList<>(map.values());
     }
 

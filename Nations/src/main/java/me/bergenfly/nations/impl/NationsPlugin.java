@@ -14,6 +14,9 @@ import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
 import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
+import me.bergenfly.nations.impl.save.SaveNation;
+import me.bergenfly.nations.impl.save.SavePlot;
+import me.bergenfly.nations.impl.save.SaveSettlement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -71,6 +74,13 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
+    public void onDisable() {
+        SavePlot.savePlots();
+        SaveNation.saveNations();
+        SaveSettlement.saveSettlements();
+    }
+
+    @Override
     public Registry<Nation, String> nationsRegistry() {
         return NATIONS;
     }
@@ -125,4 +135,5 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
             event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }
     }
+
 }
