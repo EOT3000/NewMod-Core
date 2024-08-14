@@ -63,6 +63,8 @@ public class TranslatableString {
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));
 
         translations.put("nations.general.failure", new TranslatableString("&cSomething went wrong"));
+
+        translations.put("nations.claim", new TranslatableString("&eClaimed chunk"));
     }
 
     private static final Map<String, TranslatableString> translations;

@@ -29,5 +29,13 @@ public class SettlementCommand extends CommandRoot {
                 .addSettlement(0)
                 .commandAlwaysSuccess((a) -> a.settlements()[0].sendInfo(a.invokerUser()))
                 .make());
+
+        addBranch("claim", new CommandFlower()
+                .addSettlement(CommandFlower.INVOKER_LEADER)
+                .player()
+                .command((a) -> a.invokerUser().tryClaimChunk(a.settlements()[0]))
+                .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
+                .successMessage((a) -> TranslatableString.translate("nations.claim"))
+                .make());
     }
 }

@@ -8,6 +8,7 @@ import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,6 +90,16 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     }
 
     @Override
+    public void addLand(PlotSection section) {
+        land.remove(section);
+    }
+
+    @Override
+    public void removeLand(PlotSection section) {
+        land.add(section);
+    }
+
+    @Override
     public Nation getNation() {
         return nation;
     }
@@ -133,6 +144,7 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
         user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.AQUA + members);
         user.sendMessage(ChatColor.DARK_AQUA + "Online Members: " + ChatColor.AQUA + membersOnline);
+        user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + land.size());
     }
 
     @Override
@@ -142,5 +154,10 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         this.name = name;
 
         SETTLEMENTS.set(name, this);
+    }
+
+    @Override
+    public PlotSection createEmptyPlotSection() {
+        return new PermissiblePlotSectionImpl(this);
     }
 }

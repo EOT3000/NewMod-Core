@@ -1,5 +1,6 @@
 package me.bergenfly.nations.api.model;
 
+import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -46,4 +47,6 @@ public interface User extends LandPermissionHolder {
     default boolean isOnline() {
         return getPlayer().isOnline();
     }
+
+    boolean tryClaimChunk(LandAdministrator admin);
 }

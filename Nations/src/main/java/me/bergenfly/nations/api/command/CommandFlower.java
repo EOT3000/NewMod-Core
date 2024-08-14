@@ -1,6 +1,7 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -143,7 +144,7 @@ public class CommandFlower {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         System.out.println(Arrays.toString(strings));
 
-        NationsCommandInvocation made = maker.make((Player) commandSender, strings);
+        NationsCommandInvocation made = maker.make(commandSender, strings);
 
         if(!made.valid) {
             return false;
@@ -167,12 +168,12 @@ public class CommandFlower {
     }
 
     private class NationsCommandInvocationMaker {
-        private BiFunction<Player, String[], Nation[]> nations = (a, b) -> null;
-        private BiFunction<Player, String[], Settlement[]> settlements = (a, b) -> null;
-        private BiFunction<Player, String[], User[]> users = (a, b) -> null;
-        private BiFunction<Player, String[], int[]> ints = (a, b) -> null;
-        private BiFunction<Player, String[], float[]> floats = (a, b) -> null;
-        private BiFunction<Player, String[], boolean[]> booleans = (a, b) -> null;
+        private BiFunction<CommandSender, String[], Nation[]> nations = (a, b) -> null;
+        private BiFunction<CommandSender, String[], Settlement[]> settlements = (a, b) -> null;
+        private BiFunction<CommandSender, String[], User[]> users = (a, b) -> null;
+        private BiFunction<CommandSender, String[], int[]> ints = (a, b) -> null;
+        private BiFunction<CommandSender, String[], float[]> floats = (a, b) -> null;
+        private BiFunction<CommandSender, String[], boolean[]> booleans = (a, b) -> null;
 
         private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
@@ -200,7 +201,15 @@ public class CommandFlower {
             }
         }
 
-        private NationsCommandInvocation make(Player player, String[] strings) {
+        private NationsCommandInvocation make(CommandSender sender, String[] strings) {
+            Player player = null;
+
+            boolean valid = true;
+
+            if (mustBePlayer) {
+                player = (Player) sender;
+            }
+
             Nation[] nations = this.nations.apply(player, strings);
             Settlement[] settlements = this.settlements.apply(player, strings);
             User[] users = this.users.apply(player, strings);
@@ -208,27 +217,25 @@ public class CommandFlower {
             float[] floats = this.floats.apply(player, strings);
             boolean[] booleans = this.booleans.apply(player, strings);
 
-            boolean valid = true;
-
             //If any of the arrays are length 0, means there was an error, in ObjectFetchers, so mark as invalid. If array is null, just means that
-            if(nations != null && nations.length == 0) {
+            if (nations != null && nations.length == 0) {
                 valid = false;
-            } else if(settlements != null && settlements.length == 0) {
+            } else if (settlements != null && settlements.length == 0) {
                 valid = false;
-            } else if(users != null && users.length == 0) {
+            } else if (users != null && users.length == 0) {
                 valid = false;
-            } else if(ints != null && ints.length == 0) {
+            } else if (ints != null && ints.length == 0) {
                 valid = false;
-            } else if(floats != null && floats.length != 0) {
+            } else if (floats != null && floats.length != 0) {
                 valid = false;
-            } else if(booleans != null && booleans.length != 0) {
+            } else if (booleans != null && booleans.length != 0) {
                 valid = false;
             }
 
             // If still valid, then check the NOT requirements
-            valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, player, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, player, strings);
+            valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, sender, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, sender, strings);
 
-            return new NationsCommandInvocation(player, USERS.get(player.getUniqueId()), strings, valid, nations, settlements, users, ints, floats, booleans);
+            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, ints, floats, booleans);
         }
     }
 

@@ -15,4 +15,10 @@ public interface LandAdministrator extends Named {
      * @return a set of all the {@link PlotSection}s that this administrator administrates.
      */
     Set<PlotSection> getLand();
+
+    void addLand(PlotSection section);
+
+    void removeLand(PlotSection section);
+
+    PlotSection createEmptyPlotSection();
 }

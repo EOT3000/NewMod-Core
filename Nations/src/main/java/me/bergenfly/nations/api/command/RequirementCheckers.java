@@ -6,7 +6,9 @@ import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -20,27 +22,29 @@ public class RequirementCheckers {
     private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
-    public static boolean checkNationsNotExist(IntList list, Player player, String[] strings) {
+    public static boolean checkNationsNotExist(IntList list, CommandSender sender, String[] strings) {
+        Player player = (Player) sender;
+
         for(int i : list) {
             if(i == INVOKER_MEMBER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getNation() != null) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_member"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_member"));
                     return false;
                 }
             } else if(i == INVOKER_LEADER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getNation() != null && user.getNation().getLeader() == user) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
                     return false;
                 }
             } else if(i == CURRENT_LOCATION) {
                 //TODO
             } else {
                 if(i >= strings.length) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                     return false;
                 }
@@ -48,7 +52,7 @@ public class RequirementCheckers {
                 Nation nation = NATIONS.get(strings[i]);
 
                 if(nation != null) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_argument", nation.getName()));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_argument", nation.getName()));
                     return false;
                 }
             }
@@ -57,27 +61,29 @@ public class RequirementCheckers {
         return true;
     }
 
-    public static boolean checkSettlementsNotExist(IntList list, Player player, String[] strings) {
+    public static boolean checkSettlementsNotExist(IntList list, CommandSender sender, String[] strings) {
+        Player player = (Player) sender;
+
         for(int i : list) {
             if(i == INVOKER_MEMBER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getSettlement() != null) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_member"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_member"));
                     return false;
                 }
             } else if(i == INVOKER_LEADER) {
                 User user = USERS.get(player.getUniqueId());
 
                 if(user.getSettlement() != null && user.getSettlement().getLeader() == user) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
                     return false;
                 }
             }  else if(i == CURRENT_LOCATION) {
                 //TODO
             } else {
                 if(i >= strings.length) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                     return false;
                 }
@@ -85,7 +91,7 @@ public class RequirementCheckers {
                 Settlement settlement = SETTLEMENTS.get(strings[i]);
 
                 if(settlement != null) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_argument", settlement.getName()));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_argument", settlement.getName()));
                     return false;
                 }
             }

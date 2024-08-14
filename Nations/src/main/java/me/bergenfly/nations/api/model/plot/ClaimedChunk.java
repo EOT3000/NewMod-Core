@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.model.plot;
 
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,9 +25,25 @@ public interface ClaimedChunk {
     @Nullable PlotSection getAt(int x0_15, int z0_15);
 
     /**
-     * Returns the Bukkit {@link Chunk} of this ClaimedChunk object.
+     * Returns the x coordinate of this chunk.
      *
-     * @return the {@link Chunk} of this object.
+     * @return the x coordinate of this chunk.
      */
-    @NotNull Chunk getChunk();
+    int getChunkX();
+
+    /**
+     * Returns the z coordinate of this chunk.
+     *
+     * @return the z coordinate of this chunk.
+     */
+    int getChunkZ();
+
+    /**
+     * Returns the world of this chunk
+     *
+     * @return the world of this chunk.
+     */
+    @NotNull World getWorld();
+
+    void unclaim();
 }

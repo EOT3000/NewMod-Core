@@ -7,6 +7,7 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,6 +113,16 @@ public class NationImpl implements Nation {
     }
 
     @Override
+    public void addLand(PlotSection section) {
+        nationLand.remove(section);
+    }
+
+    @Override
+    public void removeLand(PlotSection section) {
+        nationLand.add(section);
+    }
+
+    @Override
     public User getLeader() {
         return leader;
     }
@@ -169,6 +180,11 @@ public class NationImpl implements Nation {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public PlotSection createEmptyPlotSection() {
+        return new PlotSectionImpl(this);
     }
 
     //TODO organize method order in similar classes

@@ -28,11 +28,12 @@ public class HelpCommandFlower extends CommandFlower {
 
         CommandStem current = which;
 
-        while(!(current instanceof FirstCommandStem)) {
+        do {
             list.add(current.key);
 
             current = current.parent;
-        }
+
+        } while (current != null);
 
         StringBuilder built = new StringBuilder("/");
 

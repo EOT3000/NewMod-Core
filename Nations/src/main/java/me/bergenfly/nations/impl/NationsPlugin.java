@@ -1,9 +1,12 @@
 package me.bergenfly.nations.impl;
 
 import me.bergenfly.nations.api.NationsAPI;
+import me.bergenfly.nations.api.manager.NationsLandManager;
+import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.nation.NationCommand;
 import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
@@ -29,6 +32,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private Registry<Nation, String> NATIONS;
     private Registry<Settlement, String> SETTLEMENTS;
     private Registry<User, UUID> USERS;
+
+    private NationsLandManager landManager;
 
     public NationsPlugin() {
         if(instance != null) {
@@ -75,6 +80,11 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     @Override
     public Registry<User, UUID> usersRegistry() {
         return USERS;
+    }
+
+    @Override
+    public NationsLandManager landManager() {
+        return landManager;
     }
 
     public static NationsPlugin getInstance() {

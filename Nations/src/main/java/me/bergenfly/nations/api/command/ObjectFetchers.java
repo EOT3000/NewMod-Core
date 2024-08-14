@@ -7,6 +7,7 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -22,10 +23,10 @@ public class ObjectFetchers {
     private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
-    public static BiFunction<Player, String[], Nation[]> createNationFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], Nation[]> createNationFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             Nation[] r = new Nation[len];
 
             for (int i = 0; i < len; i++) {
@@ -33,27 +34,29 @@ public class ObjectFetchers {
                     r[i] = null; //TODO
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_in_territory"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_in_territory"));
                         return new Nation[0];
                     }
                 } else if(list.getInt(i) == INVOKER_MEMBER) {
+                    Player player = (Player) sender;
                     r[i] = USERS.get(player.getUniqueId()).getNation();
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_member"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_member"));
                         return new Nation[0];
                     }
                 } else if(list.getInt(i) == INVOKER_LEADER) {
+                    Player player = (Player) sender;
                     User user = USERS.get(player.getUniqueId());
                     r[i] = user.getNation();
 
                     if(r[i] == null || r[i].getLeader() != user) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_leader"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_leader"));
                         return new Nation[0];
                     }
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                         return new Nation[0];
                     }
@@ -61,7 +64,7 @@ public class ObjectFetchers {
                     r[i] = NATIONS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.nation.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                         return new Nation[0];
                     }
                 }
@@ -71,10 +74,10 @@ public class ObjectFetchers {
         };
     }
 
-    public static BiFunction<Player, String[], Settlement[]> createSettlementFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], Settlement[]> createSettlementFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             Settlement[] r = new Settlement[len];
 
             for (int i = 0; i < len; i++) {
@@ -82,34 +85,36 @@ public class ObjectFetchers {
                     r[i] = null; //TODO
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_in_territory"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_in_territory"));
                         return new Settlement[0];
                     }
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
+                    Player player = (Player) sender;
                     r[i] = USERS.get(player.getUniqueId()).getSettlement();
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_member"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_member"));
                         return new Settlement[0];
                     }
                 }  else if(list.getInt(i) == INVOKER_LEADER) {
+                    Player player = (Player) sender;
                     User user = USERS.get(player.getUniqueId());
                     r[i] = user.getSettlement();
 
                     if(r[i] == null || r[i].getLeader() != user) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_leader"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_leader"));
                         return new Settlement[0];
                     }
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                         return new Settlement[0];
                     }
                     r[i] = SETTLEMENTS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                         return new Settlement[0];
                     }
                 }
@@ -119,25 +124,26 @@ public class ObjectFetchers {
         };
     }
 
-    public static BiFunction<Player, String[], User[]> createUserFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], User[]> createUserFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             User[] r = new User[len];
 
             for (int i = 0; i < len; i++) {
                 if (list.getInt(i) == SELF) {
+                    Player player = (Player) sender;
                     r[i] = USERS.get(player.getUniqueId());
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                         return new User[0];
                     }
                     Player p = Bukkit.getPlayer(strings[list.getInt(i)]);
 
                     if(p == null) {
-                        player.sendMessage(TranslatableString.translate("nations.command.error.user.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.user.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                         return new User[0];
                     }
 
@@ -149,22 +155,22 @@ public class ObjectFetchers {
         };
     }
 
-    public static BiFunction<Player, String[], int[]> createIntFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], int[]> createIntFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             int[] r = new int[len];
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                     return new int[0];
                 }
                 try {
                     r[i] = (int) Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                     return new int[0];
                 }
 
@@ -174,22 +180,22 @@ public class ObjectFetchers {
         };
     }
 
-    public static BiFunction<Player, String[], float[]> createFloatFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], float[]> createFloatFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             float[] r = new float[len];
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                     return new float[0];
                 }
                 try {
                     r[i] = Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                     return new float[0];
                 }
 
@@ -199,15 +205,15 @@ public class ObjectFetchers {
         };
     }
 
-    public static BiFunction<Player, String[], boolean[]> createBooleanFetcher(IntArrayList list) {
+    public static BiFunction<CommandSender, String[], boolean[]> createBooleanFetcher(IntArrayList list) {
         int len = list.size();
 
-        return (player, strings) -> {
+        return (sender, strings) -> {
             boolean[] r = new boolean[len];
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
 
                     return new boolean[0];
                 }
@@ -217,7 +223,7 @@ public class ObjectFetchers {
                 } else if(strings[list.getInt(i)].equalsIgnoreCase("false")) {
                     r[i] = false;
                 } else {
-                    player.sendMessage(TranslatableString.translate("nations.command.error.boolean.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.boolean.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
                     return new boolean[0];
                 }
             }

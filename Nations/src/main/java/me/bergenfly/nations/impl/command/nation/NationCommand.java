@@ -18,6 +18,7 @@ public class NationCommand extends CommandRoot {
                 .addSettlement(CommandFlower.INVOKER_MEMBER)
                 .addSettlement(CommandFlower.INVOKER_LEADER)
                 .nationDoesNotExist(0)
+                .nationDoesNotExist(CommandFlower.INVOKER_MEMBER)
                 .cleanName(0)
                 .player()
                 .command((a) -> NationImpl.tryCreate(a.args()[0], a.invokerUser()) != null)

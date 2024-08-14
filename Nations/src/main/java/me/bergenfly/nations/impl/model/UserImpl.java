@@ -1,9 +1,13 @@
 package me.bergenfly.nations.impl.model;
 
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserImpl implements User {
+
+    private static NationsPlugin api = NationsPlugin.getInstance();
 
     private final UUID uuid;
     private String name;
@@ -103,5 +109,16 @@ public class UserImpl implements User {
     @Override
     public @NotNull String getName() {
         return this.name;
+    }
+
+    @Override
+    public boolean tryClaimChunk(LandAdministrator admin) {
+        if(!isOnline()) {
+            return false;
+        }
+
+        Location location = getPlayer().getLocation();
+
+        return api.landManager().tryClaimChunkAtLocation(location, admin);
     }
 }
