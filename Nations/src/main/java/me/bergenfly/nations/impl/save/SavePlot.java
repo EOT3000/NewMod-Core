@@ -58,7 +58,7 @@ public class SavePlot {
 
         for(List<ClaimedChunk> list : byWorld) {
             try {
-                plotsToMap(list).save(new File("plugins\\Nations\\plots\\" + list.getFirst().getWorld().getName() + ".yml"));
+                plotsToMap(list).save(new File("plugins/Nations/plots/" + list.getFirst().getWorld().getName() + ".yml"));
             } catch (Exception e) {
                 NationsPlugin.getInstance().getLogger().log(Level.SEVERE, "Error trying to save plots in world " + list.getFirst().getWorld());
                 e.printStackTrace();

@@ -21,7 +21,7 @@ public class SaveNation {
         nationSave.set("capital", nation.getCapital().getName());
         nationSave.set("firstName", nation.getFirstName());
         nationSave.set("creationTime", nation.getCreationTime());
-        nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getName).collect(Collectors.toSet()));
+        nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getName).collect(Collectors.toList()));
 
         return nationSave;
     }
@@ -29,7 +29,7 @@ public class SaveNation {
     public static void saveNations() {
         for(Nation nation : NationsPlugin.getInstance().nationsRegistry().list()) {
             try {
-                nationToMap(nation).save(new File("plugins\\Nations\\nations\\" + nation.getFirstName() + "-" + nation.getCreationTime() + ".yml"));
+                nationToMap(nation).save(new File("plugins/Nations/nations/" + nation.getFirstName() + "-" + nation.getCreationTime() + ".yml"));
             } catch (Exception e) {
                 NationsPlugin.getInstance().getLogger().log(Level.SEVERE, "Error trying to save nation " + nation.getName() + "(originally " + nation.getFirstName() + ")");
                 e.printStackTrace();

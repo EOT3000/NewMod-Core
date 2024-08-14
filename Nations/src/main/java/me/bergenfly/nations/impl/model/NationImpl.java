@@ -40,7 +40,7 @@ public class NationImpl implements Nation {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    private NationImpl(User leader, String name, String firstName, long creationTime) {
+    public NationImpl(User leader, String name, String firstName, long creationTime) {
         this.leader = leader;
         this.name = name;
         this.firstName = firstName;
@@ -138,7 +138,7 @@ public class NationImpl implements Nation {
 
     @Override
     public @NotNull String getId() {
-        return "settlement_" + firstName.toLowerCase() + "_" + creationTime;
+        return "nation_" + firstName.toLowerCase() + "_" + creationTime;
     }
 
     @Override
