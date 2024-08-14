@@ -30,5 +30,13 @@ public class NationCommand extends CommandRoot {
                 .addNation(0)
                 .commandAlwaysSuccess((a) -> a.nations()[0].sendInfo(a.invokerUser()))
                 .make());
+
+        addBranch("claim", new CommandFlower()
+                .addNation(CommandFlower.INVOKER_LEADER)
+                .player()
+                .command((a) -> a.invokerUser().tryClaimChunk(a.nations()[0]))
+                .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
+                .successMessage((a) -> TranslatableString.translate("nations.claim"))
+                .make());
     }
 }

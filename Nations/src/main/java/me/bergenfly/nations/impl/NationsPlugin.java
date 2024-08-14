@@ -4,6 +4,7 @@ import me.bergenfly.nations.api.NationsAPI;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -18,6 +19,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -102,6 +104,24 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
             USERS.set(uuid, new UserImpl(uuid));
         } else {
             user.updateName();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        ClaimedChunk from = landManager.getClaimedChunkAtLocation(event.getFrom());
+        ClaimedChunk to = landManager.getClaimedChunkAtLocation(event.getTo());
+
+        if (to == from) {
+            return;
+        }
+
+        if (to == null) {
+            event.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
+        } else {
+            LandAdministrator admin = to.getAt(0,0).getAdministrator();
+
+            event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }
     }
 }
