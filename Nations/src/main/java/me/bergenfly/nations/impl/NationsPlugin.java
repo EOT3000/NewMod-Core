@@ -62,6 +62,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
+        this.landManager = new NationsLandManager();
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
