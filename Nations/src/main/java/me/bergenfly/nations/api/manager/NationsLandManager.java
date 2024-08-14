@@ -12,6 +12,10 @@ import org.bukkit.World;
 public class NationsLandManager {
     private Registry<ClaimedChunk, Integer> PLOTS = new RegistryImpl<>(ClaimedChunk.class);
 
+    public NationsLandManager() {
+        Plots.init();
+    }
+
     public ClaimedChunk getClaimedChunkAtLocation(Location location) {
         return getClaimedChunkAtChunk(location.getWorld(), location.getChunk().getX(), location.getChunk().getZ());
     }
