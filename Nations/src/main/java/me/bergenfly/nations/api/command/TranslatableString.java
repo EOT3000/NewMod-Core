@@ -48,7 +48,7 @@ public class TranslatableString {
         translations.put("nations.command.error.settlement.not_in_territory", new TranslatableString("You must be within a territory of a settlement to do that"));
         translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
 
-        translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must be a resident of a settlement to do that"));
+        translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must leave your settlement to do that"));
         translations.put("nations.command.error.settlement.is_in_territory", new TranslatableString("You cannot be within a settlement's territory to do that"));
         translations.put("nations.command.error.settlement.is_argument", new TranslatableString("&cThe settlement &4{1}&c already exists")); //TODO same as above
 
