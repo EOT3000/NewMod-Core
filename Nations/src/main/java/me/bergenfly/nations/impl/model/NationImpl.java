@@ -48,6 +48,14 @@ public class NationImpl implements Nation {
         this.capital = leader.getSettlement();
     }
 
+    public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital) {
+        this.leader = leader;
+        this.name = name;
+        this.firstName = firstName;
+        this.creationTime = creationTime;
+        this.capital = capital;
+    }
+
     public static NationImpl tryCreate(String name, User leader) {
         if(NATIONS == null) {
             NATIONS = NationsPlugin.getInstance().nationsRegistry();
