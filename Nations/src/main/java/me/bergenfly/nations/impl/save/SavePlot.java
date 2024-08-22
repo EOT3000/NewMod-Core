@@ -21,6 +21,7 @@ public class SavePlot {
 
         plot.put("x", chunk.getChunkX());
         plot.put("z", chunk.getChunkZ());
+        plot.put("id", Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld()));
         plot.put("world", chunk.getWorld().getName());
 
         plot.put("type", chunk.getDivision());

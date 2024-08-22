@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
+import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -37,6 +38,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private Registry<Nation, String> NATIONS;
     private Registry<Settlement, String> SETTLEMENTS;
     private Registry<User, UUID> USERS;
+    private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS;
 
     private NationsLandManager landManager;
 
@@ -65,6 +67,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
+        this.PERMISSION_HOLDERS = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
@@ -93,6 +96,11 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     @Override
     public Registry<User, UUID> usersRegistry() {
         return USERS;
+    }
+
+    @Override
+    public Registry<LandPermissionHolder, String> permissionHoldersRegistry() {
+        return PERMISSION_HOLDERS;
     }
 
     @Override

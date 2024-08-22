@@ -8,6 +8,7 @@ import me.bergenfly.nations.impl.model.NationImpl;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class LoadNation {
     private static final NationsPlugin api = NationsPlugin.getInstance();
 
-    public static Nation mapToNation(YamlConfiguration configuration, File file) {
+    public static Nation mapToNation(YamlConfiguration configuration, File file) throws IOException {
         String name = configuration.getString("name");
         String leaderId = configuration.getString("leader");
 
@@ -24,6 +25,19 @@ public class LoadNation {
         int creationTime = configuration.getInt("creationTime", -1);
 
         Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.settlementsRegistry()::get).collect(Collectors.toSet());
+
+        //Mark the file as read so upon next restart, the file is ignored, unless saved to again
+        configuration.set("read", true);
+
+        try {
+            configuration.save(file);
+        } catch (IOException e) {
+            //An IOException indicates something is wrong with file permissions. If this happens, plugin should be disabled
+
+            logError("Error while loading settlements, on file " + file.getPath() + " . Nations plugin will need to be disabled.");
+
+            throw e;
+        }
 
         if (name == null) {
             name = "ncnerr_" + Long.toHexString(System.currentTimeMillis());
@@ -112,6 +126,24 @@ public class LoadNation {
         }
 
         return nation;
+    }
+
+    public static void loadNations() throws IOException {
+        File dir = new File("plugins/Nations/nations");
+
+        if(!dir.exists()) {
+            return;
+        }
+
+        for(File file : dir.listFiles()) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            Nation nation = mapToNation(config, file);
+
+            if(nation != null) {
+                api.nationsRegistry().set(nation.getName(), nation);
+            }
+        }
     }
 
     private static void logError(String err) {

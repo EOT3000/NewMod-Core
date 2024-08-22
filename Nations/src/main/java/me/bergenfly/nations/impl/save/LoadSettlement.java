@@ -121,4 +121,22 @@ public class LoadSettlement {
     private static void logError(String err) {
         api.getLogger().log(Level.SEVERE, err);
     }
+
+    public static void loadSettlements() throws IOException {
+        File dir = new File("plugins/Nations/settlements");
+
+        if(!dir.exists()) {
+            return;
+        }
+
+        for(File file : dir.listFiles()) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            Settlement settlement = mapToSettlement(config, file);
+
+            if(settlement != null) {
+                api.settlementsRegistry().set(settlement.getName(), settlement);
+            }
+        }
+    }
 }
