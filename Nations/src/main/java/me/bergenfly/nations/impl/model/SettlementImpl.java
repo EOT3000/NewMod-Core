@@ -36,7 +36,8 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    private SettlementImpl(User leader, String name, String firstName, long creationTime) {
+    //TODO figure out what to do with constructor accessiblity
+    public SettlementImpl(User leader, String name, String firstName, long creationTime) {
         this.leader = leader;
         this.name = name;
         this.firstName = firstName;

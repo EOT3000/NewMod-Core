@@ -36,19 +36,19 @@ public class LoadNation {
 
             name = name + "_" + Integer.toHexString(count);
 
-            logError("Nation in file " + file.getName() + " is invalid (recoverable), missing current name. Current name set to " + name);
+            logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing current name. Current name set to " + name);
         }
 
         if (firstName == null) {
             firstName = name;
 
-            logError("Nation in file " + file.getName() + " is invalid (recoverable), missing first name. First name set to " + name);
+            logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing first name. First name set to " + name);
         }
 
         if (creationTime == -1) {
             creationTime = 0;
 
-            logError("Nation in file " + file.getName() + " is invalid (recoverable), missing creation time. Creation time set to 0");
+            logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing creation time. Creation time set to 0");
         }
 
         UUID leaderUUID = null;
@@ -72,14 +72,14 @@ public class LoadNation {
                 if(capital != null) {
                     leader = capital.getLeader();
 
-                    logError("Nation in file " + file.getName() + " is invalid (recoverable), missing valid leader (given uuid " + leaderId + "). Leader set to leader of capital ("
+                    logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing valid leader (given uuid " + leaderId + "). Leader set to leader of capital ("
                             + leader.getName() + " (" + leader.getUniqueId() + ")" + " of " + capital.getName());
                 } else {
-                    logError("Nation in file " + file.getName() + " is invalid (unrecoverable), missing leader. Cannot set nation leader to leader of capital because capital name " + capitalName + " is not the name of a settlement. Skipping file");
+                    logError("Nation (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), missing leader. Cannot set nation leader to leader of capital because capital name " + capitalName + " is not the name of a settlement. Skipping file");
                     return null;
                 }
             } else {
-                logError("Nation in file " + file.getName() + " is invalid (unrecoverable), missing leader. Cannot set nation leader to leader of capital because capital name is not set. Skipping file");
+                logError("Nation (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), missing leader. Cannot set nation leader to leader of capital because capital name is not set. Skipping file");
                 return null;
             }
         }
@@ -93,20 +93,22 @@ public class LoadNation {
                 capital = settlements.size() == 1 ? settlements.iterator().next() : null;
 
                 if(capital == null) {
-                    logError("Nation in file " + file.getName() + " is invalid (unrecoverable), file contains no valid towns nor a valid capital (given " + capitalName + "). Skipping file");
+                    logError("Nation (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), file contains no valid towns nor a valid capital (given " + capitalName + "). Skipping file");
                     return null;
                 }
             } else {
                 //Optional will be present because set contains at least 2 settlements. Because this is a set, at most 1 will be null, meaning the other exists.
                 capital = settlements.stream().filter(Objects::nonNull).max(Comparator.comparingInt(a -> a.getMembers().size())).get();
-                logError("Nation in file " + file.getName() + " is invalid (recoverable), file contains no valid capital (given " + capitalName + "). Capital set to largest settlement (" + capital.getName() + ")");
+                logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), file contains no valid capital (given " + capitalName + "). Capital set to largest settlement (" + capital.getName() + ")");
             }
         }
 
         Nation nation = new NationImpl(leader, name, firstName, creationTime, capital);
 
         for(Settlement settlement : settlements) {
-            settlement.setNation(nation);
+            if(settlement != null) {
+                settlement.setNation(nation);
+            }
         }
 
         return nation;
