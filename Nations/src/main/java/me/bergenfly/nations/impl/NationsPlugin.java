@@ -15,9 +15,7 @@ import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
 import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
-import me.bergenfly.nations.impl.save.SaveNation;
-import me.bergenfly.nations.impl.save.SavePlot;
-import me.bergenfly.nations.impl.save.SaveSettlement;
+import me.bergenfly.nations.impl.save.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -25,12 +23,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import java.util.logging.Logger;
 
 public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
 
     private boolean enabled = false;
@@ -69,6 +69,18 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.USERS = new RegistryImpl<>(User.class);
         this.PERMISSION_HOLDERS = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
+
+        try {
+            LoadUser.loadUsers();
+            LoadSettlement.loadSettlements();
+            LoadNation.loadNations();
+            LoadPlot.loadPlots();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            logger.severe("Encountered an error loading nations plugin, must disable: " + e.toString());
+            return;
+        }
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());

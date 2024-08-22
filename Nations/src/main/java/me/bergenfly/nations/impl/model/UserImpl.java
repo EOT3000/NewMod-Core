@@ -30,6 +30,11 @@ public class UserImpl implements User {
         updateName();
     }
 
+    public UserImpl(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
     @Override
     public OfflinePlayer getPlayer() {
         return Bukkit.getOfflinePlayer(this.uuid);

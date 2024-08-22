@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.save;
 
 import me.bergenfly.nations.api.manager.Plots;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
+import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot._1x1_Chunk;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class LoadPlot {
     private static final NationsPlugin api = NationsPlugin.getInstance();
 
-    public Map<Integer, ClaimedChunk> plotsFromMap(YamlConfiguration configuration, File file) {
+    public static Map<Integer, ClaimedChunk> plotsFromMap(YamlConfiguration configuration, File file) {
         Map<Integer, ClaimedChunk> elonMusk = new HashMap<>();
 
         for(String key : configuration.getKeys(false)) {
@@ -40,4 +41,17 @@ public class LoadPlot {
     }
 
 
+    public static void loadPlots() {
+        File dir = new File("plugins/Nations/settlements");
+
+        if(!dir.exists()) {
+            return;
+        }
+
+        for(File file : dir.listFiles()) {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+            api.landManager().getPLOTS().addAll(plotsFromMap(config, file));
+        }
+    }
 }

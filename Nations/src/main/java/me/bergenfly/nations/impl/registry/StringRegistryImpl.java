@@ -37,4 +37,9 @@ public class StringRegistryImpl<V> implements Registry<V, String> {
     public Map<String, V> map() {
         return registry.map();
     }
+
+    @Override
+    public void addAll(Map<String, V> map) {
+        registry.addAll(map);
+    }
 }
