@@ -207,5 +207,10 @@ public class NationImpl implements Nation {
         return firstName;
     }
 
+    @Override
+    public int priority() {
+        return 3;
+    }
+
     //TODO organize method order in similar classes
 }

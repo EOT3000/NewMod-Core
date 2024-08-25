@@ -17,7 +17,7 @@ public class LoadUser {
         return new UserImpl(UUID.fromString(configuration.getString("uuid")), configuration.getString("name"));
     }
 
-    public static void loadUsers() throws IOException {
+    public static void loadUsers() {
         File dir = new File("plugins/Nations/users");
 
         if(!dir.exists()) {

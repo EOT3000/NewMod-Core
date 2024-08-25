@@ -5,7 +5,7 @@ import me.bergenfly.nations.api.model.plot.PlotSection;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public interface Nation extends LandAdministrator, PlayerGroup, Named, Led {
+public interface Nation extends Organization, LandAdministrator, LandPermissionHolder, PlayerGroup, Named, Led {
     Set<PlotSection> getNationLand();
 
     Set<PlotSection> getSettlementLand();

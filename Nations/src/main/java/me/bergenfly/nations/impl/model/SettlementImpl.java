@@ -170,4 +170,9 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     public long getCreationTime() {
         return creationTime;
     }
+
+    @Override
+    public int priority() {
+        return 1;
+    }
 }

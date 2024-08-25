@@ -126,4 +126,9 @@ public class UserImpl implements User {
 
         return api.landManager().tryClaimChunkAtLocation(location, admin);
     }
+
+    @Override
+    public int priority() {
+        return 0;
+    }
 }

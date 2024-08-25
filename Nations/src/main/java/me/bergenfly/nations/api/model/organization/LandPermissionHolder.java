@@ -10,4 +10,14 @@ import me.bergenfly.nations.api.permission.PlotPermission;
  * @see me.bergenfly.nations.api.model.plot.PlotSection
  */
 public interface LandPermissionHolder extends Named {
+    /**
+     * The priority of this group when it comes to a user's permission in a plot.
+     * <p>
+     * A {@link me.bergenfly.nations.api.model.User} will have a priority of 0, meaning it overrides all other groups.
+     * <p>
+     * Groups like "Ally" may have higher priorities, because they are so broad that more specific groups will override their set permission.
+     *
+     * @return the priority of this kind of land permission holder.
+     */
+    int priority();
 }
