@@ -61,4 +61,8 @@ public interface PlayerGroup {
     default void removeMember(User user) {
         throw new UnsupportedOperationException();
     }
+
+    default boolean isPartOf(User user) {
+        return getMembers().contains(user);
+    }
 }

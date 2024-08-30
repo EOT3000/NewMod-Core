@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 public interface Named {
     /**
      * Gets an id for this object. This id should be unique among all {@link Named} objects, and persistent between server restarts.
+     * <p>
+     * Must be alphanumeric and may have underscores (case-insensitive).
      *
      * @return an id of this object.
      */

@@ -120,6 +120,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         return landManager;
     }
 
+    //Don't use this. Only internal code can use this
+    @Deprecated
     public static NationsPlugin getInstance() {
         return instance;
     }

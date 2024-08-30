@@ -2,7 +2,10 @@ package me.bergenfly.nations.impl.save;
 
 import me.bergenfly.nations.api.manager.Plots;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -19,6 +22,12 @@ public class SavePlot {
 
         Map<String, Object> plot = new HashMap<>();
 
+        PlotSection section = chunk.getAt(0, 0);
+
+        if(section instanceof PermissiblePlotSection p) {
+            plot.put("permissions", p.savedPermissionList());
+        }
+
         plot.put("x", chunk.getChunkX());
         plot.put("z", chunk.getChunkZ());
         plot.put("id", Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld()));
@@ -26,6 +35,8 @@ public class SavePlot {
 
         plot.put("type", chunk.getDivision());
         plot.put("administrator", chunk.getAt(0, 0).getAdministrator().getId());
+
+
 
         return plot;
     }

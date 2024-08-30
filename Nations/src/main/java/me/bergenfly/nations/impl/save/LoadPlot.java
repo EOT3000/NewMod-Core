@@ -4,6 +4,7 @@ import me.bergenfly.nations.api.manager.Plots;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot._1x1_Chunk;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,7 +18,7 @@ public class LoadPlot {
     private static final NationsPlugin api = NationsPlugin.getInstance();
 
     public static Map<Integer, ClaimedChunk> plotsFromMap(YamlConfiguration configuration, File file) {
-        Map<Integer, ClaimedChunk> elonMusk = new HashMap<>();
+        Map<Integer, ClaimedChunk> map = new HashMap<>();
 
         for(String key : configuration.getKeys(false)) {
             ConfigurationSection section = configuration.getConfigurationSection(key);
@@ -34,10 +35,14 @@ public class LoadPlot {
 
             ClaimedChunk chunk = new _1x1_Chunk(x, z, Plots.getWorld(world), landObject);
 
-            elonMusk.put(id, chunk);
+            if(chunk.getAt(0,0) instanceof PermissiblePlotSection j) {
+                j.loadPermissions(section.getStringList("permissions"));
+            }
+
+            map.put(id, chunk);
         }
 
-        return elonMusk;
+        return map;
     }
 
 

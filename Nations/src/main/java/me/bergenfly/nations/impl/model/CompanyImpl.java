@@ -38,4 +38,6 @@ public class CompanyImpl extends AbstractLedPlayerGroup implements Company {
     public @NotNull String getId() {
         return "company_" + firstName.toLowerCase();
     }
+
+
 }

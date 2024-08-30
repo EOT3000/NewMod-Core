@@ -46,6 +46,7 @@ public class CommandFlower {
     private final IntArrayList nations = new IntArrayList();
     private final IntArrayList settlements = new IntArrayList();
     private final IntArrayList users = new IntArrayList();
+    private final IntArrayList permissionHolders = new IntArrayList();
     private final IntArrayList ints = new IntArrayList();
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();

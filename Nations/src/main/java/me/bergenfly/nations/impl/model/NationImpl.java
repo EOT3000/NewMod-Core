@@ -7,6 +7,7 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
 import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -194,7 +195,7 @@ public class NationImpl implements Nation {
 
     @Override
     public PlotSection createEmptyPlotSection() {
-        return new PlotSectionImpl(this);
+        return new PermissiblePlotSectionImpl(this);
     }
 
     @Override

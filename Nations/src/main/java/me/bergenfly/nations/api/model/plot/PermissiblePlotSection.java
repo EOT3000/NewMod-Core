@@ -4,6 +4,8 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.permission.PlotPermission;
 
+import java.util.List;
+
 public interface PermissiblePlotSection extends PlotSection {
     boolean hasPermission(PlotPermission permission, User user);
 
@@ -35,4 +37,8 @@ public interface PermissiblePlotSection extends PlotSection {
      * @param holder the permission holder to unset the permission for.
      */
     void unsetPermission(PlotPermission permission, LandPermissionHolder holder);
+
+    List<String> savedPermissionList();
+
+    void loadPermissions(List<String> list);
 }

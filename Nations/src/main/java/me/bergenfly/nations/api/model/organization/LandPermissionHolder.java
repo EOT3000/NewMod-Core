@@ -1,5 +1,6 @@
 package me.bergenfly.nations.api.model.organization;
 
+import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.permission.PlotPermission;
 
 /**
@@ -20,4 +21,18 @@ public interface LandPermissionHolder extends Named {
      * @return the priority of this kind of land permission holder.
      */
     int priority();
+
+    /**
+     * Calculates the effective priority of this permission holder in a specific situation.
+     * <p>
+     * Holders with a 'disallow' flag should have lower priority than ones with an 'allow' flag, because a disallow should override an allow.
+     *
+     * @param allowed whether or not this permission holder is allowed, or not allowed to do the permission being checked.
+     * @return the effective priority of this permission holder in the given context.
+     */
+    default int effectivePriority(boolean allowed) {
+        return priority()*2 + (allowed ? 1 : 0);
+    }
+
+    boolean isPartOf(User user);
 }

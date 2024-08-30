@@ -8,13 +8,16 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
+import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
+import me.bergenfly.nations.impl.NationsPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class PermissiblePlotSectionImpl extends PlotSectionImpl implements PermissiblePlotSection {
     private final Map<LandPermissionHolder, Object2ByteMap<PlotPermission>> permissions = new HashMap<>();
+
+    private static final NationsPlugin api = NationsPlugin.getInstance();
 
     public PermissiblePlotSectionImpl(LandAdministrator administrator) {
         super(administrator);
@@ -22,7 +25,14 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
     @Override
     public boolean hasPermission(PlotPermission permission, User user) {
-        return false;
+        //Tested this: pretty but slow
+        OptionalInt i = permissions.keySet().stream()
+                .filter((a) -> permissions.get(a).getOrDefault(permission, (byte) 0) != 0)
+                .filter((a) -> a.isPartOf(user))
+                .mapToInt((a) -> a.effectivePriority(permissions.get(a).getByte(permission) >= 1))
+                .min();
+
+        return i.isPresent() && i.getAsInt() % 2 == 1;
     }
 
     @Override
@@ -46,5 +56,36 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
             return b;
         });
+    }
+
+    //TODO should be set or collection?
+    @Override
+    public List<String> savedPermissionList() {
+        List<String> list = new ArrayList<>();
+
+        for(LandPermissionHolder holder : permissions.keySet()) {
+            Object2ByteMap<PlotPermission> map = permissions.get(holder);
+
+            for(PlotPermission permission : map.keySet()) {
+                if(map.getOrDefault(permission, (byte) 0) != 0) {
+                    list.add(holder.getId() + ";" + permission.getKey() + ";" + (map.getByte(permission) > 0));
+                }
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public void loadPermissions(List<String> list) {
+        for(String s : list) {
+            String[] spl = s.split(";");
+
+            LandPermissionHolder holder = api.permissionHoldersRegistry().get(spl[0]);
+
+            permissions.putIfAbsent(holder, new Object2ByteOpenHashMap<>());
+
+            permissions.get(holder).put(DefaultPlotPermission.of(spl[1]), Boolean.valueOf(spl[2]) ? (byte) 1 : (byte) 0);
+        }
     }
 }
