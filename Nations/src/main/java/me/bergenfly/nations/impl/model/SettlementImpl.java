@@ -163,6 +163,11 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         return new PermissiblePlotSectionImpl(this);
     }
 
+    @Override
+    public boolean isUserAdmin(User user) {
+        return leader.equals(user);
+    }
+
     public String getFirstName() {
         return firstName;
     }

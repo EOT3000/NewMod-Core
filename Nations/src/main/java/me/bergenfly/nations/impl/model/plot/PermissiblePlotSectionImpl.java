@@ -81,7 +81,7 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
         for(String s : list) {
             String[] spl = s.split(";");
 
-            LandPermissionHolder holder = api.permissionHoldersRegistry().get(spl[0]);
+            LandPermissionHolder holder = api.permissionHoldersByIdRegistry().get(spl[0]);
 
             permissions.putIfAbsent(holder, new Object2ByteOpenHashMap<>());
 

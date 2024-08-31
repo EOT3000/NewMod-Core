@@ -108,6 +108,7 @@ public class Textures {
                 .registerTypeAdapter(BlockStates.class, new BlockStatesDeserializer(this)).create();
     }
 
+    //Loads the actual texture images first.
     public void loadTextures(File dir) {
         for(File file : dir.listFiles()) {
             try {

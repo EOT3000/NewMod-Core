@@ -199,6 +199,11 @@ public class NationImpl implements Nation {
     }
 
     @Override
+    public boolean isUserAdmin(User user) {
+        return leader.equals(user);
+    }
+
+    @Override
     public long getCreationTime() {
         return creationTime;
     }

@@ -6,7 +6,7 @@ public interface Named {
     /**
      * Gets an id for this object. This id should be unique among all {@link Named} objects, and persistent between server restarts.
      * <p>
-     * Must be alphanumeric and may have underscores (case-insensitive).
+     * Must be alphanumeric and may have underscores and dashes (case-insensitive). a-z, A-Z, 0-9, -, _
      *
      * @return an id of this object.
      */

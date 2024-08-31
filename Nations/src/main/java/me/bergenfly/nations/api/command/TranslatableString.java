@@ -59,10 +59,14 @@ public class TranslatableString {
         //If a float is passed to an int parameter, float will be rounded to an int, only one number type needed
         translations.put("nations.command.error.number.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
 
+        translations.put("nations.command.error.plot_unsupported", new TranslatableString("&7This plot does not support this"));
+
         translations.put("nations.broadcast.created.settlement", new TranslatableString("&e{1} &ahas created the settlement of &e{2}"));
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));
 
         translations.put("nations.general.failure", new TranslatableString("&cSomething went wrong"));
+        translations.put("nations.general.success", new TranslatableString("&eSuccess"));
+        translations.put("nations.general.no_permission", new TranslatableString("&cYou don't have permission to do that"));
 
         translations.put("nations.claim", new TranslatableString("&eClaimed chunk"));
     }

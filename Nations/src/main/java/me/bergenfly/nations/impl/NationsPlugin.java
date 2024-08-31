@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -38,7 +39,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private Registry<Nation, String> NATIONS;
     private Registry<Settlement, String> SETTLEMENTS;
     private Registry<User, UUID> USERS;
-    private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS;
+    private Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS_NAME;
+    private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
 
     private NationsLandManager landManager;
 
@@ -67,7 +69,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
-        this.PERMISSION_HOLDERS = new RegistryImpl<>(LandPermissionHolder.class);
+        this.PERMISSION_HOLDERS_NAME = new RegistryImpl<>(null); //idk what to do with this null
+        this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
 
         try {
@@ -111,8 +114,13 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
-    public Registry<LandPermissionHolder, String> permissionHoldersRegistry() {
-        return PERMISSION_HOLDERS;
+    public Registry<Map<Class<?>, LandPermissionHolder>, String> permissionHoldersByNameRegistry() {
+        return PERMISSION_HOLDERS_NAME;
+    }
+
+    @Override
+    public Registry<LandPermissionHolder, String> permissionHoldersByIdRegistry() {
+        return PERMISSION_HOLDERS_ID;
     }
 
     @Override

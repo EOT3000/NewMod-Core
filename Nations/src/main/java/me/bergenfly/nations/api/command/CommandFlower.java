@@ -3,8 +3,10 @@ package me.bergenfly.nations.api.command;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
@@ -47,6 +49,7 @@ public class CommandFlower {
     private final IntArrayList settlements = new IntArrayList();
     private final IntArrayList users = new IntArrayList();
     private final IntArrayList permissionHolders = new IntArrayList();
+    private final IntArrayList plotPermissions = new IntArrayList();
     private final IntArrayList ints = new IntArrayList();
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
@@ -77,6 +80,14 @@ public class CommandFlower {
     }
     public CommandFlower addUser(int i) {
         users.add(i);
+        return this;
+    }
+    public CommandFlower addPermissionHolder(int i) {
+        permissionHolders.add(i);
+        return this;
+    }
+    public CommandFlower addPlotPermission(int i) {
+        plotPermissions.add(i);
         return this;
     }
     public CommandFlower addInt(int i) {
@@ -138,7 +149,7 @@ public class CommandFlower {
     }
 
     public CommandFlower make() {
-        maker = new NationsCommandInvocationMaker(nations, settlements, users, ints, floats, booleans);
+        maker = new NationsCommandInvocationMaker(nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
         return this;
     }
 
@@ -172,11 +183,15 @@ public class CommandFlower {
         private BiFunction<CommandSender, String[], Nation[]> nations = (a, b) -> null;
         private BiFunction<CommandSender, String[], Settlement[]> settlements = (a, b) -> null;
         private BiFunction<CommandSender, String[], User[]> users = (a, b) -> null;
+        private BiFunction<CommandSender, String[], LandPermissionHolder[]> permissionHolders = (a, b) -> null;
+        private BiFunction<CommandSender, String[], PlotPermission[]> plotPermissions = (a, b) -> null;
         private BiFunction<CommandSender, String[], int[]> ints = (a, b) -> null;
         private BiFunction<CommandSender, String[], float[]> floats = (a, b) -> null;
         private BiFunction<CommandSender, String[], boolean[]> booleans = (a, b) -> null;
 
-        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
+        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList permissionHolders_,
+                                              IntArrayList plotPermissions_,
+                                              IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
                 nations = ObjectFetchers.createNationFetcher(nations_);
             }
@@ -187,6 +202,14 @@ public class CommandFlower {
 
             if(!users_.isEmpty()) {
                 users = ObjectFetchers.createUserFetcher(users_);
+            }
+
+            if(!permissionHolders_.isEmpty()) {
+                permissionHolders = ObjectFetchers.createPermissionHolderFetcher(permissionHolders_);
+            }
+
+            if(!plotPermissions_.isEmpty()) {
+                plotPermissions = ObjectFetchers.createPlotPermissionFetcher(plotPermissions_);
             }
 
             if(!ints_.isEmpty()) {
@@ -214,6 +237,8 @@ public class CommandFlower {
             Nation[] nations = this.nations.apply(player, strings);
             Settlement[] settlements = this.settlements.apply(player, strings);
             User[] users = this.users.apply(player, strings);
+            LandPermissionHolder[] permissionHolders = this.permissionHolders.apply(player, strings);
+            PlotPermission[] plotPermissions = this.plotPermissions.apply(player, strings);
             int[] ints = this.ints.apply(player, strings);
             float[] floats = this.floats.apply(player, strings);
             boolean[] booleans = this.booleans.apply(player, strings);
@@ -224,6 +249,10 @@ public class CommandFlower {
             } else if (settlements != null && settlements.length == 0) {
                 valid = false;
             } else if (users != null && users.length == 0) {
+                valid = false;
+            } else if (permissionHolders != null && permissionHolders.length == 0) {
+                valid = false;
+            } else if (plotPermissions != null && plotPermissions.length == 0) {
                 valid = false;
             } else if (ints != null && ints.length == 0) {
                 valid = false;
@@ -236,10 +265,10 @@ public class CommandFlower {
             // If still valid, then check the NOT requirements
             valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, sender, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, sender, strings);
 
-            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, ints, floats, booleans);
+            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
         }
     }
 
-    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, int[] ints, float[] floats, boolean[] booleans) {}
+    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, int[] ints, float[] floats, boolean[] booleans) {}
 
 }

@@ -8,13 +8,15 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.registry.Registry;
 
+import java.util.Map;
 import java.util.UUID;
 
 public interface NationsAPI {
     Registry<Nation, String> nationsRegistry();
     Registry<Settlement, String> settlementsRegistry();
     Registry<User, UUID> usersRegistry();
-    Registry<LandPermissionHolder, String> permissionHoldersRegistry();
+    Registry<Map<Class<?>, LandPermissionHolder>, String> permissionHoldersByNameRegistry();
+    Registry<LandPermissionHolder, String> permissionHoldersByIdRegistry();
     //Registry<ClaimedChunk, Long> plotsRegistry(); //TODO: primitive instead of boxed?
 
     NationsLandManager landManager();

@@ -31,7 +31,7 @@ public class LoadPlot {
             int type = section.getInt("type");
             String administrator = section.getString("administrator");
 
-            LandAdministrator landObject = (LandAdministrator) api.permissionHoldersRegistry().get(administrator);
+            LandAdministrator landObject = (LandAdministrator) (api.permissionHoldersByIdRegistry().get(administrator));
 
             ClaimedChunk chunk = new _1x1_Chunk(x, z, Plots.getWorld(world), landObject);
 
