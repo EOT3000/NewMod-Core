@@ -46,7 +46,7 @@ public class Camera {
 
                     boolean p = false;
 
-                    if(asdj++ % 2 == 0) {
+                    /*if(asdj++ % 2 == 0) {
                         if(djkjfk.nextInt(10) == 0 && result.getHitBlock().getType().equals(Material.HAY_BLOCK)) {
                             System.out.println("Found a hay bale at " + result.getHitBlock().getLocation() + " and its at face " + result.getHitBlockFace());
                             System.out.println("It is at axis " + ((Orientable) result.getHitBlock().getBlockData()).getAxis());
@@ -55,7 +55,7 @@ public class Camera {
                             System.out.println("Would be pixels: " + GetImagePixel.getImagePixelFromFaceAndLocation(result.getHitBlockFace(), result.getHitPosition(), true));
                             p = true;
                         }
-                    }
+                    }*/
 
                     if(x == 64 && y == 64) {
                         BlockDisplay display = location.getWorld().spawn(result.getHitPosition().toLocation(location.getWorld()), BlockDisplay.class);
@@ -71,12 +71,12 @@ public class Camera {
 
                     //
 
-                    if(x == 64 && y == 64) {
+                    /*if(x == 64 && y == 64) {
                         BlockDisplay display2 = location.getWorld().spawn(adjusted.toLocation(location.getWorld()).add(result.getHitBlock().getLocation().toVector()), BlockDisplay.class);
 
                         display2.setBlock(Material.GOLD_BLOCK.createBlockData());
                         display2.setTransformation(new Transformation(new Vector3f(0, 0, 0), new AxisAngle4f(), new Vector3f(0.05f, 0.05f, 0.05f), new AxisAngle4f()));
-                    }
+                    }*/
 
                     BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y(), p);
 

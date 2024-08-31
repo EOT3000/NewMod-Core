@@ -42,5 +42,7 @@ public class BlockStates {
         return new ArrayList<>(s);
     }
 
+    // All states of all blocks are defined. model is the model this state has
+    // x and y are rotations of this model.
     public static record BlockState(BlockModel model, int x, int y) {}
 }

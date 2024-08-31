@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.manager;
 
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.model.plot._1x1_Chunk;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
@@ -55,6 +56,11 @@ public class NationsLandManager {
         PLOTS.set(id, new _1x1_Chunk(chunkX, chunkZ, w, administrator));
 
         return true;
+    }
+
+    public PlotSection getPlotSectionAtLocation(Location location) {
+        ClaimedChunk chunk = getClaimedChunkAtChunk(location.getChunk());
+        return chunk == null ? null : chunk.getAt(location.getBlockX()-chunk.getChunkX()*16, location.getBlockZ()-chunk.getChunkZ()*16);
     }
 
     public Registry<ClaimedChunk, Integer> getPLOTS() {

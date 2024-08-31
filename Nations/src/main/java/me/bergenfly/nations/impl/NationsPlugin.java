@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
+import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -14,9 +15,7 @@ import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
 import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
-import me.bergenfly.nations.impl.save.SaveNation;
-import me.bergenfly.nations.impl.save.SavePlot;
-import me.bergenfly.nations.impl.save.SaveSettlement;
+import me.bergenfly.nations.impl.save.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -24,12 +23,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
 
     private boolean enabled = false;
@@ -37,6 +39,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private Registry<Nation, String> NATIONS;
     private Registry<Settlement, String> SETTLEMENTS;
     private Registry<User, UUID> USERS;
+    private Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS_NAME;
+    private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
 
     private NationsLandManager landManager;
 
@@ -65,7 +69,21 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
         this.USERS = new RegistryImpl<>(User.class);
+        this.PERMISSION_HOLDERS_NAME = new RegistryImpl<>(null); //idk what to do with this null
+        this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
+
+        try {
+            LoadUser.loadUsers();
+            LoadSettlement.loadSettlements();
+            LoadNation.loadNations();
+            LoadPlot.loadPlots();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(this);
+            logger.severe("Encountered an error loading nations plugin, must disable: " + e.toString());
+            return;
+        }
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
@@ -96,10 +114,22 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
+    public Registry<Map<Class<?>, LandPermissionHolder>, String> permissionHoldersByNameRegistry() {
+        return PERMISSION_HOLDERS_NAME;
+    }
+
+    @Override
+    public Registry<LandPermissionHolder, String> permissionHoldersByIdRegistry() {
+        return PERMISSION_HOLDERS_ID;
+    }
+
+    @Override
     public NationsLandManager landManager() {
         return landManager;
     }
 
+    //Don't use this. Only internal code can use this
+    @Deprecated
     public static NationsPlugin getInstance() {
         return instance;
     }

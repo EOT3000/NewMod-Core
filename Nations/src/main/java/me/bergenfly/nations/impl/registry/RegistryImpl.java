@@ -36,4 +36,9 @@ public class RegistryImpl<V, K> implements Registry<V, K> {
     public Map<K, V> map() {
         return new HashMap<>(map);
     }
+
+    @Override
+    public void addAll(Map<K, V> map) {
+        this.map.putAll(map);
+    }
 }

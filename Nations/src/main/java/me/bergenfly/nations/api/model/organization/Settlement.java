@@ -2,7 +2,7 @@ package me.bergenfly.nations.api.model.organization;
 
 import me.bergenfly.nations.api.model.User;
 
-public interface Settlement extends PlayerGroup, Named, LandAdministrator, Led, NationComponent {
+public interface Settlement extends Organization, LandPermissionHolder, PlayerGroup, Named, LandAdministrator, Led, NationComponent {
 
     /**
      * Sets this settlement's nation, and removes itself from the old nation.
@@ -20,7 +20,7 @@ public interface Settlement extends PlayerGroup, Named, LandAdministrator, Led, 
     @Deprecated
     @Override
     default void addMember(User user) {
-        PlayerGroup.super.addMember(user);
+        Organization.super.addMember(user);
     }
 
     long getCreationTime();

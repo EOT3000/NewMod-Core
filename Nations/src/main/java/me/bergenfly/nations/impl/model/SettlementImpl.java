@@ -36,7 +36,8 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    private SettlementImpl(User leader, String name, String firstName, long creationTime) {
+    //TODO figure out what to do with constructor accessiblity
+    public SettlementImpl(User leader, String name, String firstName, long creationTime) {
         this.leader = leader;
         this.name = name;
         this.firstName = firstName;
@@ -162,11 +163,21 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         return new PermissiblePlotSectionImpl(this);
     }
 
+    @Override
+    public boolean isUserAdmin(User user) {
+        return leader.equals(user);
+    }
+
     public String getFirstName() {
         return firstName;
     }
 
     public long getCreationTime() {
         return creationTime;
+    }
+
+    @Override
+    public int priority() {
+        return 1;
     }
 }

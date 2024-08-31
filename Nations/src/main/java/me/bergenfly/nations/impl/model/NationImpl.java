@@ -7,6 +7,7 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
 import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -197,7 +198,12 @@ public class NationImpl implements Nation {
 
     @Override
     public PlotSection createEmptyPlotSection() {
-        return new PlotSectionImpl(this);
+        return new PermissiblePlotSectionImpl(this);
+    }
+
+    @Override
+    public boolean isUserAdmin(User user) {
+        return leader.equals(user);
     }
 
     @Override
@@ -212,6 +218,11 @@ public class NationImpl implements Nation {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public int priority() {
+        return 3;
     }
 
     //TODO organize method order in similar classes

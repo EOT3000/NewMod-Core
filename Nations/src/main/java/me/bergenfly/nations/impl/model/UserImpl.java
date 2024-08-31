@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,6 +29,11 @@ public class UserImpl implements User {
     public UserImpl(UUID uuid) {
         this.uuid = uuid;
         updateName();
+    }
+
+    public UserImpl(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
     }
 
     @Override
@@ -120,5 +126,26 @@ public class UserImpl implements User {
         Location location = getPlayer().getLocation();
 
         return api.landManager().tryClaimChunkAtLocation(location, admin);
+    }
+
+    @Override
+    public @Nullable PlotSection currentlyAt() {
+        if(!isOnline()) {
+            return null;
+        }
+
+        Location location = getPlayer().getLocation();
+
+        return api.landManager().getPlotSectionAtLocation(location);
+    }
+
+    @Override
+    public boolean isPartOf(User user) {
+        return equals(user);
+    }
+
+    @Override
+    public int priority() {
+        return 0;
     }
 }

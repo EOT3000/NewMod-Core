@@ -2,14 +2,19 @@ package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.DefaultPlotPermission;
+import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -22,6 +27,7 @@ public class ObjectFetchers {
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
     private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+    private static Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS = NationsPlugin.getInstance().permissionHoldersByNameRegistry();
 
     public static BiFunction<CommandSender, String[], Nation[]> createNationFetcher(IntArrayList list) {
         int len = list.size();
@@ -148,6 +154,58 @@ public class ObjectFetchers {
                     }
 
                     r[i] = USERS.get(p.getUniqueId());
+                }
+            }
+
+            return r;
+        };
+    }
+
+    public static BiFunction<CommandSender, String[], LandPermissionHolder[]> createPermissionHolderFetcher(IntArrayList list) {
+        int len = list.size();
+
+        return (sender, strings) -> {
+            LandPermissionHolder[] r = new LandPermissionHolder[len];
+
+            for (int i = 0; i < len; i++) {
+                if (list.getInt(i) >= strings.length) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new LandPermissionHolder[0];
+                }
+
+                Collection<LandPermissionHolder> m = PERMISSION_HOLDERS.get(strings[list.getInt(i)]).values();
+
+                if (m.isEmpty()) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.general.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    return new LandPermissionHolder[0];
+                }
+
+                r[i] = m.iterator().next();
+            }
+
+            return r;
+        };
+    }
+
+    public static BiFunction<CommandSender, String[], PlotPermission[]> createPlotPermissionFetcher(IntArrayList list) {
+        int len = list.size();
+
+        return (sender, strings) -> {
+            PlotPermission[] r = new PlotPermission[len];
+
+            for (int i = 0; i < len; i++) {
+                if (list.getInt(i) >= strings.length) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new PlotPermission[0];
+                }
+
+                try {
+                    r[i] = DefaultPlotPermission.valueOf(strings[list.getInt(i)].toUpperCase());
+                } catch(IllegalArgumentException e) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.permission.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    return new PlotPermission[0];
                 }
             }
 

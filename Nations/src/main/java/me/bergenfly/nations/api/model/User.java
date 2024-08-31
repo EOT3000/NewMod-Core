@@ -4,6 +4,7 @@ import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,4 +50,6 @@ public interface User extends LandPermissionHolder {
     }
 
     boolean tryClaimChunk(LandAdministrator admin);
+
+    @Nullable PlotSection currentlyAt();
 }

@@ -12,4 +12,6 @@ public interface Registry<V, K> {
     List<V> list();
 
     Map<K, V> map();
+
+    void addAll(Map<K, V> map);
 }
