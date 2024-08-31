@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +36,8 @@ public class NationImpl implements Nation {
 
     //Does not include settlement land
     private Set<PlotSection> nationLand = new HashSet<>();
+
+    private File file;
 
     private NationImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
@@ -205,6 +208,10 @@ public class NationImpl implements Nation {
     @Override
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 
     //TODO organize method order in similar classes

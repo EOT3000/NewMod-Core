@@ -103,11 +103,15 @@ public class LoadNation {
             }
         }
 
-        Nation nation = new NationImpl(leader, name, firstName, creationTime, capital);
+        NationImpl nation = new NationImpl(leader, name, firstName, creationTime, capital);
 
         for(Settlement settlement : settlements) {
-            settlement.setNation(nation);
+            if(settlement != null) {
+                settlement.setNation(nation);
+            }
         }
+
+        nation.setFile(file);
 
         return nation;
     }
