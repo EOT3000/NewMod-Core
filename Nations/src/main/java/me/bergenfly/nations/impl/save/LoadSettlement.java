@@ -23,22 +23,16 @@ public class LoadSettlement {
         String name = configuration.getString("name");
         String leaderId = configuration.getString("leader");
 
-        String firstName = configuration.getString("firstName");
+        String firstName = configuration.getString("firstName", null);
         int creationTime = configuration.getInt("creationTime", -1);
 
-        String finalName = name;
-        Set<User> members = configuration.getStringList("members").stream().map((a) -> {
-            try {
-                return UUID.fromString(a);
-            } catch (IllegalArgumentException e) {
-                logError("Settlement (" + finalName + ") in file " + file.getName() + " is invalid (recoverable), contains invalid member uuid. Skipping " + a);
+        String id = configuration.getString("id", null);
 
-                return null;
-            }
-        }).map(api.usersRegistry()::get).collect(Collectors.toSet());
+        String finalName = name;
 
         //Mark the file as read so upon next restart, the file is ignored, unless saved to again
-        configuration.set("read", true);
+        //I don't remember why this was needed, so I'll comment it out for now
+        /*configuration.set("read", true);
 
         try {
             configuration.save(file);
@@ -48,7 +42,17 @@ public class LoadSettlement {
             logError("Error while loading settlements, on file " + file.getPath() + " . Nations plugin will need to be disabled.");
 
             throw e;
-        }
+        }*/
+
+        Set<User> members = configuration.getStringList("members").stream().map((a) -> {
+            try {
+                return UUID.fromString(a);
+            } catch (IllegalArgumentException e) {
+                logError("Settlement (" + finalName + ") in file " + file.getName() + " is invalid (recoverable), contains invalid member uuid. Skipping " + a);
+
+                return null;
+            }
+        }).map(api.usersRegistry()::get).collect(Collectors.toSet());
 
         if (name == null) {
             name = "scnerr_" + Long.toHexString(System.currentTimeMillis());
@@ -64,16 +68,31 @@ public class LoadSettlement {
             logError("Settlement in file " + file.getName() + " is invalid (recoverable), missing current name. Current name set to " + name);
         }
 
-        if (firstName == null) {
-            firstName = name;
+        //If id is not null, then lack of first name or creation time is acceptable.
+        if(id != null) {
+            if (firstName == null) {
+                logWarning("WARNING: Settlement (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing first name. First name will not be set");
+            }
 
-            logError("Settlement (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing first name. First name set to " + name);
-        }
+            if (creationTime == -1) {
+                logWarning("WARNING: Settlement (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing creation time. Creation time will not be set");
+            }
+        } else { //Otherwise, possibly generate a new id from first name and time?
+            boolean valid = true;
 
-        if (creationTime == -1) {
-            creationTime = 0;
+            if (firstName == null) {
+                logError("Settlement (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), missing first name and id. Skipping file");
+                valid = false;
+            }
 
-            logError("Settlement (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing creation time. Creation time set to 0");
+            if (creationTime == -1) {
+                logError("Settlement (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), missing creation time and id. Skipping file");
+                valid = false;
+            }
+
+            if(!valid) {
+                return null;
+            }
         }
 
         UUID leaderUUID = null;
@@ -107,7 +126,7 @@ public class LoadSettlement {
             leader = next;
         }
 
-        Settlement settlement = new SettlementImpl(leader, name, firstName, creationTime);
+        Settlement settlement = new SettlementImpl(leader, name, firstName, creationTime, id);
 
         for(User user : members) {
             if(user != null) {
@@ -120,6 +139,10 @@ public class LoadSettlement {
 
     private static void logError(String err) {
         api.getLogger().log(Level.SEVERE, err);
+    }
+
+    private static void logWarning(String warn) {
+        api.getLogger().log(Level.WARNING, warn);
     }
 
     public static void loadSettlements() throws IOException {

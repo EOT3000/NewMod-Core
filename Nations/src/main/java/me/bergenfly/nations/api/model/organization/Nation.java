@@ -35,4 +35,8 @@ public interface Nation extends Organization, LandAdministrator, LandPermissionH
     long getCreationTime();
 
     String getFirstName();
+
+    void addInvitation(Settlement settlement);
+
+    Set<Settlement> getInvitations();
 }

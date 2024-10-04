@@ -9,6 +9,7 @@ import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
+import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,10 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
     private Set<PlotSection> land = new HashSet<>();
 
+    private Set<User> invitations = new HashSet<>();
+
+    private final String id;
+
     private SettlementImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
     }
@@ -42,6 +47,16 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         this.name = name;
         this.firstName = firstName;
         this.creationTime = creationTime;
+        this.id = IdUtil.settlementId1(firstName, creationTime); //TODO: if firstName is null, will through NPE
+    }
+
+    //TODO figure out what to do with constructor accessiblity
+    public SettlementImpl(User leader, String name, String firstName, long creationTime, String id) {
+        this.leader = leader;
+        this.name = name;
+        this.firstName = firstName;
+        this.creationTime = creationTime;
+        this.id = id;
     }
 
     public static SettlementImpl tryCreate(String name, User leader) {
@@ -68,7 +83,7 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
     @Override
     public @NotNull String getId() {
-        return "settlement_" + firstName.toLowerCase() + "_" + creationTime;
+        return id;
     }
 
     @Override
@@ -179,5 +194,15 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     @Override
     public int priority() {
         return 1;
+    }
+
+    @Override
+    public void addInvitation(User user) {
+        invitations.add(user);
+    }
+
+    @Override
+    public Set<User> getInvitations() {
+        return new HashSet<>(invitations);
     }
 }

@@ -9,6 +9,7 @@ import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
 import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
+import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -34,19 +35,24 @@ public class NationImpl implements Nation {
 
     private Set<Settlement> settlements = new HashSet<>();
 
+    private Set<Settlement> invitations = new HashSet<>();
+
     //Does not include settlement land
     private Set<PlotSection> nationLand = new HashSet<>();
+
+    private final String id;
 
     private NationImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    public NationImpl(User leader, String name, String firstName, long creationTime) {
+    private NationImpl(User leader, String name, String firstName, long creationTime) {
         this.leader = leader;
         this.name = name;
         this.firstName = firstName;
         this.creationTime = creationTime;
         this.capital = leader.getSettlement();
+        this.id = IdUtil.nationId1(firstName, creationTime);
     }
 
     public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital) {
@@ -55,6 +61,16 @@ public class NationImpl implements Nation {
         this.firstName = firstName;
         this.creationTime = creationTime;
         this.capital = capital;
+        this.id = IdUtil.nationId1(firstName, creationTime);
+    }
+
+    public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital, String id) {
+        this.leader = leader;
+        this.name = name;
+        this.firstName = firstName;
+        this.creationTime = creationTime;
+        this.capital = capital;
+        this.id = id;
     }
 
     public static NationImpl tryCreate(String name, User leader) {
@@ -147,7 +163,7 @@ public class NationImpl implements Nation {
 
     @Override
     public @NotNull String getId() {
-        return "nation_" + firstName.toLowerCase() + "_" + creationTime;
+        return id;
     }
 
     @Override
@@ -216,6 +232,16 @@ public class NationImpl implements Nation {
     @Override
     public int priority() {
         return 3;
+    }
+
+    @Override
+    public void addInvitation(Settlement settlement) {
+        invitations.add(settlement);
+    }
+
+    @Override
+    public Set<Settlement> getInvitations() {
+        return new HashSet<>(invitations);
     }
 
     //TODO organize method order in similar classes

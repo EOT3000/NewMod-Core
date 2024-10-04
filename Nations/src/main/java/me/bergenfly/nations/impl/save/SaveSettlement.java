@@ -7,27 +7,29 @@ import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class SaveSettlement {
-    public static YamlConfiguration settlementToMap(Settlement nation) {
-        YamlConfiguration nationSave = new YamlConfiguration();
+    public static YamlConfiguration settlementToMap(Settlement settlement) {
+        YamlConfiguration settlementSave = new YamlConfiguration();
 
-        nationSave.set("name", nation.getName());
-        nationSave.set("leader", nation.getLeader().getUniqueId().toString());
-        nationSave.set("firstName", nation.getFirstName());
-        nationSave.set("creationTime", nation.getCreationTime());
-        nationSave.set("members", nation.getMembers().stream().map(User::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
+        settlementSave.set("name", settlement.getName());
+        settlementSave.set("id", settlement.getId());
+        settlementSave.set("leader", settlement.getLeader().getUniqueId().toString());
+        if(settlement.getFirstName() != null) settlementSave.set("firstName", settlement.getFirstName());
+        if(settlement.getCreationTime() != -1) settlementSave.set("creationTime", settlement.getCreationTime());
+        settlementSave.set("members", settlement.getMembers().stream().filter(Objects::nonNull).map(User::getUniqueId).map(UUID::toString).collect(Collectors.toList()));
 
-        return nationSave;
+        return settlementSave;
     }
 
     public static void saveSettlements() {
         for(Settlement settlement : NationsPlugin.getInstance().settlementsRegistry().list()) {
             try {
-                settlementToMap(settlement).save(new File("plugins/Nations/settlements/" + settlement.getFirstName() + "-" + settlement.getCreationTime() + ".yml"));
+                settlementToMap(settlement).save(new File("plugins/Nations/settlements/" + settlement.getId() + ".yml"));
             } catch (Exception e) {
                 NationsPlugin.getInstance().getLogger().log(Level.SEVERE, "Error trying to save settlement " + settlement.getName() + "(originally " + settlement.getFirstName() + ")");
                 e.printStackTrace();

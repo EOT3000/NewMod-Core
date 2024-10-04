@@ -2,6 +2,8 @@ package me.bergenfly.nations.api.model.organization;
 
 import me.bergenfly.nations.api.model.User;
 
+import java.util.Set;
+
 public interface Settlement extends Organization, LandPermissionHolder, PlayerGroup, Named, LandAdministrator, Led, NationComponent {
 
     /**
@@ -26,4 +28,8 @@ public interface Settlement extends Organization, LandPermissionHolder, PlayerGr
     long getCreationTime();
 
     String getFirstName();
+
+    void addInvitation(User user);
+
+    Set<User> getInvitations();
 }
