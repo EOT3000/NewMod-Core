@@ -134,15 +134,20 @@ public class NationCommand extends CommandRoot {
             TextComponent line = Component.empty();
 
             for (int x = minX; x < maxX; x++) {
-                ClaimedChunk chunk = landManager.getClaimedChunkAtLocation(player.getWorld(), x, z);
+                ClaimedChunk chunk = landManager.getClaimedChunkAtChunk(player.getWorld(), x, z);
+
+                if(chunk == null) {
+                    line = line.append(Component.text('-').color(NamedTextColor.GRAY));
+                    continue;
+                }
 
                 LandAdministrator admin = chunk.getAt(0, 0).getAdministrator();
 
                 if (!map.containsKey(admin)) {
                     if (admin instanceof Nation) {
-                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.DARK_GRAY)));
+                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.DARK_RED)));
                     } else {
-                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.GRAY)));
+                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.RED)));
                     }
 
                     cur++;

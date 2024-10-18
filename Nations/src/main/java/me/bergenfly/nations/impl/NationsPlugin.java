@@ -12,6 +12,7 @@ import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.nation.NationCommand;
 import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
+import me.bergenfly.nations.impl.listener.PlotListener;
 import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
@@ -87,8 +88,10 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
+        Bukkit.getPluginCommand("plot").setExecutor(new NationCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(new PlotListener(), this);
     }
 
     @Override
@@ -96,6 +99,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         SavePlot.savePlots();
         SaveNation.saveNations();
         SaveSettlement.saveSettlements();
+        SaveUser.saveUsers();
     }
 
     @Override
@@ -161,6 +165,14 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
             event.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
         } else {
             LandAdministrator admin = to.getAt(0,0).getAdministrator();
+
+            if(from != null) {
+                LandAdministrator adminOld = from.getAt(0, 0).getAdministrator();
+
+                if(adminOld == admin) {
+                    return;
+                }
+            }
 
             event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }

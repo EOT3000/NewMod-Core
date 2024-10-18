@@ -22,7 +22,7 @@ public class SaveNation {
         nationSave.set("capital", nation.getCapital().getName());
         if(nation.getFirstName() != null) nationSave.set("firstName", nation.getFirstName());
         if(nation.getCreationTime() != -1) nationSave.set("creationTime", nation.getCreationTime());
-        nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getName).collect(Collectors.toList()));
+        nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getId).collect(Collectors.toList()));
 
         return nationSave;
     }

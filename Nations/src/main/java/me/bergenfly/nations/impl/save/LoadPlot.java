@@ -47,7 +47,7 @@ public class LoadPlot {
 
 
     public static void loadPlots() {
-        File dir = new File("plugins/Nations/settlements");
+        File dir = new File("plugins/Nations/plots");
 
         if(!dir.exists()) {
             return;

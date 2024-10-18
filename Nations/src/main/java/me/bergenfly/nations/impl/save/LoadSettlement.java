@@ -159,6 +159,7 @@ public class LoadSettlement {
 
             if(settlement != null) {
                 api.settlementsRegistry().set(settlement.getName(), settlement);
+                api.permissionHoldersByIdRegistry().set(settlement.getId(), settlement);
             }
         }
     }

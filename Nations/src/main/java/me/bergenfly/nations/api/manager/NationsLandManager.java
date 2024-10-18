@@ -53,7 +53,11 @@ public class NationsLandManager {
             return false;
         }
 
-        PLOTS.set(id, new _1x1_Chunk(chunkX, chunkZ, w, administrator));
+        _1x1_Chunk c = new _1x1_Chunk(chunkX, chunkZ, w, administrator);
+
+        administrator.addLand(c.getAt(0,0));
+
+        PLOTS.set(id, c);
 
         return true;
     }

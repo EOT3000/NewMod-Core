@@ -26,7 +26,7 @@ public class LoadNation {
         String firstName = configuration.getString("firstName", null);
         int creationTime = configuration.getInt("creationTime", -1);
 
-        Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.settlementsRegistry()::get).collect(Collectors.toSet());
+        Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.permissionHoldersByIdRegistry()::get).map((a) -> (Settlement) a).collect(Collectors.toSet());
 
         String id = configuration.getString("id", null);
 
@@ -162,6 +162,7 @@ public class LoadNation {
 
             if(nation != null) {
                 api.nationsRegistry().set(nation.getName(), nation);
+                api.permissionHoldersByIdRegistry().set(nation.getId(), nation);
             }
         }
     }
