@@ -17,14 +17,20 @@ import java.util.*;
 public class PermissiblePlotSectionImpl extends PlotSectionImpl implements PermissiblePlotSection {
     private final Map<LandPermissionHolder, Object2ByteMap<PlotPermission>> permissions = new HashMap<>();
 
+    private LandPermissionHolder owner;
+
     private static final NationsPlugin api = NationsPlugin.getInstance();
 
     public PermissiblePlotSectionImpl(LandAdministrator administrator) {
         super(administrator);
+
+        this.owner = administrator;
     }
 
     @Override
     public boolean hasPermission(PlotPermission permission, User user) {
+        if(owner.isLandManager(user)) return true;
+
         //Tested this: pretty but slow
         OptionalInt i = permissions.keySet().stream()
                 .filter((a) -> permissions.get(a).getOrDefault(permission, (byte) 0) != 0)
@@ -87,5 +93,15 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
             permissions.get(holder).put(DefaultPlotPermission.of(spl[1]), Boolean.valueOf(spl[2]) ? (byte) 1 : (byte) 0);
         }
+    }
+
+    @Override
+    public LandPermissionHolder getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setOwner(LandPermissionHolder owner) {
+        this.owner = owner;
     }
 }

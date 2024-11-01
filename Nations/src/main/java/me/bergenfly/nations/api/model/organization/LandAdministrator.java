@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * An entity, typically a government, that can claim and administrate {@link me.bergenfly.nations.api.model.plot.PlotSection}s.
  */
-public interface LandAdministrator extends Named {
+public interface LandAdministrator extends Named, LandPermissionHolder {
     /**
      * Gets all land that this administrator administrates. For nations, includes both nation and settlement land.
      *
@@ -24,10 +24,15 @@ public interface LandAdministrator extends Named {
     PlotSection createEmptyPlotSection();
 
     /**
-     * Gets if the given user has admin permissions in land run by this adminsitrator.
+     * Gets if the given user has admin permissions in land run by this administrator.
      *
      * @param user the user to check for.
      * @return true if the user is an administrator, false if not.
      */
     boolean isUserAdmin(User user);
+
+    @Override
+    default boolean isLandManager(User user) { //TODO don't know why I made two identical methods. Figure this out and simplify in the future.
+        return isUserAdmin(user);
+    }
 }

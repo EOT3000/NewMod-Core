@@ -4,6 +4,7 @@ import me.bergenfly.nations.api.command.CommandFlower;
 import me.bergenfly.nations.api.command.CommandRoot;
 import me.bergenfly.nations.api.command.CommandStem;
 import me.bergenfly.nations.api.command.TranslatableString;
+import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.impl.model.NationImpl;
@@ -29,21 +30,43 @@ public class PlotCommand extends CommandRoot {
                 .command((a) -> {
                     PlotSection section = a.invokerUser().currentlyAt();
 
-                    if(section instanceof PermissiblePlotSection s) {
-                        if (section.getAdministrator().isUserAdmin(a.invokerUser())) {
-                            s.setPermission(a.plotPermissions()[0], a.permissionHolders()[0], a.booleans()[0]);
-                            return true;
-                        } else {
-                            a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));
-                            return false;
-                        }
-                    } else {
-                        //Should not happen
-                        a.invokerUser().sendMessage(TranslatableString.translate("nations.command.error.plot_unsupported"));
-                        return false;
-                    }
+                    if(!checkPlotOwner(section, a)) return false;
+
+                    ((PermissiblePlotSection) section).setPermission(a.plotPermissions()[0], a.permissionHolders()[0], a.booleans()[0]);
+
+                    return true;
                 })
                 .successMessage((a) -> TranslatableString.translate("nations.general.success"))
                 .make()); //TODO: error code return codes for different messages (- returns false, + returns true)
+
+        permission.addBranch("fs", new CommandFlower()
+                .addSettlement(CommandFlower.CURRENT_LOCATION)
+                .player()
+                .command((a) -> {
+                    PlotSection section = a.invokerUser().currentlyAt();
+
+                    if(!checkPlotOwner(section, a)) return false;
+
+                    ((PermissiblePlotSection) section).setPermission(a.plotPermissions()[0], a.permissionHolders()[0], a.booleans()[0]);
+
+                    return true;
+                })
+                .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                .make());
+    }
+
+    private static boolean checkPlotOwner(PlotSection section, CommandFlower.NationsCommandInvocation a) {
+        if(section instanceof PermissiblePlotSection s) {
+            if (section.getAdministrator().isUserAdmin(a.invokerUser())) {
+                return true;
+            } else {
+                a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                return false;
+            }
+        } else {
+            //Should not happen
+            a.invokerUser().sendMessage(TranslatableString.translate("nations.command.error.plot_unsupported"));
+            return false;
+        }
     }
 }

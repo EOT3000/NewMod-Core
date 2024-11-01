@@ -35,4 +35,8 @@ public interface LandPermissionHolder extends Named {
     }
 
     boolean isPartOf(User user);
+
+    default boolean isLandManager(User user) {
+        return isPartOf(user);
+    }
 }
