@@ -20,7 +20,7 @@ public enum DefaultPlotPermission implements PlotPermission {
     VEHICLE("vehicle"),                             //Place boats and minecarts
     LEVER("lever"),                                 //Click buttons and flick levers
     DOOR("door"),                                   //Open/close trapdoors, doors, fence gates
-    OTHER_INTERACT("other_interact");               //Other interactions
+    INTERACT("interact");                           //Other interactions
 
     //TODO move this
     private static Map<NamespacedKey, DefaultPlotPermission> permissions = new HashMap<>();

@@ -57,7 +57,7 @@ public class PlotCommand extends CommandRoot {
 
     private static boolean checkPlotOwner(PlotSection section, CommandFlower.NationsCommandInvocation a) {
         if(section instanceof PermissiblePlotSection s) {
-            if (section.getAdministrator().isUserAdmin(a.invokerUser())) {
+            if (s.getOwner().isLandManager(a.invokerUser())) {
                 return true;
             } else {
                 a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));
