@@ -17,4 +17,6 @@ public abstract class AbstractLedPlayerGroup extends AbstractPlayerGroup impleme
 
         addMember(user);
     }
+
+    //TODO: remove leader
 }

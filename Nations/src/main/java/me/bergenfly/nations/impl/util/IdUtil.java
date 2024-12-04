@@ -9,4 +9,8 @@ public class IdUtil {
     public static String nationId1(String firstName, long creationTime) {
         return "nation_" + firstName.toLowerCase() + "_" + creationTime;
     }
+
+    public static String rankId1(String firstName, String nationId, long creationTime) {
+        return "rank_" + nationId + "_" + firstName.toLowerCase() + "_" + creationTime;
+    }
 }
