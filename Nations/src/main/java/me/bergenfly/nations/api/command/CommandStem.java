@@ -24,7 +24,11 @@ public class CommandStem {
     }
 
     public CommandStem addBranch(String s, CommandFlower flower) {
-        return branches.put(s, new CommandStem(flower, this, s));
+        CommandStem stem = new CommandStem(flower, this, s);
+
+        branches.put(s, stem);
+
+        return stem;
     }
 
     public CommandStem next(String strings) {
