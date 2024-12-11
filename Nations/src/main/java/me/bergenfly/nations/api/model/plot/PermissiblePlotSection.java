@@ -45,4 +45,8 @@ public interface PermissiblePlotSection extends PlotSection {
     LandPermissionHolder getOwner();
 
     void setOwner(LandPermissionHolder holder);
+
+    boolean isClaimable();
+
+    void setClaimable(boolean claimable);
 }

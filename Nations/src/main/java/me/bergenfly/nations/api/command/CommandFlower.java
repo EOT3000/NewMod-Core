@@ -1,14 +1,19 @@
 package me.bergenfly.nations.api.command;
 
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import org.apache.commons.lang3.function.TriFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,7 +21,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -25,8 +32,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class CommandFlower {
-
-    protected static final Pattern pattern = Pattern.compile("^((?!([a-z]|[A-Z]|[0-9]|_)).)*$|__");
 
     static {
         // When changing change in check method too
@@ -54,10 +59,7 @@ public class CommandFlower {
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
 
-    private final IntArrayList nationsNotExist = new IntArrayList();
-    private final IntArrayList settlementsNotExist = new IntArrayList();
-
-    private final IntArrayList cleanName = new IntArrayList();
+    private final List<IntObjectImmutablePair<RequirementCheckers.RequirementChecker>> requirements = new ArrayList<>();
 
     private boolean mustBePlayer = false;
 
@@ -104,16 +106,53 @@ public class CommandFlower {
     }
 
     public CommandFlower nationDoesNotExist(int i) {
-        nationsNotExist.add(i);
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkNationNotExist));
         return this;
     }
     public CommandFlower settlementDoesNotExist(int i) {
-        settlementsNotExist.add(i);
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkSettlementNotExist));
         return this;
     }
 
     public CommandFlower cleanName(int i) {
-        cleanName.add(i);
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCleanName));
+        return this;
+    }
+
+    public CommandFlower nameLength(int i, int min, int max) {
+        requirements.add(new IntObjectImmutablePair<>(i, (a,b,c) -> RequirementCheckers.checkNameLength(a,b,c,min,max)));
+        return this;
+    }
+
+    public CommandFlower nationPermission(NationPermission permission) {
+        requirements.add(new IntObjectImmutablePair<>(0, (a,b,c) -> RequirementCheckers.checkNationPermission(c,permission)));
+        return this;
+    }
+
+    public CommandFlower argsLength(int length) {
+        requirements.add(new IntObjectImmutablePair<>(0, (a,b,c) -> a.length >= length));
+        return this;
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker, String failureKey) {
+        return requirement(i, checker, (a) -> TranslatableString.translate(failureKey));
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker, Function<String[], String> failure) {
+        requirements.add(new IntObjectImmutablePair<>(i, (a,b,c) -> {
+            boolean result = checker.test(a,b,c);
+
+            if(!result) {
+                c.sendMessage(failure.apply(a));
+            }
+
+            return result;
+        }));
+        return this;
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker) {
+        requirements.add(new IntObjectImmutablePair<>(i, checker));
         return this;
     }
 
@@ -262,8 +301,14 @@ public class CommandFlower {
                 valid = false;
             }
 
-            // If still valid, then check the NOT requirements
-            valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, sender, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, sender, strings);
+            // If still valid, then check the other requirements
+            for(IntObjectImmutablePair<RequirementCheckers.RequirementChecker> checker : requirements) {
+                if(!valid) {
+                    break;
+                }
+
+                valid = checker.right().test(strings, checker.leftInt(), sender);
+            }
 
             return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
         }

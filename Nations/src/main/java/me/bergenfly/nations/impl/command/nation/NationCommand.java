@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2CharArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2CharMap;
 import me.bergenfly.nations.api.command.CommandFlower;
 import me.bergenfly.nations.api.command.CommandRoot;
+import me.bergenfly.nations.api.command.CommandStem;
 import me.bergenfly.nations.api.command.TranslatableString;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
@@ -11,8 +12,12 @@ import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
+import me.bergenfly.nations.api.permission.NationPermission;
+import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
+import me.bergenfly.nations.impl.model.RankImpl;
 import me.bergenfly.nations.impl.model.SettlementImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -22,8 +27,12 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class NationCommand extends CommandRoot {
+
+    private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+    private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
 
     private NationsLandManager landManager = NationsPlugin.getInstance().landManager();
 
@@ -33,11 +42,14 @@ public class NationCommand extends CommandRoot {
 
     @Override
     public void loadSubcommands() {
+        //addBranch()
+
         addBranch("create", new CommandFlower()
                 .addSettlement(CommandFlower.INVOKER_LEADER)
                 .nationDoesNotExist(0)
                 .nationDoesNotExist(CommandFlower.INVOKER_MEMBER)
                 .cleanName(0)
+                .nameLength(0, 3, 24)
                 .player()
                 .command((a) -> NationImpl.tryCreate(a.args()[0], a.invokerUser()) != null)
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.nation", a.invoker().getName(), a.args()[0]))
@@ -58,60 +70,98 @@ public class NationCommand extends CommandRoot {
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
 
-        addBranch("invite", new CommandFlower()
-                .addNation(CommandFlower.INVOKER_LEADER)
-                .addSettlement(0)
-                .player()
-                .command((a) -> {
-                    if(a.nations()[0].getSettlements().contains(a.settlements()[0])) {
-                        a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_member", a.settlements()[0].getName()));
-                        return false;
-                    }
-                    if(a.nations()[0].getInvitations().contains(a.settlements()[0])) {
-                        a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_invited", a.settlements()[0].getName()));
-                        return false;
-                    }
-                    a.nations()[0].addInvitation(a.settlements()[0]);
-                    a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.invite.settlement", a.invoker().getName(), a.settlements()[0].getName()));
-                    a.settlements()[0].broadcastString(TranslatableString.translate("nations.broadcast.invited.settlement", a.invoker().getName(), a.nations()[0].getName()));
-                    return true;
-                })
-                .make());
+        {
+            addBranch("invite", new CommandFlower()
+                    .addNation(CommandFlower.INVOKER_LEADER)
+                    .addSettlement(0)
+                    .player()
+                    .command((a) -> {
+                        if (a.nations()[0].getSettlements().contains(a.settlements()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_member", a.settlements()[0].getName()));
+                            return false;
+                        }
+                        if (a.nations()[0].getInvitations().contains(a.settlements()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_invited", a.settlements()[0].getName()));
+                            return false;
+                        }
+                        a.nations()[0].addInvitation(a.settlements()[0]);
+                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.invite.settlement", a.invoker().getName(), a.settlements()[0].getName()));
+                        a.settlements()[0].broadcastString(TranslatableString.translate("nations.broadcast.invited.settlement", a.invoker().getName(), a.nations()[0].getName()));
+                        return true;
+                    })
+                    .make());
+        } //invite
 
         //TODO: uninvite command, and add a join confirmation for settlements w/ a nation
-        addBranch("join", new CommandFlower()
-                .addSettlement(CommandFlower.INVOKER_LEADER)
-                .addNation(0)
-                .player()
-                .command((a) -> {
-                    if(!a.nations()[0].getInvitations().contains(a.settlements()[0])) {
-                        a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.not_invited"));
-                        return false;
-                    }
-
-                    Nation on = a.settlements()[0].getNation();
-
-                    if(on != null) {
-                        if(on.getCapital() == a.settlements()[0]) {
-                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.is_capital"));
+        {
+            addBranch("join", new CommandFlower()
+                    .addSettlement(CommandFlower.INVOKER_LEADER)
+                    .addNation(0)
+                    .player()
+                    .command((a) -> {
+                        if (!a.nations()[0].getInvitations().contains(a.settlements()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.not_invited"));
                             return false;
                         }
 
-                        on.broadcastString(TranslatableString.translate("nations.broadcast.left.nation", a.settlements()[0].getName()));
-                    }
+                        Nation on = a.settlements()[0].getNation();
 
-                    a.settlements()[0].setNation(a.nations()[0]);
+                        if (on != null) {
+                            if (on.getCapital() == a.settlements()[0]) {
+                                a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.is_capital"));
+                                return false;
+                            }
 
-                    a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.joined.nation", a.settlements()[0].getName()));
+                            on.broadcastString(TranslatableString.translate("nations.broadcast.left.nation", a.settlements()[0].getName()));
+                        }
 
-                    return true;
-                })
-                .make());
+                        a.settlements()[0].setNation(a.nations()[0]);
 
-        addBranch("map", new CommandFlower()
-                .player()
-                .commandAlwaysSuccess((a) -> sendMap((Player) a.invoker(), a.invokerUser()))
-                .make());
+                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.joined.nation", a.settlements()[0].getName()));
+
+                        return true;
+                    })
+                    .make());
+        } //join
+
+        {
+            addBranch("map", new CommandFlower()
+                    .player()
+                    .commandAlwaysSuccess((a) -> sendMap((Player) a.invoker(), a.invokerUser()))
+                    .make());
+        } //map
+
+        {
+            CommandStem rank = addBranch("rank", null);
+
+            rank.addBranch("create", new CommandFlower()
+                    .cleanName(0)
+                    .nameLength(0, 3,24)
+                    .requirement(0, (a,b,c)-> {
+                        Nation n = USERS.get(((Player) c).getUniqueId()).getNation();
+
+                        return n != null && !n.hasRankWithName(a[b]);
+                    }, (a) -> TranslatableString.translate("nations.command.error.rank.is_argument", a[0]))
+                    //TODO built in permission requirements
+                    .nationPermission(DefaultNationPermission.MANAGEMENT)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .commandAlwaysSuccess((a) -> a.nations()[0].addRank(new RankImpl(a.args()[1], a.nations()[0])))
+                    .successBroadcast((a) -> TranslatableString.translate("nations.general.success"))
+                    .make());
+
+            addBranch("info", new CommandFlower()
+                    .addNation(0)
+                    .argsLength(2)
+                    .requirement(1, (a,b,c)-> {
+                        Nation n = NATIONS.get(a[0]);
+
+                        return n.hasRankWithName(a[b]);
+                    }, (a) -> TranslatableString.translate("nations.command.error.rank.not_argument", a[1]))
+                    .player()
+                    .commandAlwaysSuccess((a) -> a.nations()[0].getRank(a.args()[1]).sendInfo(a.invoker()))
+                    .make());
+
+        } //rank subcommand
     }
 
     private String chars = "ABCDFEGHKLMNOPRSUWXZ";

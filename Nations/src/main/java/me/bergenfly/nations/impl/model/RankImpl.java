@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.model;
 
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.DeletionSubscriber;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Rank;
@@ -21,15 +22,15 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
 
     private final long creationTime;
 
-    private RankImpl(String name, Nation nation) {
+    public RankImpl(String name, Nation nation) {
         this(name, nation, System.currentTimeMillis());
     }
 
-    private RankImpl(String name, Nation nation, long creationTime) {
+    public RankImpl(String name, Nation nation, long creationTime) {
         this(name, null, nation, creationTime, IdUtil.rankId1(name, nation.getId(), creationTime));
     }
 
-    private RankImpl(String name, User leader, Nation nation, long creationTime, String id) {
+    public RankImpl(String name, User leader, Nation nation, long creationTime, String id) {
         this.nation = nation;
         this.name = name;
         this.id = id;
@@ -90,5 +91,27 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     @Override
     public void sendInfo(CommandSender user) {
 
+    }
+
+
+
+    //DELETABLE
+
+    private final Set<DeletionSubscriber> subscribers = new HashSet<>();
+    private boolean deleted = false;
+
+    @Override
+    public void delete() {
+        this.deleted = true;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void subscribeToDeletion(DeletionSubscriber subscriber) {
+        subscribers.add(subscriber);
     }
 }

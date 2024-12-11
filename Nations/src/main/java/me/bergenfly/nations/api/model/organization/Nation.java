@@ -1,6 +1,8 @@
 package me.bergenfly.nations.api.model.organization;
 
+import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.api.permission.NationPermission;
 
 import java.util.Set;
 import java.util.stream.Stream;
@@ -14,6 +16,17 @@ public interface Nation extends Organization, LandAdministrator, LandPermissionH
 
     Settlement getCapital();
 
+    Set<Rank> getRanks();
+
+    Rank getRank(String name);
+
+    void addRank(Rank rank);
+
+    void removeRank(Rank rank);
+
+    boolean hasRankWithName(String name);
+
+    boolean hasPermission(User user, NationPermission permission);
 
     /**
      * Should not be used, except by inheritors of {@link Settlement}.

@@ -1,10 +1,9 @@
 package me.bergenfly.nations.impl.model;
 
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.PlayerGroup;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
@@ -14,14 +13,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class NationImpl implements Nation {
+public class NationImpl implements Nation, DeletionSubscriber {
     private static Registry<Nation, String> NATIONS;
 
     private final String firstName;
@@ -39,6 +36,8 @@ public class NationImpl implements Nation {
 
     //Does not include settlement land
     private Set<PlotSection> nationLand = new HashSet<>();
+
+    private Map<String, Rank> ranks = new HashMap<>();
 
     private final String id;
 
@@ -109,6 +108,15 @@ public class NationImpl implements Nation {
             }
         }
 
+        String ranks = "";
+
+        for(Rank rank : getRanks()) {
+            ranks += (rank.getName() + ", ");
+        }
+
+        ranks = ranks.substring(0, ranks.length()-2);
+
+        user.sendMessage(ChatColor.DARK_AQUA + "Ranks: " + ChatColor.AQUA + ranks);
         user.sendMessage(ChatColor.DARK_AQUA + "Settlements: " + ChatColor.AQUA + settlements);
         user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + nationLand.size());
     }
@@ -195,6 +203,45 @@ public class NationImpl implements Nation {
     }
 
     @Override
+    public void removeRank(Rank rank) {
+        ranks.remove(rank.getName());
+    }
+
+    @Override
+    public void addRank(Rank rank) {
+        ranks.put(rank.getName().toLowerCase(), rank);
+    }
+
+    public boolean hasRankWithName(String name) {
+        return ranks.containsKey(name.toLowerCase());
+    }
+
+    @Override
+    public boolean hasPermission(User user, NationPermission permission) {
+        if(!getMembers().contains(user)) {
+            return false;
+        }
+
+        for(Rank rank : getRanks()) {
+            if(rank.isPartOf(user) && rank.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public Set<Rank> getRanks() {
+        return new HashSet<>(ranks.values());
+    }
+
+    @Override
+    public Rank getRank(String name) {
+        return ranks.get(name.toLowerCase());
+    }
+
+    @Override
     public void addSettlement(Settlement settlement) {
         settlements.add(settlement);
     }
@@ -245,4 +292,13 @@ public class NationImpl implements Nation {
     }
 
     //TODO organize method order in similar classes
+
+    //TODO; figure out deletion management
+
+    @Override
+    public void deleted(Deletable deletable) {
+        if(ranks.containsValue(deletable)) {
+            ranks.remove(((Rank) deletable).getName());
+        }
+    }
 }

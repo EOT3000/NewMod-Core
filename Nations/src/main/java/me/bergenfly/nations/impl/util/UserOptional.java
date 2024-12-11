@@ -1,4 +1,4 @@
-package me.bergenfly.nations.impl.util;
+/*package me.bergenfly.nations.impl.util;
 
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.PlayerGroup;
@@ -18,3 +18,6 @@ public class UserOptional implements Predicate<> {
 
 
 }
+*/
+
+//Don't remember what this was for

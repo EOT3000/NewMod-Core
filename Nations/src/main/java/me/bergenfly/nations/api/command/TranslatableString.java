@@ -59,6 +59,9 @@ public class TranslatableString {
         translations.put("nations.command.error.settlement.already_invited", new TranslatableString("&cThe settlement &4{1}&c has already been invited to the nation"));
         translations.put("nations.command.error.settlement.already_member", new TranslatableString("&cThe settlement &4{1}&c is already a member of the nation"));
 
+        translations.put("nations.command.error.rank.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a rank"));
+        translations.put("nations.command.error.rank.is_argument", new TranslatableString("&cThe rank &4{1}&c already exists"));
+
         translations.put("nations.command.error.settlement.not_invited", new TranslatableString("&cYour settlement has not been invited to join this nation"));
         translations.put("nations.command.error.user.not_invited", new TranslatableString("&cYou have not been invited to join this settlement"));
 
@@ -72,7 +75,12 @@ public class TranslatableString {
         //If a float is passed to an int parameter, float will be rounded to an int, only one number type needed
         translations.put("nations.command.error.number.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
 
-        translations.put("nations.command.error.plot_unsupported", new TranslatableString("&7This plot does not support this"));
+        translations.put("nations.command.error.string.non_alphanumeric", new TranslatableString("&cThe string &4{1}&c can only contain numbers, letters, and an underscore (_)"));
+        translations.put("nations.command.error.string.long", new TranslatableString("&cThe string &4{1}&c is too long (must be between &e{2}&c and &e{3}&c characters long)"));
+        translations.put("nations.command.error.string.short", new TranslatableString("&cThe string &4{1}&c is too short (must be between &e{2}&c and &e{3}&c characters long)"));
+
+        translations.put("nations.command.error.plot.unsupported", new TranslatableString("&cThis plot does not support this"));
+        translations.put("nations.command.error.plot.nfs", new TranslatableString("&cThis plot is not for sale"));
 
         translations.put("nations.broadcast.created.settlement", new TranslatableString("&e{1} &ahas created the settlement of &e{2}"));
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));

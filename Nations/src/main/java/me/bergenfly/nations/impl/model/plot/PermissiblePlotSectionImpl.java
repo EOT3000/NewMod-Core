@@ -21,6 +21,8 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
     private static final NationsPlugin api = NationsPlugin.getInstance();
 
+    private boolean claimable = false;
+
     public PermissiblePlotSectionImpl(LandAdministrator administrator) {
         super(administrator);
 
@@ -103,5 +105,16 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
     @Override
     public void setOwner(LandPermissionHolder owner) {
         this.owner = owner;
+        this.setClaimable(false);
+    }
+
+    @Override
+    public boolean isClaimable() {
+        return claimable;
+    }
+
+    @Override
+    public void setClaimable(boolean claimable) {
+        this.claimable = claimable;
     }
 }
