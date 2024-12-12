@@ -136,6 +136,7 @@ public class NationCommand extends CommandRoot {
 
             rank.addBranch("create", new CommandFlower()
                     .cleanName(0)
+                    .player()
                     .nameLength(0, 3,24)
                     .requirement(0, (a,b,c)-> {
                         Nation n = USERS.get(((Player) c).getUniqueId()).getNation();
@@ -149,7 +150,7 @@ public class NationCommand extends CommandRoot {
                     .successBroadcast((a) -> TranslatableString.translate("nations.general.success"))
                     .make());
 
-            addBranch("info", new CommandFlower()
+            rank.addBranch("info", new CommandFlower()
                     .addNation(0)
                     .argsLength(2)
                     .requirement(1, (a,b,c)-> {
