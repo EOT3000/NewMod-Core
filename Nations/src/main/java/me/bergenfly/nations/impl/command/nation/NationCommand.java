@@ -146,7 +146,7 @@ public class NationCommand extends CommandRoot {
                     //TODO built in permission requirements
                     .nationPermission(DefaultNationPermission.MANAGEMENT)
                     .addNation(CommandFlower.INVOKER_MEMBER)
-                    .commandAlwaysSuccess((a) -> a.nations()[0].addRank(new RankImpl(a.args()[1], a.nations()[0])))
+                    .commandAlwaysSuccess((a) -> a.nations()[0].addRank(new RankImpl(a.args()[0], a.nations()[0])))
                     .successBroadcast((a) -> TranslatableString.translate("nations.general.success"))
                     .make());
 

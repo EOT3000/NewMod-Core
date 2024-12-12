@@ -114,9 +114,9 @@ public class NationImpl implements Nation, DeletionSubscriber {
             ranks += (rank.getName() + ", ");
         }
 
-        ranks = ranks.substring(0, ranks.length()-2);
+        ranks = ranks.length() > 2 ? ChatColor.AQUA + ranks.substring(0, ranks.length()-2) : ChatColor.GRAY + "None";
 
-        user.sendMessage(ChatColor.DARK_AQUA + "Ranks: " + ChatColor.AQUA + ranks);
+        user.sendMessage(ChatColor.DARK_AQUA + "Ranks: " + ranks);
         user.sendMessage(ChatColor.DARK_AQUA + "Settlements: " + ChatColor.AQUA + settlements);
         user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + nationLand.size());
     }

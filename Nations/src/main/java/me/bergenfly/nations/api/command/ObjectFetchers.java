@@ -70,7 +70,7 @@ public class ObjectFetchers {
                     r[i] = NATIONS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                         return new Nation[0];
                     }
                 }
@@ -120,7 +120,7 @@ public class ObjectFetchers {
                     r[i] = SETTLEMENTS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                         return new Settlement[0];
                     }
                 }
@@ -149,7 +149,7 @@ public class ObjectFetchers {
                     Player p = Bukkit.getPlayer(strings[list.getInt(i)]);
 
                     if(p == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.user.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.user.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                         return new User[0];
                     }
 
@@ -177,7 +177,7 @@ public class ObjectFetchers {
                 Collection<LandPermissionHolder> m = PERMISSION_HOLDERS.get(strings[list.getInt(i)]).values();
 
                 if (m.isEmpty()) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.general.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.general.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                     return new LandPermissionHolder[0];
                 }
 
@@ -204,7 +204,7 @@ public class ObjectFetchers {
                 try {
                     r[i] = DefaultPlotPermission.valueOf(strings[list.getInt(i)].toUpperCase());
                 } catch(IllegalArgumentException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.permission.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.permission.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                     return new PlotPermission[0];
                 }
             }
@@ -228,7 +228,7 @@ public class ObjectFetchers {
                 try {
                     r[i] = (int) Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                     return new int[0];
                 }
 
@@ -253,7 +253,7 @@ public class ObjectFetchers {
                 try {
                     r[i] = Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                     return new float[0];
                 }
 
@@ -281,7 +281,7 @@ public class ObjectFetchers {
                 } else if(strings[list.getInt(i)].equalsIgnoreCase("false")) {
                     r[i] = false;
                 } else {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.boolean.not_argument", Integer.toString(list.getInt(i)), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.boolean.not_argument", Integer.toString(list.getInt(i+1)), strings[list.getInt(i)]));
                     return new boolean[0];
                 }
             }

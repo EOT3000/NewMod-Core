@@ -2,13 +2,11 @@ package me.bergenfly.nations.impl.model;
 
 import it.unimi.dsi.fastutil.objects.Object2ByteMap;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.DeletionSubscriber;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Rank;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.impl.util.IdUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +88,10 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
 
     @Override
     public void sendInfo(CommandSender user) {
-
+        //TODO convert to translation keys
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + getLeader().getName());
+        user.sendMessage(ChatColor.DARK_AQUA + "Nation: " + ChatColor.AQUA + getNation().getName());
     }
 
 
