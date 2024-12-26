@@ -5,7 +5,9 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
+import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
@@ -204,8 +206,33 @@ public class ObjectFetchers {
                 try {
                     r[i] = DefaultPlotPermission.valueOf(strings[list.getInt(i)].toUpperCase());
                 } catch(IllegalArgumentException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.plot_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new PlotPermission[0];
+                }
+            }
+
+            return r;
+        };
+    }
+
+    public static BiFunction<CommandSender, String[], NationPermission[]> createNationPermissionFetcher(IntArrayList list) {
+        int len = list.size();
+
+        return (sender, strings) -> {
+            NationPermission[] r = new NationPermission[len];
+
+            for (int i = 0; i < len; i++) {
+                if (list.getInt(i) >= strings.length) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                    return new NationPermission[0];
+                }
+
+                try {
+                    r[i] = DefaultNationPermission.valueOf(strings[list.getInt(i)].toUpperCase());
+                } catch(IllegalArgumentException e) {
+                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    return new NationPermission[0];
                 }
             }
 

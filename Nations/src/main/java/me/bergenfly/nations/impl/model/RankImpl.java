@@ -5,9 +5,12 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
+import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,10 +93,45 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
         user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
-        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + (getLeader() == null ? "&7None" : getLeader().getName()));
+        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + (getLeader() == null ? ChatColor.GRAY + "None" : getLeader().getName()));
         user.sendMessage(ChatColor.DARK_AQUA + "Nation: " + ChatColor.AQUA + getNation().getName());
+
+        if(senderHasMoreInfo(user)) {
+            String members = "";
+
+            for(User member : getMembers()) {
+                if(!member.equals(getLeader())) {
+                    members += (", " + member.getName());
+                }
+            }
+
+            members = getLeader() != null ? ("Leader " + getLeader().getName()) + members : members.replaceFirst(", ", "");
+
+            String permissions = "";
+
+            for(NationPermission permission : this.permissions) {
+                permissions += ", " + permission.getKey().getNamespace();
+            }
+
+            permissions = permissions.replaceFirst(", ", "");
+
+            user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.AQUA + members);
+            user.sendMessage(ChatColor.DARK_AQUA + "Permissions: " + ChatColor.AQUA + permissions);
+        } else {
+            user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.DARK_GRAY + "Hidden");
+            user.sendMessage(ChatColor.DARK_AQUA + "Permissions: " + ChatColor.DARK_GRAY + "Hidden");
+        }
     }
 
+    private boolean senderHasMoreInfo(CommandSender user) {
+        if(user instanceof Player) {
+            User u = NationsPlugin.getInstance().usersRegistry().get(((Player) user).getUniqueId());
+
+            return nation.getLeader() == u || getMembers().contains(u);
+        }
+
+        return user instanceof ConsoleCommandSender;
+    }
 
 
     //DELETABLE

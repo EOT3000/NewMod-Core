@@ -59,6 +59,7 @@ public class CommandFlower {
     private final IntArrayList users = new IntArrayList();
     private final IntArrayList permissionHolders = new IntArrayList();
     private final IntArrayList plotPermissions = new IntArrayList();
+    private final IntArrayList nationPermissions = new IntArrayList();
     private final IntArrayList ints = new IntArrayList();
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
@@ -94,6 +95,10 @@ public class CommandFlower {
     }
     public CommandFlower addPlotPermission(int i) {
         plotPermissions.add(i);
+        return this;
+    }
+    public CommandFlower addNationPermission(int i) {
+        nationPermissions.add(i);
         return this;
     }
     public CommandFlower addInt(int i) {
@@ -192,7 +197,7 @@ public class CommandFlower {
     }
 
     public CommandFlower make() {
-        maker = new NationsCommandInvocationMaker(nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
+        maker = new NationsCommandInvocationMaker(nations, settlements, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         return this;
     }
 
@@ -239,12 +244,13 @@ public class CommandFlower {
         private BiFunction<CommandSender, String[], User[]> users = (a, b) -> null;
         private BiFunction<CommandSender, String[], LandPermissionHolder[]> permissionHolders = (a, b) -> null;
         private BiFunction<CommandSender, String[], PlotPermission[]> plotPermissions = (a, b) -> null;
+        private BiFunction<CommandSender, String[], NationPermission[]> nationPermissions = (a, b) -> null;
         private BiFunction<CommandSender, String[], int[]> ints = (a, b) -> null;
         private BiFunction<CommandSender, String[], float[]> floats = (a, b) -> null;
         private BiFunction<CommandSender, String[], boolean[]> booleans = (a, b) -> null;
 
         private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList permissionHolders_,
-                                              IntArrayList plotPermissions_,
+                                              IntArrayList plotPermissions_, IntArrayList nationPermissions_,
                                               IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
                 nations = ObjectFetchers.createNationFetcher(nations_);
@@ -264,6 +270,10 @@ public class CommandFlower {
 
             if(!plotPermissions_.isEmpty()) {
                 plotPermissions = ObjectFetchers.createPlotPermissionFetcher(plotPermissions_);
+            }
+
+            if(!nationPermissions_.isEmpty()) {
+                nationPermissions = ObjectFetchers.createNationPermissionFetcher(nationPermissions_);
             }
 
             if(!ints_.isEmpty()) {
@@ -293,6 +303,7 @@ public class CommandFlower {
             User[] users = this.users.apply(player, strings);
             LandPermissionHolder[] permissionHolders = this.permissionHolders.apply(player, strings);
             PlotPermission[] plotPermissions = this.plotPermissions.apply(player, strings);
+            NationPermission[] nationPermissions = this.nationPermissions.apply(player, strings);
             int[] ints = this.ints.apply(player, strings);
             float[] floats = this.floats.apply(player, strings);
             boolean[] booleans = this.booleans.apply(player, strings);
@@ -307,6 +318,8 @@ public class CommandFlower {
             } else if (permissionHolders != null && permissionHolders.length == 0) {
                 valid = false;
             } else if (plotPermissions != null && plotPermissions.length == 0) {
+                valid = false;
+            } else if (nationPermissions != null && nationPermissions.length == 0) {
                 valid = false;
             } else if (ints != null && ints.length == 0) {
                 valid = false;
@@ -325,10 +338,10 @@ public class CommandFlower {
                 valid = checker.right().test(strings, checker.leftInt(), sender);
             }
 
-            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
+            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         }
     }
 
-    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, int[] ints, float[] floats, boolean[] booleans) {}
+    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, NationPermission[] nationPermissions, int[] ints, float[] floats, boolean[] booleans) {}
 
 }

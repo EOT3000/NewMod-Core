@@ -176,7 +176,7 @@ public class NationCommand extends CommandRoot {
 
                         if(a.users()[0].getNation() != a.invokerUser().getNation()) {
                             a.invoker().sendMessage(TranslatableString.translate("ajisjia", a.users()[0].getName()));
-                            return false;
+                            return false; //TODO this message
                         }
 
                         if(r == null) {
@@ -185,6 +185,42 @@ public class NationCommand extends CommandRoot {
                         }
 
                         r.setLeader(a.users()[0]);
+                        return true;
+                    })
+                    .make());
+
+            set.addBranch("permission", new CommandFlower()
+                    .addNationPermission(1)
+                    .addBoolean(2)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .argsLength(3)
+                    .nationPermission(DefaultNationPermission.MANAGEMENT)
+                    .player()
+                    .command((a) -> {
+                        Rank r = a.nations()[0].getRank(a.args()[0]);
+
+                        if(a.users()[0].getNation() != a.invokerUser().getNation()) {
+                            a.invoker().sendMessage(TranslatableString.translate("ajisjia", a.users()[0].getName()));
+                            return false;
+                        }
+
+                        if(r == null) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[1]));
+                            return false;
+                        }
+
+                        if(a.booleans()[0]) {
+                            r.setPermission(a.nationPermissions()[0]);
+
+                            a.invoker().sendMessage("added the permission (NationCommand)");
+
+                            //TODO command return codes, so messages can be taken outside the logic of the command
+                        } else {
+                            r.unsetPermission(a.nationPermissions()[0]);
+
+                            a.invoker().sendMessage("removed the permission (NationCommand)");
+                        }
+
                         return true;
                     })
                     .make());
