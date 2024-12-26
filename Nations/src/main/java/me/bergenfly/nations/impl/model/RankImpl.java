@@ -90,7 +90,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
         user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
-        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + getLeader().getName());
+        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + (getLeader() == null ? "&7None" : getLeader().getName()));
         user.sendMessage(ChatColor.DARK_AQUA + "Nation: " + ChatColor.AQUA + getNation().getName());
     }
 

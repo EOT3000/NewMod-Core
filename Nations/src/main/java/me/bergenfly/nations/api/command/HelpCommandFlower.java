@@ -15,10 +15,14 @@ public class HelpCommandFlower extends CommandFlower {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] a) {
+        commandSender.sendMessage("Help");
+
         for(CommandStem branch : stem.branches.values()) {
             commandSender.sendMessage(buildPrevious(branch));
         }
+
+        commandSender.sendMessage("");
 
         return false;
     }

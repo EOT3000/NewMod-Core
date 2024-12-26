@@ -29,6 +29,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class CommandFlower {
@@ -45,6 +47,8 @@ public class CommandFlower {
     public static final int INVOKER_MEMBER;
     public static final int INVOKER_LEADER;
     public static final int SELF;
+
+    private static final Logger logger = NationsPlugin.getInstance().getLogger();
 
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
@@ -192,7 +196,7 @@ public class CommandFlower {
         return this;
     }
 
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
         System.out.println(Arrays.toString(strings));
 
         NationsCommandInvocation made = maker.make(commandSender, strings);
@@ -201,19 +205,30 @@ public class CommandFlower {
             return false;
         }
 
-        if(this.command.test(made)) {
-            if(successBroadcast != null) {
-                String send = successBroadcast.apply(made);
+        try {
+            if (this.command.test(made)) {
+                if (successBroadcast != null) {
+                    String send = successBroadcast.apply(made);
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(send);
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        player.sendMessage(send);
+                    }
                 }
-            }
 
-            if(successMessage != null) commandSender.sendMessage(successMessage.apply(made));
-            return true;
-        } else {
-            if(failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
+                if (successMessage != null) commandSender.sendMessage(successMessage.apply(made));
+                return true;
+            } else {
+                if (failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            logger.log(Level.WARNING, "Error executing command");
+            logger.log(Level.WARNING, "Final arguments: " + Arrays.toString(strings));
+            logger.log(Level.WARNING, "All arguments: " + Arrays.toString(initial));
+            logger.log(Level.WARNING, "---");
+
             return false;
         }
     }

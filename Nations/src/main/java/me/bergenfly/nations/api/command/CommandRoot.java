@@ -59,6 +59,6 @@ public abstract class CommandRoot implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Pair<CommandFlower, String[]> result = getFinal(strings);
 
-        return result.getLeft().onCommand(commandSender, command, s, result.getRight());
+        return result.getLeft().onCommand(commandSender, command, s, result.getRight(), strings);
     }
 }

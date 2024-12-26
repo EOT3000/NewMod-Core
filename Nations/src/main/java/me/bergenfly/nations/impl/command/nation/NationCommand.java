@@ -10,6 +10,7 @@ import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
+import me.bergenfly.nations.api.model.organization.Rank;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.permission.DefaultNationPermission;
@@ -160,6 +161,32 @@ public class NationCommand extends CommandRoot {
                     }, (a) -> TranslatableString.translate("nations.command.error.rank.not_argument", a[1]))
                     .player()
                     .commandAlwaysSuccess((a) -> a.nations()[0].getRank(a.args()[1]).sendInfo(a.invoker()))
+                    .make());
+
+            CommandStem set = rank.addBranch("set");
+
+            set.addBranch("leader", new CommandFlower()
+                    .addUser(1)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .argsLength(2)
+                    .nationPermission(DefaultNationPermission.MANAGEMENT)
+                    .player()
+                    .command((a) -> {
+                        Rank r = a.nations()[0].getRank(a.args()[0]);
+
+                        if(a.users()[0].getNation() != a.invokerUser().getNation()) {
+                            a.invoker().sendMessage(TranslatableString.translate("ajisjia", a.users()[0].getName()));
+                            return false;
+                        }
+
+                        if(r == null) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[1]));
+                            return false;
+                        }
+
+                        r.setLeader(a.users()[0]);
+                        return true;
+                    })
                     .make());
 
         } //rank subcommand
