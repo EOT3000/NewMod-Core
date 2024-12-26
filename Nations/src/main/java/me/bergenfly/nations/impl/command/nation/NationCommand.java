@@ -148,7 +148,7 @@ public class NationCommand extends CommandRoot {
                     .nationPermission(DefaultNationPermission.MANAGEMENT)
                     .addNation(CommandFlower.INVOKER_MEMBER)
                     .commandAlwaysSuccess((a) -> a.nations()[0].addRank(new RankImpl(a.args()[0], a.nations()[0])))
-                    .successBroadcast((a) -> TranslatableString.translate("nations.general.success"))
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
                     .make());
 
             rank.addBranch("info", new CommandFlower()
@@ -163,24 +163,97 @@ public class NationCommand extends CommandRoot {
                     .commandAlwaysSuccess((a) -> a.nations()[0].getRank(a.args()[1]).sendInfo(a.invoker()))
                     .make());
 
+            rank.addBranch("add", new CommandFlower()
+                    .addUser(1)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .argsLength(2)
+                    .player()
+                    .command((a) -> {
+                        Nation n = a.nations()[0];
+                        Rank r = n.getRank(a.args()[0]);
+
+                        //Make all these if statements single lines
+
+                        if(r == null) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[0]));
+                            return false;
+                        }
+
+                        if(a.users()[0].getNation() != a.nations()[0]) {
+                            a.invoker().sendMessage(TranslatableString.translate("NationCommand: user not in faction", a.users()[0].getName()));
+                            return false;
+                        }
+
+                        if(n.getLeader() == a.invokerUser() || r.getLeader() == a.invokerUser()) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                            return false;
+                        }
+
+                        //TODO broadcast results of these somewhere, send update to people actually being added
+
+                        r.addMember(a.users()[0]);
+                        return true;
+                    })
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .make());
+
+            rank.addBranch("kick", new CommandFlower()
+                    .addUser(1)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .argsLength(2)
+                    .player()
+                    .command((a) -> {
+                        Nation n = a.nations()[0];
+                        Rank r = n.getRank(a.args()[0]);
+
+                        //Make all these if statements single lines
+
+                        if(r == null) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[0]));
+                            return false;
+                        }
+
+                        if(!r.getMembers().contains(a.users()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("NationCommand: user not in rank", a.users()[0].getName()));
+                            return false;
+                        }
+
+                        if(n.getLeader() == a.invokerUser() || r.getLeader() == a.invokerUser()) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                            return false;
+                        }
+
+                        //TODO broadcast results of these somewhere, send update to people actually being added
+
+                        r.removeMember(a.users()[0]);
+                        return true;
+                    })
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .make());
+
             CommandStem set = rank.addBranch("set");
 
             set.addBranch("leader", new CommandFlower()
                     .addUser(1)
                     .addNation(CommandFlower.INVOKER_MEMBER)
                     .argsLength(2)
-                    .nationPermission(DefaultNationPermission.MANAGEMENT)
                     .player()
                     .command((a) -> {
+                        Nation n = a.nations()[0];
                         Rank r = a.nations()[0].getRank(a.args()[0]);
 
-                        if(a.users()[0].getNation() != a.invokerUser().getNation()) {
-                            a.invoker().sendMessage(TranslatableString.translate("ajisjia", a.users()[0].getName()));
-                            return false; //TODO this message
+                        if(r == null) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[0]));
+                            return false;
                         }
 
-                        if(r == null) {
-                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[1]));
+                        if(a.users()[0].getNation() != a.invokerUser().getNation()) {
+                            a.invoker().sendMessage(TranslatableString.translate("NationCommand: user not in faction", a.users()[0].getName()));
+                            return false;
+                        }
+
+                        if(n.getLeader() != a.invokerUser()) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
                             return false;
                         }
 
@@ -197,15 +270,16 @@ public class NationCommand extends CommandRoot {
                     .nationPermission(DefaultNationPermission.MANAGEMENT)
                     .player()
                     .command((a) -> {
+                        Nation n = a.nations()[0];
                         Rank r = a.nations()[0].getRank(a.args()[0]);
-
-                        if(a.users()[0].getNation() != a.invokerUser().getNation()) {
-                            a.invoker().sendMessage(TranslatableString.translate("ajisjia", a.users()[0].getName()));
-                            return false;
-                        }
 
                         if(r == null) {
                             a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[1]));
+                            return false;
+                        }
+
+                        if(!n.hasPermission(a.users()[0], a.nationPermissions()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
                             return false;
                         }
 

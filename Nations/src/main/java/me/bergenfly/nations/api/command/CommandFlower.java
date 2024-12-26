@@ -10,6 +10,7 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
@@ -110,7 +111,7 @@ public class CommandFlower {
     }
     public CommandFlower addNationPermission(int i) {
         nationPermissions.add(i);
-        tabCompleters.put(i, (a) -> Arrays.stream(DefaultPlotPermission.values()).map(PlotPermission::getName).toList());
+        tabCompleters.put(i, (a) -> Arrays.stream(DefaultNationPermission.values()).map(NationPermission::getName).toList());
         return this;
     }
     public CommandFlower addInt(int i) {

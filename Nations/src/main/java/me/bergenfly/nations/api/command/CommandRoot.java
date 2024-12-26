@@ -76,6 +76,10 @@ public abstract class CommandRoot implements TabExecutor {
 
         String last = strings[strings.length-1];
 
+        if(result.getRight().length == 0) {
+            return new ArrayList<>();
+        }
+
         if(left instanceof HelpCommandFlower h) {
             List<String> ret = new ArrayList<>();
 
@@ -90,10 +94,6 @@ public abstract class CommandRoot implements TabExecutor {
             }
 
             return new ArrayList<>(h.stem.branches.keySet());
-        }
-
-        if(result.getRight().length == 0) {
-            return new ArrayList<>();
         }
 
         ArgumentTabCompleter completer = left.tabCompleters.get(result.getRight().length-1);
