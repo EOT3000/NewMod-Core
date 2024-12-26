@@ -1,6 +1,7 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
@@ -9,6 +10,7 @@ import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
@@ -32,6 +34,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CommandFlower {
 
@@ -51,6 +54,8 @@ public class CommandFlower {
     private static final Logger logger = NationsPlugin.getInstance().getLogger();
 
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+    private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
+    private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
 
     private Predicate<NationsCommandInvocation> command;
 
@@ -63,6 +68,8 @@ public class CommandFlower {
     private final IntArrayList ints = new IntArrayList();
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
+
+    final Int2ObjectArrayMap<ArgumentTabCompleter> tabCompleters = new Int2ObjectArrayMap<>();
 
     private final List<IntObjectImmutablePair<RequirementCheckers.RequirementChecker>> requirements = new ArrayList<>();
 
@@ -79,14 +86,17 @@ public class CommandFlower {
 
     public CommandFlower addNation(int i) {
         nations.add(i);
+        tabCompleters.put(i, (a) -> NATIONS.list().stream().map(Nation::getName).toList());
         return this;
     }
     public CommandFlower addSettlement(int i) {
         settlements.add(i);
+        tabCompleters.put(i, (a) -> SETTLEMENTS.list().stream().map(Settlement::getName).toList());
         return this;
     }
     public CommandFlower addUser(int i) {
         users.add(i);
+        tabCompleters.put(i, (a) -> USERS.list().stream().map(User::getName).toList());
         return this;
     }
     public CommandFlower addPermissionHolder(int i) {
@@ -95,10 +105,12 @@ public class CommandFlower {
     }
     public CommandFlower addPlotPermission(int i) {
         plotPermissions.add(i);
+        tabCompleters.put(i, (a) -> Arrays.stream(DefaultPlotPermission.values()).map(PlotPermission::getName).toList());
         return this;
     }
     public CommandFlower addNationPermission(int i) {
         nationPermissions.add(i);
+        tabCompleters.put(i, (a) -> Arrays.stream(DefaultPlotPermission.values()).map(PlotPermission::getName).toList());
         return this;
     }
     public CommandFlower addInt(int i) {
@@ -111,6 +123,7 @@ public class CommandFlower {
     }
     public CommandFlower addBoolean(int i) {
         booleans.add(i);
+        tabCompleters.put(i, (a) -> Arrays.asList("true", "false"));
         return this;
     }
 

@@ -47,6 +47,11 @@ public enum DefaultPlotPermission implements PlotPermission {
         return key;
     }
 
+    @Override
+    public @NotNull String getName() {
+        return name();
+    }
+
     public static DefaultPlotPermission of(String s) {
         if(permissions.isEmpty()) {
             for(DefaultPlotPermission p : values()) {

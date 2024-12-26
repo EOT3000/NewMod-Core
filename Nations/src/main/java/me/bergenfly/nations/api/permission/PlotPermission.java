@@ -18,4 +18,6 @@ public interface PlotPermission {
      * @return this permission's id.
      */
     @NotNull NamespacedKey getKey();
+
+    @NotNull String getName();
 }

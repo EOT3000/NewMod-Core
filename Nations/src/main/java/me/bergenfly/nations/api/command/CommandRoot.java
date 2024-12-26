@@ -72,24 +72,36 @@ public abstract class CommandRoot implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Pair<CommandFlower, String[]> result = getFinal(strings);
 
+        CommandFlower left = result.getLeft();
+
         String last = strings[strings.length-1];
 
-        if(result.getLeft() instanceof HelpCommandFlower) {
+        if(left instanceof HelpCommandFlower h) {
             List<String> ret = new ArrayList<>();
 
-            for(String option : ((HelpCommandFlower) result.getLeft()).stem.branches.keySet()) {
+            for(String option : h.stem.branches.keySet()) {
                 if(option.startsWith(last)) {
                     ret.add(option);
                 }
-
-                if(!ret.isEmpty()) {
-                    return ret;
-                }
-
-                return new ArrayList<>(((HelpCommandFlower) result.getLeft()).stem.branches.keySet());
             }
+
+            if(!ret.isEmpty()) {
+                return ret;
+            }
+
+            return new ArrayList<>(h.stem.branches.keySet());
         }
 
-        return new ArrayList<>();
+        if(result.getRight().length == 0) {
+            return new ArrayList<>();
+        }
+
+        ArgumentTabCompleter completer = left.tabCompleters.get(result.getRight().length-1);
+
+        if(completer == null) {
+            return new ArrayList<>();
+        } else {
+            return completer.complete(commandSender);
+        }
     }
 }

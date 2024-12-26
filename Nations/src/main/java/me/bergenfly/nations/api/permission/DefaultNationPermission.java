@@ -36,4 +36,9 @@ public enum DefaultNationPermission implements NationPermission {
     public NamespacedKey getKey() {
         return key;
     }
+
+    @Override
+    public @NotNull String getName() {
+        return name();
+    }
 }

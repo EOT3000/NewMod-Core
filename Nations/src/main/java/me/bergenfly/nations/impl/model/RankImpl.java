@@ -110,7 +110,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
             String permissions = "";
 
             for(NationPermission permission : this.permissions) {
-                permissions += ", " + permission.getKey().getNamespace();
+                permissions += ", " + permission.getName();
             }
 
             permissions = permissions.replaceFirst(", ", "");

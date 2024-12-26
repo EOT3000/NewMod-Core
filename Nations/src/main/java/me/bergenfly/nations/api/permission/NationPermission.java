@@ -10,4 +10,6 @@ public interface NationPermission {
      * @return this permission's id.
      */
     @NotNull NamespacedKey getKey();
+
+    @NotNull String getName();
 }
