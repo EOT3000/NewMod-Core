@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HelpCommandFlower extends CommandFlower {
-    private final CommandStem stem;
+    final CommandStem stem;
 
     public HelpCommandFlower(CommandStem stem) {
         this.stem = stem;

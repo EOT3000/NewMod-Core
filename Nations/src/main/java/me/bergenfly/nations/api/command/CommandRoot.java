@@ -5,9 +5,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class CommandRoot implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public abstract class CommandRoot implements TabExecutor {
 
     public abstract void loadSubcommands();
 
@@ -60,5 +66,30 @@ public abstract class CommandRoot implements CommandExecutor {
         Pair<CommandFlower, String[]> result = getFinal(strings);
 
         return result.getLeft().onCommand(commandSender, command, s, result.getRight(), strings);
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        Pair<CommandFlower, String[]> result = getFinal(strings);
+
+        String last = strings[strings.length-1];
+
+        if(result.getLeft() instanceof HelpCommandFlower) {
+            List<String> ret = new ArrayList<>();
+
+            for(String option : ((HelpCommandFlower) result.getLeft()).stem.branches.keySet()) {
+                if(option.startsWith(last)) {
+                    ret.add(option);
+                }
+
+                if(!ret.isEmpty()) {
+                    return ret;
+                }
+
+                return new ArrayList<>(((HelpCommandFlower) result.getLeft()).stem.branches.keySet());
+            }
+        }
+
+        return new ArrayList<>();
     }
 }
