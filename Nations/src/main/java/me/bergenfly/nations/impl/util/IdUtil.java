@@ -13,4 +13,20 @@ public class IdUtil {
     public static String rankId1(String firstName, String nationId, long creationTime) {
         return "rank_" + nationId + "_" + firstName.toLowerCase() + "_" + creationTime;
     }
+
+    public static long creationTimeFromId1(String id) {
+        int ind = id.lastIndexOf("_");
+
+        return Long.parseLong(id.substring(ind+1));
+    }
+
+    public static String nameFromId1(String id) {
+        int ind = id.lastIndexOf("_");
+
+        String p1 = id.substring(0,ind);
+
+        int ind2 = p1.lastIndexOf("_");
+
+        return id.substring(ind+1);
+    }
 }

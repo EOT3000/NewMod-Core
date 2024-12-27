@@ -60,6 +60,16 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     }
 
     @Override
+    public Set<NationPermission> getPermissions() {
+        return new HashSet<>(permissions);
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    @Override
     public @NotNull String getName() {
         return name;
     }

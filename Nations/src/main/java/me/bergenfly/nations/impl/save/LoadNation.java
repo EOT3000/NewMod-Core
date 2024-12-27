@@ -26,6 +26,8 @@ public class LoadNation {
         String firstName = configuration.getString("firstName", null);
         int creationTime = configuration.getInt("creationTime", -1);
 
+        configuration.getMapList(null);
+
         Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.permissionHoldersByIdRegistry()::get).map((a) -> (Settlement) a).collect(Collectors.toSet());
 
         String id = configuration.getString("id", null);
@@ -136,6 +138,8 @@ public class LoadNation {
                 logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), file contains no valid capital (given " + capitalName + "). Capital set to largest settlement (" + capital.getName() + ")");
             }
         }
+
+
 
         Nation nation = new NationImpl(leader, name, firstName, creationTime, capital, id);
 
