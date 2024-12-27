@@ -27,6 +27,10 @@ public class IdUtil {
 
         int ind2 = p1.lastIndexOf("_");
 
-        return id.substring(ind+1);
+        return p1.substring(ind2+1);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(nameFromId1("dhuuw_NAME_2893"));
     }
 }

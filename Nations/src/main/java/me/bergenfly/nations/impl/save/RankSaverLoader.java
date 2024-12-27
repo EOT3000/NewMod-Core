@@ -1,9 +1,12 @@
 package me.bergenfly.nations.impl.save;
 
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Rank;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.RankImpl;
 import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -13,7 +16,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class RankSaverLoader {
-    public Map<String, Object> rankToYaml(Rank rank) {
+    public static Map<String, Object> rankToYaml(Rank rank) {
         Map<String, Object> ret = new HashMap<>();
 
         ret.put("rankName", rank.getName());
@@ -26,7 +29,19 @@ public class RankSaverLoader {
         return ret;
     }
 
-    public Rank rankFromYaml(Map<?,?> map, String nationId, File file, String nationName) {
+    public static List<Map<String, Object>> ranksToYaml(Nation nation) {
+        List<Map<String, Object>> ret = new ArrayList<>();
+
+        for(Rank rank : nation.getRanks()) {
+            Map<String,Object> map = rankToYaml(rank);
+
+            ret.add(map);
+        }
+
+        return ret;
+    }
+
+    public static Rank rankFromYaml(Map<?,?> map, Nation nation, File file) {
         Object rName_ = map.get("rankName");
         Object rId_ = map.get("rankId");
         Object rLeader_ = map.get("rankLeader");
@@ -40,7 +55,7 @@ public class RankSaverLoader {
         User leader;
 
         if(!(rId_ instanceof String)) {
-            logWarning("Error loading rank in file " + file.getName() + " (" + nationName + "). Missing id. Attempting recovery. Dumping data:");
+            logWarning("Error loading rank in file " + file.getName() + " (" + nation.getName() + "). Missing id. Attempting recovery. Dumping data:");
             logWarning(map.toString());
 
             if(!(rName_ instanceof String)) {
@@ -50,12 +65,12 @@ public class RankSaverLoader {
             }
 
             if(!(rCreationTime_ instanceof Long)) {
-                logError("Could not recover, missing creation time. Skipping this rank.");
+                logError("Could not recover, missing rank creation time. Skipping this rank.");
                 logError("---");
                 return null;
             }
 
-            id = IdUtil.rankId1((String) rName_, nationId, (Long) rCreationTime_);
+            id = IdUtil.rankId1((String) rName_, nation.getId(), (Long) rCreationTime_);
 
             logInfo("Successfully reconstructed id for rank " + rName_ + " in file " + file.getName());
             logInfo("Reconstructed id: " + id);
@@ -65,7 +80,7 @@ public class RankSaverLoader {
         }
 
         if(!(rName_ instanceof String)) {
-            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nationName + "). Missing name. Trying to determine from id");
+            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Missing name. Trying to determine from id");
 
             name = IdUtil.nameFromId1(id);
 
@@ -76,7 +91,7 @@ public class RankSaverLoader {
         }
 
         if(!(rCreationTime_ instanceof Long)) {
-            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nationName + "). Missing creation time. Trying to determine from id");
+            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Missing creation time. Trying to determine from id");
 
             creationTime = IdUtil.creationTimeFromId1(id);
 
@@ -87,7 +102,7 @@ public class RankSaverLoader {
         }
 
         if(!(rLeader_ instanceof String)) {
-            logWarning("Recoverable error loading rank in file " + file.getName() + " (" + nationName + "). Missing leader. Leaving leader unset.");
+            logWarning("Recoverable error loading rank in file " + file.getName() + " (" + nation.getName() + "). Missing leader. Leaving leader unset.");
 
             leader = null;
         } else if(!rLeader_.equals("null")) {
@@ -97,10 +112,10 @@ public class RankSaverLoader {
                 leader = api.usersRegistry().get(uuid);
 
                 if(leader == null) { //Only check for null leader, we don't care too much if leader isn't in nation for example
-                    logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nationName + "). Leader UUID (" + rLeader_ + ") is not a valid user. Leaving leader unset.");
+                    logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Leader UUID (" + rLeader_ + ") is not a valid user. Leaving leader unset.");
                 }
             } catch (IllegalArgumentException e) {
-                logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nationName + "). Missing leader. Leaving leader unset.");
+                logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Given leader UUID " + rLeader_ + " is not a valid UUID. Leaving leader unset.");
 
                 leader = null;
             }
@@ -108,11 +123,61 @@ public class RankSaverLoader {
             leader = null;
         }
 
+        Rank rank = new RankImpl(name, leader, nation, creationTime, id);
+
         if(!(rMembers_ instanceof List<?>)) {
-            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nationName + "). Missing members. Leaving members unset.");
+            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Missing members. Leaving members unset.");
+        } else {
+            for(Object object : ((List<?>) rMembers_)) {
+                if(object instanceof String) {
+                    try {
+                        UUID uuid = UUID.fromString((String) object);
+
+                        User member = api.usersRegistry().get(uuid);
+
+                        if(member == null) { //Only check for null leader, we don't care too much if leader isn't in nation for example
+                            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Member UUID (" + rLeader_ + ") is not a valid user. Skipping member.");
+                        } else {
+                            rank.addMember(member);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Given member UUID " + object + "is not a valid UUID. Skipping member.");
+                    }
+                } else {
+                    logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Given member UUID " + object + "is not a valid UUID. Skipping member.");
+                }
+            }
         }
 
-        return null;
+        if(!(rPermissions_ instanceof List<?>)) {
+            logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Missing permissions. Leaving permissions unset.");
+        } else {
+            for(Object object : ((List<?>) rPermissions_)) {
+                if(object instanceof String s) {
+                    try {
+                        DefaultNationPermission permission = DefaultNationPermission.valueOf(s);
+
+                        rank.setPermission(permission);
+                    } catch (IllegalArgumentException e) {
+                        logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Given permission " + object + "is not a nation permission. Skipping permission.");
+                    }
+                } else {
+                    logWarning("Recoverable error loading rank " + id + " in file " + file.getName() + " (" + nation.getName() + "). Given permission " + object + "is not a nation permission. Skipping permission.");
+                }
+            }
+        }
+
+        return rank;
+    }
+
+    public static void loadRanks(Nation nation, List<Map<?,?>> ranks, File file) {
+        for(Map<?,?> rankMap : ranks) {
+            Rank rank = rankFromYaml(rankMap, nation, file);
+
+            if(rank != null) {
+                nation.addRank(rank);
+            }
+        }
     }
 
     private static final NationsPlugin api = NationsPlugin.getInstance();

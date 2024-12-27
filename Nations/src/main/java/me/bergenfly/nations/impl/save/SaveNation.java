@@ -23,6 +23,7 @@ public class SaveNation {
         if(nation.getFirstName() != null) nationSave.set("firstName", nation.getFirstName());
         if(nation.getCreationTime() != -1) nationSave.set("creationTime", nation.getCreationTime());
         nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getId).collect(Collectors.toList()));
+        nationSave.set("ranks", RankSaverLoader.ranksToYaml(nation));
 
         return nationSave;
     }

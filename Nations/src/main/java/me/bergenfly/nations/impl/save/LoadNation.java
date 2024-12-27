@@ -26,7 +26,7 @@ public class LoadNation {
         String firstName = configuration.getString("firstName", null);
         int creationTime = configuration.getInt("creationTime", -1);
 
-        configuration.getMapList(null);
+        List<Map<?,?>> ranks = configuration.getMapList("ranks");
 
         Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.permissionHoldersByIdRegistry()::get).map((a) -> (Settlement) a).collect(Collectors.toSet());
 
@@ -139,9 +139,9 @@ public class LoadNation {
             }
         }
 
-
-
         Nation nation = new NationImpl(leader, name, firstName, creationTime, capital, id);
+
+        RankSaverLoader.loadRanks(nation, ranks, file);
 
         for(Settlement settlement : settlements) {
             if(settlement != null) {
