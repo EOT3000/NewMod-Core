@@ -41,6 +41,8 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     private final String id;
 
+    private final Set<Company> charters = new HashSet<>();
+
     private NationImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
     }
@@ -300,5 +302,18 @@ public class NationImpl implements Nation, DeletionSubscriber {
         if(ranks.containsValue(deletable)) {
             ranks.remove(((Rank) deletable).getName());
         }
+    }
+
+
+
+    //CHARTERING
+    @Override
+    public void charter(Company company) {
+        charters.add(company);
+    }
+
+    @Override
+    public boolean isChartered(Company company) {
+        return charters.contains(company);
     }
 }

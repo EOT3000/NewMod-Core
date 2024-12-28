@@ -4,7 +4,7 @@ import me.bergenfly.nations.api.model.User;
 
 import java.util.Set;
 
-public interface Settlement extends Organization, LandPermissionHolder, PlayerGroup, Named, LandAdministrator, Led, NationComponent {
+public interface Settlement extends Charterer, Organization, LandPermissionHolder, PlayerGroup, Named, LandAdministrator, Led, NationComponent {
 
     /**
      * Sets this settlement's nation, and removes itself from the old nation.

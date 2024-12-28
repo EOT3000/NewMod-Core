@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.command.CommandRoot;
 import me.bergenfly.nations.api.command.CommandStem;
 import me.bergenfly.nations.api.command.TranslatableString;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.impl.model.NationImpl;
@@ -38,6 +39,7 @@ public class PlotCommand extends CommandRoot {
                         return true;
                     })
                     .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .failureMessage((a) -> TranslatableString.translate("PlotCommand: no permission"))
                     .make()); //TODO: error code return codes for different messages (- returns false, + returns true)
         } //permission set
 
@@ -63,13 +65,24 @@ public class PlotCommand extends CommandRoot {
                     .addSettlement(CommandFlower.CURRENT_LOCATION)
                     .player()
                     .command((a) -> {
-                        PlotSection section = a.invokerUser().currentlyAt();
+                        if(a.args().length == 0) {
+                            PlotSection section = a.invokerUser().currentlyAt();
 
-                        if (!checkFs(section, a)) return false;
+                            if (!checkFs(section, a)) return false;
 
-                        ((PermissiblePlotSection) section).setOwner(a.invokerUser());
+                            ((PermissiblePlotSection) section).setOwner(a.invokerUser());
 
-                        return true;
+                            return true;
+                        } else {
+                            LandPermissionHolder holder;
+                            PlotSection section = a.invokerUser().currentlyAt();
+
+                            if (!checkFs(section, a)) return false;
+
+                            ((PermissiblePlotSection) section).setOwner(a.invokerUser());
+
+                            return true;
+                        }
                     })
                     .successMessage((a) -> TranslatableString.translate("nations.general.success"))
                     .make());

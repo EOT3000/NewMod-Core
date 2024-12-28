@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.model;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Company;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -36,6 +37,8 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     private Set<User> invitations = new HashSet<>();
 
     private final String id;
+
+    private final Set<Company> charters = new HashSet<>();
 
     private SettlementImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
@@ -204,5 +207,17 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     @Override
     public Set<User> getInvitations() {
         return new HashSet<>(invitations);
+    }
+
+
+    //CHARTERING
+    @Override
+    public void charter(Company company) {
+        charters.add(company);
+    }
+
+    @Override
+    public boolean isChartered(Company company) {
+        return charters.contains(company);
     }
 }
