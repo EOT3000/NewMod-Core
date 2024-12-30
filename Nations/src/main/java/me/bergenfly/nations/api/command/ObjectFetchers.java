@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
@@ -27,7 +29,7 @@ public class ObjectFetchers {
     private static int SELF = CommandFlower.SELF;
 
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
-    private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
+    private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
     private static Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS = NationsPlugin.getInstance().permissionHoldersByNameRegistry();
 
@@ -98,18 +100,24 @@ public class ObjectFetchers {
                     }
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
                     Player player = (Player) sender;
-                    r[i] = USERS.get(player.getUniqueId()).getSettlement();
 
-                    if(r[i] == null) {
+                    Community c = USERS.get(player.getUniqueId()).getCommunity();
+
+                    if(c instanceof Settlement s) {
+                        r[i] = s;
+                    } else {
                         sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_member"));
                         return new Settlement[0];
                     }
                 }  else if(list.getInt(i) == INVOKER_LEADER) {
                     Player player = (Player) sender;
                     User user = USERS.get(player.getUniqueId());
-                    r[i] = user.getSettlement();
 
-                    if(r[i] == null || r[i].getLeader() != user) {
+                    Community c = user.getCommunity();
+
+                    if(c instanceof Settlement s && s.getLeader() == user) {
+                        r[i] = s;
+                    } else {
                         sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_leader"));
                         return new Settlement[0];
                     }
@@ -119,11 +127,63 @@ public class ObjectFetchers {
 
                         return new Settlement[0];
                     }
-                    r[i] = SETTLEMENTS.get(strings[list.getInt(i)]);
+                    Community c = COMMUNITIES.get(strings[list.getInt(i)]);
 
-                    if(r[i] == null) {
+                    if(c instanceof Settlement s) {
+                        r[i] = s;
+                    } else {
                         sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                         return new Settlement[0];
+                    }
+                }
+            }
+
+            return r;
+        };
+    }
+
+    public static BiFunction<CommandSender, String[], Community[]> createCommunityFetcher(IntArrayList list) {
+        int len = list.size();
+
+        return (sender, strings) -> {
+            Community[] r = new Community[len];
+
+            for (int i = 0; i < len; i++) {
+                if (list.getInt(i) == CURRENT_LOCATION) {
+                    r[i] = null; //TODO
+
+                    if(r[i] == null) {
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_in_territory"));
+                        return new Community[0];
+                    }
+                } else if (list.getInt(i) == INVOKER_MEMBER) {
+                    Player player = (Player) sender;
+                    r[i] = USERS.get(player.getUniqueId()).getCommunity();
+
+                    if(r[i] == null) {
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_member"));
+                        return new Community[0];
+                    }
+                }  else if(list.getInt(i) == INVOKER_LEADER) {
+                    Player player = (Player) sender;
+                    User user = USERS.get(player.getUniqueId());
+                    r[i] = user.getCommunity();
+
+                    if(r[i] == null || r[i].getLeader() != user) {
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_leader"));
+                        return new Community[0];
+                    }
+                } else {
+                    if(list.getInt(i) >= strings.length) {
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+                        return new Community[0];
+                    }
+                    r[i] = COMMUNITIES.get(strings[list.getInt(i)]);
+
+                    if(r[i] == null) {
+                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                        return new Community[0];
                     }
                 }
             }

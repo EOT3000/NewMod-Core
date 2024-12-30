@@ -1,6 +1,7 @@
 package me.bergenfly.nations.impl.model;
 
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -24,7 +25,7 @@ public class UserImpl implements User {
     private final UUID uuid;
     private String name;
 
-    private Settlement settlement;
+    private Community community;
 
     public UserImpl(UUID uuid) {
         this.uuid = uuid;
@@ -72,26 +73,26 @@ public class UserImpl implements User {
     }
 
     @Override
-    public void setSettlement(@Nullable Settlement settlement) {
-        if(this.settlement != null) {
-            this.settlement.removeMember(this);
+    public void setCommunity(@Nullable Community community) {
+        if(this.community != null) {
+            this.community.removeMember(this);
         }
 
-        if(settlement != null) {
-            settlement.addMember(this);
+        if(community != null) {
+            community.addMember(this);
         }
 
-        this.settlement = settlement;
+        this.community = community;
     }
 
     @Override
-    public @Nullable Settlement getSettlement() {
-        return settlement;
+    public @Nullable Community getCommunity() {
+        return community;
     }
 
     @Override
     public @Nullable Nation getNation() {
-        return settlement == null ? null : settlement.getNation();
+        return community == null ? null : community.getNation();
     }
 
     @Override

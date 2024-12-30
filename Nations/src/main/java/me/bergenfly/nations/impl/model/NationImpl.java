@@ -7,14 +7,12 @@ import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
-import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
 import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,14 +28,14 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     private Settlement capital;
 
-    private Set<Settlement> settlements = new HashSet<>();
+    private final Set<Community> communities = new HashSet<>();
 
-    private Set<Settlement> invitations = new HashSet<>();
+    private final Set<Community> invitations = new HashSet<>();
 
     //Does not include settlement land
-    private Set<PlotSection> nationLand = new HashSet<>();
+    private final Set<PlotSection> nationLand = new HashSet<>();
 
-    private Map<String, Rank> ranks = new HashMap<>();
+    private final Map<String, Rank> ranks = new HashMap<>();
 
     private final String id;
 
@@ -96,36 +94,46 @@ public class NationImpl implements Nation, DeletionSubscriber {
         return s;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
         user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
 
-        String settlements = "Capital " + capital.getName();
+        StringBuilder settlements = new StringBuilder("Capital " + capital.getName());
 
-        for(Settlement member : this.settlements) {
+        for(Settlement member : this.getSettlements()) {
             if(!member.equals(capital)) {
-                settlements += (", " + member.getName());
+                settlements.append(", ").append(member.getName());
             }
         }
 
-        String ranks = "";
+        StringBuilder tribes = new StringBuilder();
 
-        for(Rank rank : getRanks()) {
-            ranks += (rank.getName() + ", ");
+        for(Tribe member : this.getTribes()) {
+            tribes.append(", ").append(member.getName());
         }
 
-        ranks = ranks.length() > 2 ? ChatColor.AQUA + ranks.substring(0, ranks.length()-2) : ChatColor.GRAY + "None";
+        tribes = new StringBuilder(tribes.length() > 2 ? ChatColor.AQUA + tribes.substring(0, tribes.length() - 2) : ChatColor.GRAY + "None");
+
+        StringBuilder ranks = new StringBuilder();
+
+        for(Rank rank : getRanks()) {
+            ranks.append(rank.getName()).append(", ");
+        }
+
+        ranks = new StringBuilder(ranks.length() > 2 ? ChatColor.AQUA + ranks.substring(0, ranks.length() - 2) : ChatColor.GRAY + "None");
 
         user.sendMessage(ChatColor.DARK_AQUA + "Ranks: " + ranks);
         user.sendMessage(ChatColor.DARK_AQUA + "Settlements: " + ChatColor.AQUA + settlements);
+        user.sendMessage(ChatColor.DARK_AQUA + "Tribes: " + ChatColor.AQUA + tribes);
         user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + nationLand.size());
     }
 
     @Override
     public Set<User> getMembers() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(PlayerGroup::getMembers)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
@@ -133,7 +141,7 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     @Override
     public Set<User> getOnlineMembers() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(PlayerGroup::getMembers)
                 .flatMap(Collection::stream)
                 .filter(User::isOnline)
@@ -143,7 +151,7 @@ public class NationImpl implements Nation, DeletionSubscriber {
     @Override
     public Set<PlotSection> getLand() {
         return Stream.concat(nationLand.stream(),
-                        settlements.stream()
+                        getSettlements().stream()
                                 .map(Settlement::getLand)
                                 .flatMap(Collection::stream))
                 .collect(Collectors.toSet());
@@ -151,12 +159,12 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     @Override
     public void addLand(PlotSection section) {
-        nationLand.remove(section);
+        nationLand.add(section);
     }
 
     @Override
     public void removeLand(PlotSection section) {
-        nationLand.add(section);
+        nationLand.remove(section);
     }
 
     @Override
@@ -183,12 +191,12 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     @Override
     public Set<PlotSection> getNationLand() {
-        return nationLand;
+        return new HashSet<>(nationLand);
     }
 
     @Override
     public Set<PlotSection> getSettlementLand() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(Settlement::getLand)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
@@ -196,7 +204,17 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
     @Override
     public Set<Settlement> getSettlements() {
-        return new HashSet<>(settlements);
+        return communities.stream().filter(Community::isSettlement).map((a) -> (Settlement) a).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Tribe> getTribes() {
+        return communities.stream().filter((a) -> !a.isSettlement()).map((a) -> (Tribe) a).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Community> getCommunities() {
+        return new HashSet<>(communities);
     }
 
     @Override
@@ -244,13 +262,13 @@ public class NationImpl implements Nation, DeletionSubscriber {
     }
 
     @Override
-    public void addSettlement(Settlement settlement) {
-        settlements.add(settlement);
+    public void addCommunity(Community settlement) {
+        communities.add(settlement);
     }
 
     @Override
-    public void removeSettlement(Settlement settlement) {
-        settlements.remove(settlement);
+    public void removeCommunity(Community settlement) {
+        communities.remove(settlement);
     }
 
     @Override
@@ -284,12 +302,12 @@ public class NationImpl implements Nation, DeletionSubscriber {
     }
 
     @Override
-    public void addInvitation(Settlement settlement) {
-        invitations.add(settlement);
+    public void addInvitation(Community community) {
+        invitations.add(community);
     }
 
     @Override
-    public Set<Settlement> getInvitations() {
+    public Set<Community> getInvitations() {
         return new HashSet<>(invitations);
     }
 

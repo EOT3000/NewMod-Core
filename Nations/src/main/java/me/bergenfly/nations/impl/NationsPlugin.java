@@ -4,10 +4,7 @@ import me.bergenfly.nations.api.NationsAPI;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.LandAdministrator;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.nation.NationCommand;
@@ -39,7 +36,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private boolean enabled = false;
 
     private Registry<Nation, String> NATIONS;
-    private Registry<Settlement, String> SETTLEMENTS;
+    private Registry<Community, String> COMMUNITIES;
     private Registry<User, UUID> USERS;
     private Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS_NAME;
     private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
@@ -69,7 +66,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
 
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
-        this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
+        this.COMMUNITIES = new StringRegistryImpl<>(Community.class);
         this.USERS = new RegistryImpl<>(User.class);
         this.PERMISSION_HOLDERS_NAME = new RegistryImpl<>(null); //idk what to do with this null
         this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
@@ -109,8 +106,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
-    public Registry<Settlement, String> settlementsRegistry() {
-        return SETTLEMENTS;
+    public Registry<Community, String> communitiesRegistry() {
+        return COMMUNITIES;
     }
 
     @Override

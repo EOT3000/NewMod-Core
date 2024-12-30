@@ -27,8 +27,8 @@ public class SettlementCommand extends CommandRoot {
                 .make());
 
         addBranch("info", new CommandFlower()
-                .addSettlement(0)
-                .commandAlwaysSuccess((a) -> a.settlements()[0].sendInfo(a.invoker()))
+                .addCommunity(0)
+                .commandAlwaysSuccess((a) -> a.communities()[0].sendInfo(a.invoker()))
                 .make());
 
         addBranch("claim", new CommandFlower()

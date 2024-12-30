@@ -14,6 +14,10 @@ public interface Nation extends Charterer, Organization, LandAdministrator, Land
 
     Set<Settlement> getSettlements();
 
+    Set<Tribe> getTribes();
+
+    Set<Community> getCommunities();
+
     Settlement getCapital();
 
     Set<Rank> getRanks();
@@ -29,27 +33,27 @@ public interface Nation extends Charterer, Organization, LandAdministrator, Land
     boolean hasPermission(User user, NationPermission permission);
 
     /**
-     * Should not be used, except by inheritors of {@link Settlement}.
+     * Should not be used, except by inheritors of {@link Community}.
      *
-     * @deprecated use {@link Settlement#setNation}
+     * @deprecated use {@link Community#setNation}
      */
     @Deprecated
-    void addSettlement(Settlement settlement);
+    void addCommunity(Community settlement);
 
 
     /**
-     * Should not be used, except by inheritors of {@link Settlement}.
+     * Should not be used, except by inheritors of {@link Community}.
      *
-     * @deprecated use {@link Settlement#setNation}
+     * @deprecated use {@link Community#setNation}
      */
     @Deprecated
-    void removeSettlement(Settlement settlement);
+    void removeCommunity(Community settlement);
 
     long getCreationTime();
 
     String getFirstName();
 
-    void addInvitation(Settlement settlement);
+    void addInvitation(Community settlement);
 
-    Set<Settlement> getInvitations();
+    Set<Community> getInvitations();
 }
