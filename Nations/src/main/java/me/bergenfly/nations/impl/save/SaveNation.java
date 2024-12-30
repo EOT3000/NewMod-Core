@@ -1,5 +1,6 @@
 package me.bergenfly.nations.impl.save;
 
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -22,7 +23,7 @@ public class SaveNation {
         nationSave.set("capital", nation.getCapital().getName());
         if(nation.getFirstName() != null) nationSave.set("firstName", nation.getFirstName());
         if(nation.getCreationTime() != -1) nationSave.set("creationTime", nation.getCreationTime());
-        nationSave.set("settlements", nation.getSettlements().stream().map(Settlement::getId).collect(Collectors.toList()));
+        nationSave.set("communities", nation.getCommunities().stream().map(Community::getId).collect(Collectors.toList()));
         nationSave.set("ranks", RankSaverLoader.ranksToYaml(nation));
 
         return nationSave;

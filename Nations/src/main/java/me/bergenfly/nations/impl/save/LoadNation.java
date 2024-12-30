@@ -1,10 +1,12 @@
 package me.bergenfly.nations.impl.save;
 
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
+import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -24,11 +26,11 @@ public class LoadNation {
 
         String capitalName = configuration.getString("capital");
         String firstName = configuration.getString("firstName", null);
-        int creationTime = configuration.getInt("creationTime", -1);
+        long creationTime = configuration.getLong("creationTime", -1);
 
         List<Map<?,?>> ranks = configuration.getMapList("ranks");
 
-        Set<Settlement> settlements = configuration.getStringList("settlements").stream().map(api.permissionHoldersByIdRegistry()::get).map((a) -> (Settlement) a).collect(Collectors.toSet());
+        Set<Community> communities = configuration.getStringList("communities").stream().map(api.permissionHoldersByIdRegistry()::get).map((a) -> (Community) a).collect(Collectors.toSet());
 
         String id = configuration.getString("id", null);
 
@@ -63,11 +65,41 @@ public class LoadNation {
         //If id is not null, then lack of first name or creation time is acceptable.
         if(id != null) {
             if (firstName == null) {
-                logWarning("WARNING: Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing first name. First name will not be set");
+                logWarning("WARNING: Nation (" + name + ") in file " + file.getName() + " is invalid (potentially recoverable), missing first name. Attempting to recreate first name");
+
+                String nfn = null;
+
+                try {
+                    nfn = IdUtil.nameFromId1(id);
+                    logWarning("Success: set nation's first name to " + nfn);
+                    logWarning("---");
+                } catch (Exception e) {
+                    logError("Unrecoverable error: Could not set nation's first name. Skipping nation");
+                    logError("---");
+
+                    return null;
+                }
+
+                firstName = nfn;
             }
 
             if (creationTime == -1) {
-                logWarning("WARNING: Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing creation time. Creation time will not be set");
+                logWarning("WARNING: Community (" + name + ") in file " + file.getName() + " is invalid (potentially recoverable), missing creation time. Attempting to recreate creation time");
+
+                long nct = -1;
+
+                try {
+                    nct = IdUtil.creationTimeFromId1(id);
+                    logWarning("Success: set community's creation time to " + nct);
+                    logWarning("---");
+                } catch (Exception e) {
+                    logError("Unrecoverable error: Could not set community's creation time. Skipping community");
+                    logError("---");
+
+                    return null;
+                }
+
+                creationTime = nct;
             }
         } else { //Otherwise, possibly generate a new id from first name and time?
             boolean valid = true;
@@ -103,9 +135,12 @@ public class LoadNation {
 
         if (leader == null) {
             if (capitalName != null) {
-                capital = api.settlementsRegistry().get(capitalName);
+                Community tryCapital = api.communitiesRegistry().get(capitalName);
 
-                if(capital != null) {
+                if(tryCapital instanceof Settlement s) {
+
+                    capital = s;
+
                     leader = capital.getLeader();
 
                     logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing valid leader (given uuid " + leaderId + "). Leader set to leader of capital ("
@@ -121,15 +156,19 @@ public class LoadNation {
         }
 
         if(capitalName != null) {
-            capital = api.settlementsRegistry().get(capitalName);
+            Community tryCapital = api.communitiesRegistry().get(capitalName);
+
+            capital = tryCapital instanceof Settlement s ? s : null;
         }
 
         if(capital == null) {
+            Set<Settlement> settlements = communities.stream().filter((a) -> a instanceof Settlement).map((a) -> (Settlement) a).collect(Collectors.toSet());
+
             if(settlements.size() <= 1) {
                 capital = settlements.size() == 1 ? settlements.iterator().next() : null;
 
                 if(capital == null) {
-                    logError("Nation (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), file contains no valid towns nor a valid capital (given " + capitalName + "). Skipping file");
+                    logError("Nation (" + name + ") in file " + file.getName() + " is invalid (unrecoverable), file contains no valid settlements nor a valid capital (given " + capitalName + "). Skipping file");
                     return null;
                 }
             } else {
@@ -143,9 +182,9 @@ public class LoadNation {
 
         RankSaverLoader.loadRanks(nation, ranks, file);
 
-        for(Settlement settlement : settlements) {
-            if(settlement != null) {
-                settlement.setNation(nation);
+        for(Community community : communities) {
+            if(community != null) {
+                community.setNation(nation);
             }
         }
 

@@ -75,7 +75,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
         try {
             LoadUser.loadUsers();
-            LoadSettlement.loadSettlements();
+            LoadCommunity.loadCommunities();
             LoadNation.loadNations();
             LoadPlot.loadPlots();
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     public void onDisable() {
         SavePlot.savePlots();
         SaveNation.saveNations();
-        SaveSettlement.saveSettlements();
+        SaveCommunity.saveCommunities();
         SaveUser.saveUsers();
     }
 

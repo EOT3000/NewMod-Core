@@ -25,8 +25,9 @@ public class CompanyImpl extends AbstractLedPlayerGroup implements Company {
     }
 
     @Override
-    public void setName(String name) {
+    public boolean setName(String name) {
         this.name = name;
+        return true;
     }
 
     @Override

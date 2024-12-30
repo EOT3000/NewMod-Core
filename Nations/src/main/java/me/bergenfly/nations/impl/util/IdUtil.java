@@ -6,6 +6,10 @@ public class IdUtil {
         return "settlement_" + firstName.toLowerCase() + "_" + creationTime;
     }
 
+    public static String tribeId1(String firstName, long creationTime) {
+        return "settlement_" + firstName.toLowerCase() + "_" + creationTime;
+    }
+
     public static String nationId1(String firstName, long creationTime) {
         return "nation_" + firstName.toLowerCase() + "_" + creationTime;
     }
