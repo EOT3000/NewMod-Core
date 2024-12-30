@@ -139,8 +139,8 @@ public class CommandFlower {
         requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkNationNotExist));
         return this;
     }
-    public CommandFlower settlementDoesNotExist(int i) {
-        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkSettlementNotExist));
+    public CommandFlower communityDoesNotExist(int i) {
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCommunityNotExist));
         return this;
     }
 

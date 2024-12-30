@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.model;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.Company;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
@@ -19,24 +20,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
+public class SettlementImpl extends AbstractCommunity implements Settlement {
 
-    private static Registry<Settlement, String> SETTLEMENTS;
-
-    private final String firstName;
-    private final long creationTime;
-
-    private User leader;
-
-    private String name;
-
-    private Nation nation;
+    private static Registry<Community, String> COMMUNITIES;
 
     private Set<PlotSection> land = new HashSet<>();
-
-    private Set<User> invitations = new HashSet<>();
-
-    private final String id;
 
     private final Set<Company> charters = new HashSet<>();
 
@@ -44,64 +32,34 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    //TODO figure out what to do with constructor accessiblity
     public SettlementImpl(User leader, String name, String firstName, long creationTime) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
-        this.id = IdUtil.settlementId1(firstName, creationTime); //TODO: if firstName is null, will through NPE
+        super(leader, name, firstName, creationTime);
     }
 
-    //TODO figure out what to do with constructor accessiblity
     public SettlementImpl(User leader, String name, String firstName, long creationTime, String id) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
-        this.id = id;
+        super(leader, name, firstName, creationTime, id);
     }
 
     public static SettlementImpl tryCreate(String name, User leader) {
-        if(SETTLEMENTS == null) {
-            SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
+        if(COMMUNITIES == null) {
+            COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+        }
+
+        if(COMMUNITIES.get(name) != null) {
+            return null;
+        }
+
+        if(leader.getCommunity() != null) {
+            return null;
         }
 
         SettlementImpl s = new SettlementImpl(name, leader);
 
-        if(SETTLEMENTS.get(name) != null) {
-            return null;
-        }
+        COMMUNITIES.set(name, s);
 
-        if(leader.getSettlement() != null) {
-            return null;
-        }
-
-        SETTLEMENTS.set(name, s);
-
-        leader.setSettlement(s);
+        leader.setCommunity(s);
 
         return s;
-    }
-
-    @Override
-    public @NotNull String getId() {
-        return id;
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return name;
-    }
-
-    @Override
-    public User getLeader() {
-        return leader;
-    }
-
-    @Override
-    public void setLeader(User leader) {
-        this.leader = leader;
     }
 
     @Override
@@ -117,26 +75,6 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     @Override
     public void removeLand(PlotSection section) {
         land.add(section);
-    }
-
-    @Override
-    public Nation getNation() {
-        return nation;
-    }
-
-    @Override
-    public void setNation(Nation nation) {
-        this.nation = nation;
-
-        if(this.nation != null) {
-            this.nation.removeSettlement(this);
-        }
-
-        if(nation != null) {
-            nation.addSettlement(this);
-        }
-
-        this.nation = nation;
     }
 
     @Override
@@ -168,15 +106,6 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     }
 
     @Override
-    public void setName(String name) {
-        SETTLEMENTS.set(this.name, null);
-
-        this.name = name;
-
-        SETTLEMENTS.set(name, this);
-    }
-
-    @Override
     public PlotSection createEmptyPlotSection() {
         return new PermissiblePlotSectionImpl(this);
     }
@@ -185,30 +114,6 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     public boolean isUserAdmin(User user) {
         return leader.equals(user);
     }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public long getCreationTime() {
-        return creationTime;
-    }
-
-    @Override
-    public int priority() {
-        return 1;
-    }
-
-    @Override
-    public void addInvitation(User user) {
-        invitations.add(user);
-    }
-
-    @Override
-    public Set<User> getInvitations() {
-        return new HashSet<>(invitations);
-    }
-
 
     //CHARTERING
     @Override

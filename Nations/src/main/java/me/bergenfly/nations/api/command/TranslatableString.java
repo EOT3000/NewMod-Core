@@ -38,7 +38,7 @@ public class TranslatableString {
     //TODO reorganize translation keys- look at other projects
     private static void addTranslations() {
         translations.put("nations.command.error.settlement.is_capital", new TranslatableString("&cThe capital may not leave its nation"));
-        translations.put("nations.command.error.user.is_leader", new TranslatableString("&cThe leader may not leave their settlement"));
+        translations.put("nations.command.error.user.is_leader", new TranslatableString("&cThe leader may not leave their {1}"));
 
         translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
         translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to run that command"));
@@ -65,8 +65,8 @@ public class TranslatableString {
         translations.put("nations.command.error.settlement.not_invited", new TranslatableString("&cYour settlement has not been invited to join this nation"));
         translations.put("nations.command.error.user.not_invited", new TranslatableString("&cYou have not been invited to join this settlement"));
 
-        translations.put("nations.command.error.user.already_invited", new TranslatableString("&cThe user &4{1}&c has already been invited to the settlement"));
-        translations.put("nations.command.error.user.already_member", new TranslatableString("&cThe user &4{1}&c is already a member of the settlement"));
+        translations.put("nations.command.error.user.already_invited", new TranslatableString("&cThe user &4{1}&c has already been invited to the {2}"));
+        translations.put("nations.command.error.user.already_member", new TranslatableString("&cThe user &4{1}&c is already a member of the {2}"));
 
         translations.put("nations.command.error.player.not_argument", new TranslatableString("&4{2}&c is not a valid player (&7{1o} &cargument)"));
 
@@ -82,20 +82,20 @@ public class TranslatableString {
         translations.put("nations.command.error.plot.unsupported", new TranslatableString("&cThis plot does not support this"));
         translations.put("nations.command.error.plot.nfs", new TranslatableString("&cThis plot is not for sale"));
 
-        translations.put("nations.broadcast.created.settlement", new TranslatableString("&e{1} &ahas created the settlement of &e{2}"));
+        translations.put("nations.broadcast.created.community", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));
 
         translations.put("nations.broadcast.invite.settlement", new TranslatableString("&e{1} &ahas invited the settlement of &e{2} to the nation"));
         translations.put("nations.broadcast.invited.settlement", new TranslatableString("&e{1} &ahas invited your settlement to the nation of &e{2}"));
 
-        translations.put("nations.broadcast.invite.user", new TranslatableString("&e{1} &ahas invited &e{2} to the settlement"));
-        translations.put("nations.broadcast.invited.user", new TranslatableString("&e{1} &ahas invited you to the settlement of &e{2}"));
+        translations.put("nations.broadcast.invite.user", new TranslatableString("&e{1} &ahas invited &e{2} to the {3}"));
+        translations.put("nations.broadcast.invited.user", new TranslatableString("&e{1} &ahas invited you to the {3} of &e{2}"));
 
         translations.put("nations.broadcast.left.nation", new TranslatableString("&aThe settlement of &e{1} &ahas left your nation"));
         translations.put("nations.broadcast.joined.nation", new TranslatableString("&aThe settlement of &e{1} &ahas joined your nation"));
 
-        translations.put("nations.broadcast.left.settlement", new TranslatableString("&e{1} &ahas left your settlement"));
-        translations.put("nations.broadcast.joined.settlement", new TranslatableString("&e{1} &ahas joined your settlement"));
+        translations.put("nations.broadcast.left.community", new TranslatableString("&e{1} &ahas left your {2}"));
+        translations.put("nations.broadcast.joined.community", new TranslatableString("&e{1} &ahas joined your {2}"));
 
         translations.put("nations.general.failure", new TranslatableString("&cSomething went wrong"));
         translations.put("nations.general.success", new TranslatableString("&eSuccess"));

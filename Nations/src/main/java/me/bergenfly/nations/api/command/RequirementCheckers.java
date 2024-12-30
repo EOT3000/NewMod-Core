@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.permission.NationPermission;
@@ -23,7 +24,7 @@ public class RequirementCheckers {
     protected static final Pattern pattern = Pattern.compile("[^a-zA-Z\\d_]|__");
 
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
-    private static Registry<Settlement, String> SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
+    private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
 
     public static boolean checkNationNotExist(String[] args, int i, CommandSender sender) {
@@ -63,21 +64,21 @@ public class RequirementCheckers {
         return true;
     }
 
-    public static boolean checkSettlementNotExist(String[] args, int i, CommandSender sender) {
+    public static boolean checkCommunityNotExist(String[] args, int i, CommandSender sender) {
         Player player = (Player) sender;
 
         if(i == INVOKER_MEMBER) {
             User user = USERS.get(player.getUniqueId());
 
-            if(user.getSettlement() != null) {
-                sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_member"));
+            if(user.getCommunity() != null) {
+                sender.sendMessage(TranslatableString.translate("nations.command.error.community.is_member"));
                 return false;
             }
         } else if(i == INVOKER_LEADER) {
             User user = USERS.get(player.getUniqueId());
 
-            if(user.getSettlement() != null && user.getSettlement().getLeader() == user) {
-                sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_leader"));
+            if(user.getCommunity() != null && user.getCommunity().getLeader() == user) {
+                sender.sendMessage(TranslatableString.translate("nations.command.error.user.is_leader", word(user.getCommunity())));
                 return false;
             }
         }  else if(i == CURRENT_LOCATION) {
@@ -89,10 +90,10 @@ public class RequirementCheckers {
                 return false;
             }
 
-            Settlement settlement = SETTLEMENTS.get(args[i]);
+            Community community = COMMUNITIES.get(args[i]);
 
-            if(settlement != null) {
-                sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_argument", settlement.getName()));
+            if(community != null) {
+                sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.is_argument", community.getName()));
                 return false;
             }
         }
@@ -150,5 +151,9 @@ public class RequirementCheckers {
 
     public interface RequirementChecker {
         boolean test(String[] args, int i, CommandSender sender);
+    }
+
+    public static String word(Community c) {
+        return c.isSettlement() ? "settlement" : "tribe";
     }
 }

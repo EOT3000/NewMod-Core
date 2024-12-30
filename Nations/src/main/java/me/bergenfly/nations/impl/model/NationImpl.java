@@ -42,16 +42,7 @@ public class NationImpl implements Nation, DeletionSubscriber {
     private final Set<Company> charters = new HashSet<>();
 
     private NationImpl(String name, User leader) {
-        this(leader, name, name, System.currentTimeMillis());
-    }
-
-    private NationImpl(User leader, String name, String firstName, long creationTime) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
-        this.capital = leader.getSettlement();
-        this.id = IdUtil.nationId1(firstName, creationTime);
+        this(leader, name, name, System.currentTimeMillis(), (Settlement) leader.getCommunity());
     }
 
     public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital) {
@@ -77,19 +68,19 @@ public class NationImpl implements Nation, DeletionSubscriber {
             NATIONS = NationsPlugin.getInstance().nationsRegistry();
         }
 
+        if(!(leader.getCommunity() instanceof Settlement)) {
+            return null;
+        }
+
         NationImpl s = new NationImpl(name, leader);
 
         if(NATIONS.get(name) != null) {
             return null;
         }
 
-        if(leader.getSettlement() == null) {
-            return null;
-        }
-
         NATIONS.set(name, s);
 
-        leader.getSettlement().setNation(s);
+        leader.getCommunity().setNation(s);
 
         return s;
     }
@@ -272,8 +263,22 @@ public class NationImpl implements Nation, DeletionSubscriber {
     }
 
     @Override
-    public void setName(String name) {
+    public boolean setName(String name) {
+        if(NATIONS == null) {
+            NATIONS = NationsPlugin.getInstance().nationsRegistry();
+        }
+
+        if(NATIONS.get(name) != null) {
+            return false;
+        }
+
+        NATIONS.set(this.name, null);
+
         this.name = name;
+
+        NATIONS.set(name, this);
+
+        return true;
     }
 
     @Override
