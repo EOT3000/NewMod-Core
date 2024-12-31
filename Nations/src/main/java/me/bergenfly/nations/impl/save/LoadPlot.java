@@ -35,6 +35,8 @@ public class LoadPlot {
 
             ClaimedChunk chunk = new _1x1_Chunk(x, z, Plots.getWorld(world), landObject);
 
+            landObject.addLand(chunk.getAt(0,0));
+
             if(chunk.getAt(0,0) instanceof PermissiblePlotSection j) {
                 j.loadPermissions(section.getStringList("permissions"));
             }

@@ -22,7 +22,7 @@ public class CompanyCommand extends CommandRoot {
         addBranch("info", new CommandFlower()
                 .addCompany(0)
                 .player()
-                .commandAlwaysSuccess((a) -> a.communities()[0].sendInfo(a.invoker()))
+                .commandAlwaysSuccess((a) -> a.companies()[0].sendInfo(a.invoker()))
                 .make());
     }
 

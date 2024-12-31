@@ -384,10 +384,10 @@ public class CommandFlower {
                 valid = checker.right().test(strings, checker.leftInt(), sender);
             }
 
-            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, communities, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
+            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, communities, companies, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         }
     }
 
-    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, Community[] communities, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, NationPermission[] nationPermissions, int[] ints, float[] floats, boolean[] booleans) {}
+    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, Community[] communities, Company[] companies, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, NationPermission[] nationPermissions, int[] ints, float[] floats, boolean[] booleans) {}
 
 }

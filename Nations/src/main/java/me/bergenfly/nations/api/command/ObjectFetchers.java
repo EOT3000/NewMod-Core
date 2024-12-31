@@ -100,11 +100,11 @@ public class ObjectFetchers {
                     PlotSection ca = USERS.get(((Player) sender).getUniqueId()).currentlyAt();
 
                     if(ca.getAdministrator() instanceof Settlement) {
+                        r[i] = (Settlement) ca.getAdministrator();
+                    } else {
                         sender.sendMessage(translate("nations.command.error.settlement.not_in_territory"));
                         return new Settlement[0];
                     }
-
-                    r[i] = (Settlement) ca.getAdministrator();
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
                     Player player = (Player) sender;
 
