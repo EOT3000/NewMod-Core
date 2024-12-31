@@ -115,7 +115,12 @@ public class PlotCommand extends CommandRoot {
                     .command((a) -> {
                         PlotSection section = a.invokerUser().currentlyAt();
 
-                        a.invoker().sendMessage(ChatColor.GOLD + "---[ " + ChatColor.YELLOW + "Plot" + ChatColor.GOLD + " ] ---");
+                        if(section instanceof PermissiblePlotSection p && p.isClaimable()) {
+                            a.invoker().sendMessage(ChatColor.GOLD + "---[ " + ChatColor.YELLOW + "Plot" + ChatColor.DARK_GRAY + "[For Sale]" + ChatColor.GOLD + " ] ---");
+                        } else {
+                            a.invoker().sendMessage(ChatColor.GOLD + "---[ " + ChatColor.YELLOW + "Plot" + ChatColor.GOLD + " ] ---");
+                        }
+
                         a.invoker().sendMessage(ChatColor.DARK_AQUA + "Administrator: " + ChatColor.AQUA + section.getAdministrator().getFullName());
 
                         if(section instanceof PermissiblePlotSection) {

@@ -8,6 +8,7 @@ import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.community.SettlementCommand;
+import me.bergenfly.nations.impl.command.company.CompanyCommand;
 import me.bergenfly.nations.impl.command.nation.NationCommand;
 import me.bergenfly.nations.impl.command.plot.PlotCommand;
 import me.bergenfly.nations.impl.command.community.CommunityCommand;
@@ -94,6 +95,7 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         Bukkit.getPluginCommand("tribe").setExecutor(new TribeCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
         Bukkit.getPluginCommand("plot").setExecutor(new PlotCommand());
+        Bukkit.getPluginCommand("company").setExecutor(new CompanyCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new PlotListener(), this);

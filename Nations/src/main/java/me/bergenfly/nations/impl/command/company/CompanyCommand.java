@@ -18,6 +18,12 @@ public class CompanyCommand extends CommandRoot {
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.company", a.invoker().getName(), a.args()[0]))
                 .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
                 .make());
+
+        addBranch("info", new CommandFlower()
+                .addCompany(0)
+                .player()
+                .commandAlwaysSuccess((a) -> a.communities()[0].sendInfo(a.invoker()))
+                .make());
     }
 
     public CompanyCommand() {

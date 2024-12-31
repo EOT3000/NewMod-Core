@@ -79,9 +79,14 @@ public class SettlementImpl extends AbstractCommunity implements Settlement {
     }
 
     @Override
+    public String getFullName() {
+        return "Settlement " + name.replaceAll("_", " ");
+    }
+
+    @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
         user.sendMessage(ChatColor.DARK_AQUA + "Nation" + (nation == null ? "less" : ": " + ChatColor.AQUA + nation.getName()));
 

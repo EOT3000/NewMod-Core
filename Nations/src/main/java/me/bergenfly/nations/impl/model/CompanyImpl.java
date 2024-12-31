@@ -6,6 +6,7 @@ import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.util.IdUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +53,35 @@ public class CompanyImpl extends AbstractLedPlayerGroup implements Company {
     }
 
     @Override
-    public void sendInfo(CommandSender user) {
+    public String getFullName() {
+        return "Company " + name.replaceAll("_", " ");
+    }
 
+    @Override
+    public void sendInfo(CommandSender user) {
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
+
+        String members = "Leader " + leader.getName();
+
+        for(User member : getMembers()) {
+            if(!member.equals(leader)) {
+                members += (", " + member.getName());
+            }
+        }
+
+        String membersOnline = "Leader " + leader.getName();
+
+        for(User member : getOnlineMembers()) {
+            if(!member.equals(leader)) {
+                membersOnline += (", " + member.getName());
+            }
+        }
+
+        //TODO: for all player groups, include a count of members as well
+
+        user.sendMessage(ChatColor.DARK_AQUA + "Members: " + ChatColor.AQUA + members);
+        user.sendMessage(ChatColor.DARK_AQUA + "Online Members: " + ChatColor.AQUA + membersOnline);
     }
 
     @Override

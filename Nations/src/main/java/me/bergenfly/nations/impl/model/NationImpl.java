@@ -87,11 +87,16 @@ public class NationImpl implements Nation, DeletionSubscriber {
         return s;
     }
 
+    @Override
+    public String getFullName() {
+        return "Nation " + name.replaceAll("_", " ");
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
 
         StringBuilder settlements = new StringBuilder("Capital " + capital.getName());

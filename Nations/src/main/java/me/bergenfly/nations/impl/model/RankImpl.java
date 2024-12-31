@@ -76,7 +76,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
 
     @Override
     public String getFullName() {
-        return "Rank " + name + " of " + getNation().getName();
+        return "Rank " + name.replaceAll("_", " ") + " of " + getNation().getName();
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + (getLeader() == null ? ChatColor.GRAY + "None" : getLeader().getName()));
         user.sendMessage(ChatColor.DARK_AQUA + "Nation: " + ChatColor.AQUA + getNation().getName());
 

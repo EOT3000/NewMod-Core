@@ -49,9 +49,14 @@ public class TribeImpl extends AbstractCommunity implements Tribe {
     }
 
     @Override
+    public String getFullName() {
+        return "Tribe " + name.replaceAll("_", " ");
+    }
+
+    @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
         user.sendMessage(ChatColor.DARK_AQUA + "Nation" + (nation == null ? "less" : ": " + ChatColor.AQUA + nation.getName()));
 
