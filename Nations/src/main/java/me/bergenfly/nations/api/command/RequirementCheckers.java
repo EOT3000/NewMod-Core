@@ -165,7 +165,18 @@ public class RequirementCheckers {
 
         Nation n = user.getNation();
 
-        return n != null && (n.getLeader() == user || n.hasPermission(user, permission));
+        if(n == null) {
+            user.sendMessage(TranslatableString.translate("nations.command.error.nation.not_member"));
+            return false;
+        }
+
+        if(n.hasPermission(user, permission)) {
+            return true;
+        }
+
+        user.sendMessage(TranslatableString.translate("nations.general.no_permission"));
+
+        return false;
     }
 
     public interface RequirementChecker {

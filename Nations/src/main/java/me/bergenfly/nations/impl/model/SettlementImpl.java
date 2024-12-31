@@ -70,12 +70,12 @@ public class SettlementImpl extends AbstractCommunity implements Settlement {
 
     @Override
     public void addLand(PlotSection section) {
-        land.remove(section);
+        land.add(section);
     }
 
     @Override
     public void removeLand(PlotSection section) {
-        land.add(section);
+        land.remove(section);
     }
 
     @Override

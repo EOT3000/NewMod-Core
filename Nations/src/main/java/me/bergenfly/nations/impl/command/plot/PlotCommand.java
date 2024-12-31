@@ -110,10 +110,13 @@ public class PlotCommand extends CommandRoot {
 
         {
             addBranch("info", new CommandFlower()
-                    .addNation(CommandFlower.CURRENT_LOCATION)
                     .player()
                     .command((a) -> {
                         PlotSection section = a.invokerUser().currentlyAt();
+
+                        if(section == null) {
+                            a.invoker().sendMessage("PlotCommand: must be in territory");
+                        }
 
                         if(section instanceof PermissiblePlotSection p && p.isClaimable()) {
                             a.invoker().sendMessage(ChatColor.GOLD + "---[ " + ChatColor.YELLOW + "Plot" + ChatColor.DARK_GRAY + "[For Sale]" + ChatColor.GOLD + " ] ---");

@@ -250,7 +250,7 @@ public class NationImpl implements Nation, DeletionSubscriber {
             }
         }
 
-        return false;
+        return leader == user;
     }
 
     @Override

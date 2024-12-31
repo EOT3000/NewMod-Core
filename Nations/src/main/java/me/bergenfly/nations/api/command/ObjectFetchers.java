@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.*;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
@@ -96,12 +97,14 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if (list.getInt(i) == CURRENT_LOCATION) {
-                    r[i] = null; //TODO
+                    PlotSection ca = USERS.get(((Player) sender).getUniqueId()).currentlyAt();
 
-                    if(r[i] == null) {
+                    if(ca.getAdministrator() instanceof Settlement) {
                         sender.sendMessage(translate("nations.command.error.settlement.not_in_territory"));
                         return new Settlement[0];
                     }
+
+                    r[i] = (Settlement) ca.getAdministrator();
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
                     Player player = (Player) sender;
 
