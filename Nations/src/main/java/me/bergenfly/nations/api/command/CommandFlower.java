@@ -7,10 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.Community;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
@@ -58,12 +55,14 @@ public class CommandFlower {
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
     private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+    private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
 
     private Predicate<NationsCommandInvocation> command;
 
     private final IntArrayList nations = new IntArrayList();
     private final IntArrayList settlements = new IntArrayList();
     private final IntArrayList communities = new IntArrayList();
+    private final IntArrayList companies = new IntArrayList();
     private final IntArrayList users = new IntArrayList();
     private final IntArrayList permissionHolders = new IntArrayList();
     private final IntArrayList plotPermissions = new IntArrayList();
@@ -102,6 +101,11 @@ public class CommandFlower {
         tabCompleters.put(i, (a) -> COMMUNITIES.list().stream().map(Community::getName).toList());
         return this;
     }
+    public CommandFlower addCompany(int i) {
+        companies.add(i);
+        tabCompleters.put(i, (a) -> COMPANIES.list().stream().map(Company::getName).toList());
+        return this;
+    }
     public CommandFlower addUser(int i) {
         users.add(i);
         tabCompleters.put(i, (a) -> USERS.list().stream().map(User::getName).toList());
@@ -137,6 +141,10 @@ public class CommandFlower {
 
     public CommandFlower nationDoesNotExist(int i) {
         requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkNationNotExist));
+        return this;
+    }
+    public CommandFlower companyDoesNotExist(int i) {
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCompanyNotExist));
         return this;
     }
     public CommandFlower communityDoesNotExist(int i) {
@@ -218,7 +226,7 @@ public class CommandFlower {
     }
 
     public CommandFlower make() {
-        maker = new NationsCommandInvocationMaker(nations, settlements, communities, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
+        maker = new NationsCommandInvocationMaker(nations, settlements, communities, companies, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         return this;
     }
 
@@ -263,6 +271,7 @@ public class CommandFlower {
         private BiFunction<CommandSender, String[], Nation[]> nations = (a, b) -> null;
         private BiFunction<CommandSender, String[], Settlement[]> settlements = (a, b) -> null;
         private BiFunction<CommandSender, String[], Community[]> communities = (a, b) -> null;
+        private BiFunction<CommandSender, String[], Company[]> companies = (a, b) -> null;
         private BiFunction<CommandSender, String[], User[]> users = (a, b) -> null;
         private BiFunction<CommandSender, String[], LandPermissionHolder[]> permissionHolders = (a, b) -> null;
         private BiFunction<CommandSender, String[], PlotPermission[]> plotPermissions = (a, b) -> null;
@@ -271,7 +280,8 @@ public class CommandFlower {
         private BiFunction<CommandSender, String[], float[]> floats = (a, b) -> null;
         private BiFunction<CommandSender, String[], boolean[]> booleans = (a, b) -> null;
 
-        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList communities_, IntArrayList users_, IntArrayList permissionHolders_,
+        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList communities_, IntArrayList companies_,
+                                              IntArrayList users_, IntArrayList permissionHolders_,
                                               IntArrayList plotPermissions_, IntArrayList nationPermissions_,
                                               IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
@@ -284,6 +294,10 @@ public class CommandFlower {
 
             if(!communities_.isEmpty()) {
                 communities = ObjectFetchers.createCommunityFetcher(communities_);
+            }
+
+            if(!companies_.isEmpty()) {
+                companies = ObjectFetchers.createCompanyFetcher(communities_);
             }
 
             if(!users_.isEmpty()) {
@@ -327,6 +341,7 @@ public class CommandFlower {
             Nation[] nations = this.nations.apply(player, strings);
             Settlement[] settlements = this.settlements.apply(player, strings);
             Community[] communities = this.communities.apply(player, strings);
+            Company[] companies = this.companies.apply(player, strings);
             User[] users = this.users.apply(player, strings);
             LandPermissionHolder[] permissionHolders = this.permissionHolders.apply(player, strings);
             PlotPermission[] plotPermissions = this.plotPermissions.apply(player, strings);
@@ -339,6 +354,10 @@ public class CommandFlower {
             if (nations != null && nations.length == 0) {
                 valid = false;
             } else if (settlements != null && settlements.length == 0) {
+                valid = false;
+            } else if (communities != null && communities.length == 0) {
+                valid = false;
+            }  else if (companies != null && companies.length == 0) {
                 valid = false;
             } else if (users != null && users.length == 0) {
                 valid = false;

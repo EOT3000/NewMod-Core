@@ -37,6 +37,24 @@ public class TranslatableString {
 
     //TODO reorganize translation keys- look at other projects
     private static void addTranslations() {
+        /*
+            public static final int VALID;
+    public static final int INVALID_TYPE;
+    public static final int INVALID_NATION;
+    public static final int NONE_MATCH_SPECIFIC;
+    public static final int NONE_MATCH_GENERAL;
+    public static final int MULTIPLE_MATCH;
+    public static final int TOO_MANY_PARAMETERS;
+        */
+
+        translations.put("nations.command.error.holder.invalid_type", new TranslatableString("&4{1} &cis not a valid type (run '/nation help types' for more information)"));
+        translations.put("nations.command.error.holder.invalid_nation", new TranslatableString("&4{1} &cis not a valid nation (run '/nation help types' for more information)"));
+        translations.put("nations.command.error.holder.none_match_specific", new TranslatableString("&cThere are no matches found for &4{1}&c. Check that all parameters are correct (run '/nation help types' for more information)"));
+        translations.put("nations.command.error.holder.none_match_general", new TranslatableString("&cThere are no players or organizations named&4{1}"));
+        translations.put("nations.command.error.holder.multiple_match", new TranslatableString("&cThere are multiple entities that match&4{1}&c. Use parameters to narrow the search down (run '/nation help types' for more information)"));
+        translations.put("nations.command.error.holder.too_many_parameters", new TranslatableString("&cThe parameters provided are malformed (run '/nation help types' for more information)"));
+
+
         translations.put("nations.command.error.settlement.is_capital", new TranslatableString("&cThe capital may not leave its nation"));
         translations.put("nations.command.error.user.is_leader", new TranslatableString("&cThe leader may not leave their {1}"));
 

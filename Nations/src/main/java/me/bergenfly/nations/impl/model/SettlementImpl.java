@@ -33,7 +33,7 @@ public class SettlementImpl extends AbstractCommunity implements Settlement {
     }
 
     public SettlementImpl(User leader, String name, String firstName, long creationTime) {
-        super(leader, name, firstName, creationTime);
+        super(leader, name, firstName, creationTime, IdUtil.settlementId1(firstName, creationTime));
     }
 
     public SettlementImpl(User leader, String name, String firstName, long creationTime, String id) {
@@ -58,6 +58,7 @@ public class SettlementImpl extends AbstractCommunity implements Settlement {
         COMMUNITIES.set(name, s);
 
         leader.setCommunity(s);
+        NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
 
         return s;
     }

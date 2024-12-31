@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl;
 
 import me.bergenfly.nations.api.NationsAPI;
 import me.bergenfly.nations.api.manager.NationsLandManager;
+import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -39,8 +40,10 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private Registry<Nation, String> NATIONS;
     private Registry<Community, String> COMMUNITIES;
     private Registry<User, UUID> USERS;
-    private Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS_NAME;
+    private Registry<Company, String> COMPANIES;
     private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
+
+    private NationsPermissionManager permissionManager;
 
     private NationsLandManager landManager;
 
@@ -69,9 +72,10 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
         this.COMMUNITIES = new StringRegistryImpl<>(Community.class);
         this.USERS = new RegistryImpl<>(User.class);
-        this.PERMISSION_HOLDERS_NAME = new RegistryImpl<>(null); //idk what to do with this null
+        this.COMPANIES = new RegistryImpl<>(Company.class);
         this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
+        this.permissionManager = new NationsPermissionManager();
 
         try {
             LoadUser.loadUsers();
@@ -119,8 +123,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
-    public Registry<Map<Class<?>, LandPermissionHolder>, String> permissionHoldersByNameRegistry() {
-        return PERMISSION_HOLDERS_NAME;
+    public Registry<Company, String> companiesRegistry() {
+        return COMPANIES;
     }
 
     @Override
@@ -131,6 +135,11 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     @Override
     public NationsLandManager landManager() {
         return landManager;
+    }
+
+    @Override
+    public NationsPermissionManager permissionManager() {
+        return permissionManager;
     }
 
     //Don't use this. Only internal code can use this

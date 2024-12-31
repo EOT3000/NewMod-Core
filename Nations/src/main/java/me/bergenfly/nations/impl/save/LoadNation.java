@@ -53,11 +53,11 @@ public class LoadNation {
 
             int count = 1;
 
-            while (api.nationsRegistry().get(name + "_" + Integer.toHexString(count)) != null) {
+            while (api.nationsRegistry().get(name + "_" + Integer.toHexString(count) + "______") != null) {
                 count++;
             }
 
-            name = name + "_" + Integer.toHexString(count);
+            name = name + "_" + Integer.toHexString(count) + "______";
 
             logError("Nation (" + name + ") in file " + file.getName() + " is invalid (recoverable), missing current name. Current name set to " + name);
         }
@@ -206,6 +206,7 @@ public class LoadNation {
             if(nation != null) {
                 api.nationsRegistry().set(nation.getName(), nation);
                 api.permissionHoldersByIdRegistry().set(nation.getId(), nation);
+                api.permissionManager().registerHolder(nation, null);
             }
         }
     }

@@ -30,6 +30,7 @@ public class LoadUser {
             User user = mapToUser(config, file);
 
             api.usersRegistry().set(user.getUniqueId(), user);
+            api.permissionManager().registerHolder(user, null);
         }
     }
 }

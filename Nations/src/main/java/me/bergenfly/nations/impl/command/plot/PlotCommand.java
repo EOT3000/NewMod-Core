@@ -1,16 +1,24 @@
 package me.bergenfly.nations.impl.command.plot;
 
-import me.bergenfly.nations.api.command.CommandFlower;
-import me.bergenfly.nations.api.command.CommandRoot;
-import me.bergenfly.nations.api.command.CommandStem;
-import me.bergenfly.nations.api.command.TranslatableString;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
+import me.bergenfly.nations.api.command.*;
+import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.api.permission.DefaultPlotPermission;
+import me.bergenfly.nations.api.permission.PlotPermission;
+import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
+import org.bukkit.ChatColor;
+
+import static me.bergenfly.nations.api.command.TranslatableString.translate;
+import static me.bergenfly.nations.api.manager.NationsPermissionManager.*;
 
 public class PlotCommand extends CommandRoot {
+
+    private static NationsPermissionManager PERMISSION_MANAGER = NationsPlugin.getInstance().permissionManager();
 
     public PlotCommand() {
         super("plot");
@@ -74,19 +82,63 @@ public class PlotCommand extends CommandRoot {
 
                             return true;
                         } else {
-                            LandPermissionHolder holder;
-                            PlotSection section = a.invokerUser().currentlyAt();
+                            IntObjectPair<LandPermissionHolder> m = PERMISSION_MANAGER.get(a.args()[0]);
 
-                            if (!checkFs(section, a)) return false;
+                            int c = m.keyInt();
 
-                            ((PermissiblePlotSection) section).setOwner(a.invokerUser());
+                            if(c == VALID) {
+                                PlotSection section = a.invokerUser().currentlyAt();
 
-                            return true;
+                                if (!checkFs(section, a)) return false;
+
+                                if(m.right().isLandManager(a.invokerUser())) {
+                                    ((PermissiblePlotSection) section).setOwner(m.right());
+                                    return true;
+                                }
+
+                                a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                            } else {
+                                ObjectFetchers.sendErrorMessage(c, a.invoker(), a.args()[0]);
+                            }
+
+                            return false;
                         }
                     })
                     .successMessage((a) -> TranslatableString.translate("nations.general.success"))
                     .make());
         } //claim
+
+        {
+            addBranch("info", new CommandFlower()
+                    .addNation(CommandFlower.CURRENT_LOCATION)
+                    .player()
+                    .command((a) -> {
+                        PlotSection section = a.invokerUser().currentlyAt();
+
+                        a.invoker().sendMessage(ChatColor.GOLD + "---[ " + ChatColor.YELLOW + "Plot" + ChatColor.GOLD + " ] ---");
+                        a.invoker().sendMessage(ChatColor.DARK_AQUA + "Administrator: " + ChatColor.AQUA + section.getAdministrator().getFullName());
+
+                        if(section instanceof PermissiblePlotSection) {
+                            a.invoker().sendMessage(ChatColor.DARK_AQUA + "Owner: " + ChatColor.AQUA + ((PermissiblePlotSection) section).getOwner().getFullName());
+                            a.invoker().sendMessage(ChatColor.DARK_GREEN + "Your allowed permissions: ");
+
+                            for(PlotPermission pp : DefaultPlotPermission.values()) {
+                                if(((PermissiblePlotSection) section).hasPermission(pp, a.invokerUser()))
+                                    a.invoker().sendMessage(ChatColor.GREEN + " - " + pp.getName());
+                            }
+
+                            a.invoker().sendMessage(ChatColor.DARK_RED + "Your disallowed permissions: ");
+
+                            for(PlotPermission pp : DefaultPlotPermission.values()) {
+                                if(!((PermissiblePlotSection) section).hasPermission(pp, a.invokerUser()))
+                                    a.invoker().sendMessage(ChatColor.RED + " - " + pp.getName());
+                            }
+                        }
+
+                        return true;
+                    })
+                    .make());
+        }
     }
 
     private static boolean checkPlotOwner(PlotSection section, CommandFlower.NationsCommandInvocation a) {

@@ -313,9 +313,9 @@ public class NationCommand extends CommandRoot {
 
         int cur = 0;
 
-        Map<LandAdministrator, TextComponent> map = new HashMap<>();
+        Map<Object, TextComponent> map = new HashMap<>();
 
-        map.put(user.getSettlement(), Component.text('#').color(TextColor.color(0x154000)));
+        map.put(user.getCommunity(), Component.text('#').color(TextColor.color(0x154000)));
         map.put(user.getNation(), Component.text('#').color(TextColor.color(0xccffb3)));
 
         for (int z = minZ; z < maxZ; z++) {

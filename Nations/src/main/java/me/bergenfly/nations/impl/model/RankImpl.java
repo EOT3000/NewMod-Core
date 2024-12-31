@@ -75,6 +75,11 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     }
 
     @Override
+    public String getFullName() {
+        return "Rank " + name + " of " + getNation().getName();
+    }
+
+    @Override
     public @NotNull String getId() {
         return id;
     }
@@ -86,7 +91,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
 
     @Override
     public boolean isLandManager(User user) {
-        return Rank.super.isLandManager(user);
+        return user.equals(leader);
     }
 
     @Override
@@ -152,6 +157,8 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     @Override
     public void delete() {
         this.deleted = true;
+
+        subscribers.stream().forEach((a) -> a.deleted(this));
     }
 
     @Override

@@ -19,6 +19,10 @@ public interface Named {
      */
     @NotNull String getName();
 
+    default String getFullName() {
+        return getName();
+    }
+
     default boolean setName(String name) {
         return false;
     }

@@ -80,6 +80,8 @@ public class NationImpl implements Nation, DeletionSubscriber {
 
         NATIONS.set(name, s);
 
+        NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
+
         leader.getCommunity().setNation(s);
 
         return s;
@@ -216,11 +218,15 @@ public class NationImpl implements Nation, DeletionSubscriber {
     @Override
     public void removeRank(Rank rank) {
         ranks.remove(rank.getName());
+
+        rank.delete();
     }
 
     @Override
     public void addRank(Rank rank) {
         ranks.put(rank.getName().toLowerCase(), rank);
+
+        NationsPlugin.getInstance().permissionManager().registerHolder(rank, null);
     }
 
     public boolean hasRankWithName(String name) {
@@ -263,20 +269,24 @@ public class NationImpl implements Nation, DeletionSubscriber {
     }
 
     @Override
-    public boolean setName(String name) {
+    public boolean setName(String newName) {
+        String oldName = this.name;
+
         if(NATIONS == null) {
             NATIONS = NationsPlugin.getInstance().nationsRegistry();
         }
 
-        if(NATIONS.get(name) != null) {
+        if(NATIONS.get(newName) != null) {
             return false;
         }
 
-        NATIONS.set(this.name, null);
+        NATIONS.set(oldName, null);
 
-        this.name = name;
+        this.name = newName;
 
-        NATIONS.set(name, this);
+        NATIONS.set(newName, this);
+
+        NationsPlugin.getInstance().permissionManager().registerHolder(this, oldName);
 
         return true;
     }

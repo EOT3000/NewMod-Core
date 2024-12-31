@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * An entity, typically a government, that can claim and administrate {@link me.bergenfly.nations.api.model.plot.PlotSection}s.
  */
-public interface LandAdministrator extends Named, LandPermissionHolder {
+public interface LandAdministrator extends Charterer, Named, LandPermissionHolder {
     /**
      * Gets all land that this administrator administrates. For nations, includes both nation and settlement land.
      *

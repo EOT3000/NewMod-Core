@@ -1,11 +1,10 @@
 package me.bergenfly.nations.api.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
+import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.Community;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.NationPermission;
@@ -16,12 +15,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiFunction;
 
+import static me.bergenfly.nations.api.manager.NationsPermissionManager.*;
+
+import static me.bergenfly.nations.api.command.TranslatableString.translate;
+
+
+//TODO: this should definitely not be static
 public class ObjectFetchers {
     private static final int CURRENT_LOCATION = CommandFlower.CURRENT_LOCATION;
     private static final int INVOKER_MEMBER = CommandFlower.INVOKER_MEMBER;
@@ -31,7 +33,9 @@ public class ObjectFetchers {
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
     private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
-    private static Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS = NationsPlugin.getInstance().permissionHoldersByNameRegistry();
+    private static NationsPermissionManager PERMISSION_MANAGER = NationsPlugin.getInstance().permissionManager();
+    private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
+
 
     public static BiFunction<CommandSender, String[], Nation[]> createNationFetcher(IntArrayList list) {
         int len = list.size();
@@ -44,7 +48,7 @@ public class ObjectFetchers {
                     r[i] = null; //TODO
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_in_territory"));
+                        sender.sendMessage(translate("nations.command.error.nation.not_in_territory"));
                         return new Nation[0];
                     }
                 } else if(list.getInt(i) == INVOKER_MEMBER) {
@@ -52,7 +56,7 @@ public class ObjectFetchers {
                     r[i] = USERS.get(player.getUniqueId()).getNation();
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_member"));
+                        sender.sendMessage(translate("nations.command.error.nation.not_member"));
                         return new Nation[0];
                     }
                 } else if(list.getInt(i) == INVOKER_LEADER) {
@@ -61,12 +65,12 @@ public class ObjectFetchers {
                     r[i] = user.getNation();
 
                     if(r[i] == null || r[i].getLeader() != user) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_leader"));
+                        sender.sendMessage(translate("nations.command.error.nation.not_leader"));
                         return new Nation[0];
                     }
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                         return new Nation[0];
                     }
@@ -74,7 +78,7 @@ public class ObjectFetchers {
                     r[i] = NATIONS.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.nation.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                        sender.sendMessage(translate("nations.command.error.nation.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                         return new Nation[0];
                     }
                 }
@@ -95,7 +99,7 @@ public class ObjectFetchers {
                     r[i] = null; //TODO
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_in_territory"));
+                        sender.sendMessage(translate("nations.command.error.settlement.not_in_territory"));
                         return new Settlement[0];
                     }
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
@@ -106,7 +110,7 @@ public class ObjectFetchers {
                     if(c instanceof Settlement s) {
                         r[i] = s;
                     } else {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_member"));
+                        sender.sendMessage(translate("nations.command.error.settlement.not_member"));
                         return new Settlement[0];
                     }
                 }  else if(list.getInt(i) == INVOKER_LEADER) {
@@ -118,12 +122,12 @@ public class ObjectFetchers {
                     if(c instanceof Settlement s && s.getLeader() == user) {
                         r[i] = s;
                     } else {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_leader"));
+                        sender.sendMessage(translate("nations.command.error.settlement.not_leader"));
                         return new Settlement[0];
                     }
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                         return new Settlement[0];
                     }
@@ -132,7 +136,7 @@ public class ObjectFetchers {
                     if(c instanceof Settlement s) {
                         r[i] = s;
                     } else {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.settlement.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                        sender.sendMessage(translate("nations.command.error.settlement.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                         return new Settlement[0];
                     }
                 }
@@ -153,7 +157,7 @@ public class ObjectFetchers {
                     r[i] = null; //TODO
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_in_territory"));
+                        sender.sendMessage(translate("nations.command.error.community.not_in_territory"));
                         return new Community[0];
                     }
                 } else if (list.getInt(i) == INVOKER_MEMBER) {
@@ -161,7 +165,7 @@ public class ObjectFetchers {
                     r[i] = USERS.get(player.getUniqueId()).getCommunity();
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_member"));
+                        sender.sendMessage(translate("nations.command.error.community.not_member"));
                         return new Community[0];
                     }
                 }  else if(list.getInt(i) == INVOKER_LEADER) {
@@ -170,19 +174,19 @@ public class ObjectFetchers {
                     r[i] = user.getCommunity();
 
                     if(r[i] == null || r[i].getLeader() != user) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_leader"));
+                        sender.sendMessage(translate("nations.command.error.community.not_leader"));
                         return new Community[0];
                     }
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                         return new Community[0];
                     }
                     r[i] = COMMUNITIES.get(strings[list.getInt(i)]);
 
                     if(r[i] == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.community.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                        sender.sendMessage(translate("nations.command.error.community.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                         return new Community[0];
                     }
                 }
@@ -191,6 +195,31 @@ public class ObjectFetchers {
             return r;
         };
     }
+
+    public static BiFunction<CommandSender, String[], Company[]> createCompanyFetcher(IntArrayList list) {
+        int len = list.size();
+
+        return (sender, strings) -> {
+            Company[] r = new Company[len];
+
+            for (int i = 0; i < len; i++) {
+                if (list.getInt(i) >= strings.length) {
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
+
+                    return new Company[0];
+                }
+                r[i] = COMPANIES.get(strings[list.getInt(i)]);
+
+                if (r[i] == null) {
+                    sender.sendMessage(translate("nations.command.error.company.not_argument", Integer.toString(i + 1), strings[list.getInt(i)]));
+                    return new Company[0];
+                }
+            }
+
+            return r;
+        };
+    }
+
 
     public static BiFunction<CommandSender, String[], User[]> createUserFetcher(IntArrayList list) {
         int len = list.size();
@@ -204,14 +233,14 @@ public class ObjectFetchers {
                     r[i] = USERS.get(player.getUniqueId());
                 } else {
                     if(list.getInt(i) >= strings.length) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                        sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                         return new User[0];
                     }
                     Player p = Bukkit.getPlayer(strings[list.getInt(i)]);
 
                     if(p == null) {
-                        sender.sendMessage(TranslatableString.translate("nations.command.error.user.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                        sender.sendMessage(translate("nations.command.error.user.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                         return new User[0];
                     }
 
@@ -231,23 +260,51 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if (list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new LandPermissionHolder[0];
                 }
 
-                Collection<LandPermissionHolder> m = PERMISSION_HOLDERS.get(strings[list.getInt(i)]).values();
+                IntObjectPair<LandPermissionHolder> m = PERMISSION_MANAGER.get(strings[list.getInt(i)]);
 
-                if (m.isEmpty()) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.general.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
-                    return new LandPermissionHolder[0];
+                int c = m.keyInt();
+
+                /*public static final int VALID;
+                public static final int INVALID_TYPE;
+                public static final int INVALID_NATION;
+                public static final int NONE_MATCH_SPECIFIC;
+                public static final int NONE_MATCH_GENERAL;
+                public static final int MULTIPLE_MATCH;
+                public static final int TOO_MANY_PARAMETERS;*/
+
+                if(c == VALID) {
+                    r[i] = m.right();
+                    continue;
+                } else {
+                    sendErrorMessage(c, sender, strings[list.getInt(i)]);
                 }
 
-                r[i] = m.iterator().next();
+                return new LandPermissionHolder[0];
             }
 
             return r;
         };
+    }
+
+    public static void sendErrorMessage(int c, CommandSender sender, String full) {
+        if(c == INVALID_TYPE) {
+            sender.sendMessage(translate("nations.command.error.holder.invalid_type", full.split(":")[0]));
+        } else if(c == INVALID_NATION) {
+            sender.sendMessage(translate("nations.command.error.holder.invalid_nation", full.split(":")[1]));
+        } else if(c == NONE_MATCH_SPECIFIC) {
+            sender.sendMessage(translate("nations.command.error.holder.none_match_specific", full));
+        } else if(c == NONE_MATCH_GENERAL) {
+            sender.sendMessage(translate("nations.command.error.holder.none_match_general", full));
+        } else if(c == MULTIPLE_MATCH) {
+            sender.sendMessage(translate("nations.command.error.holder.multiple_match", full));
+        } else if(c == TOO_MANY_PARAMETERS) {
+            sender.sendMessage(translate("nations.command.error.holder.none_match_specific"));
+        }
     }
 
     public static BiFunction<CommandSender, String[], PlotPermission[]> createPlotPermissionFetcher(IntArrayList list) {
@@ -258,7 +315,7 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if (list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new PlotPermission[0];
                 }
@@ -266,7 +323,7 @@ public class ObjectFetchers {
                 try {
                     r[i] = DefaultPlotPermission.valueOf(strings[list.getInt(i)].toUpperCase());
                 } catch(IllegalArgumentException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.plot_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(translate("nations.command.error.plot_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new PlotPermission[0];
                 }
             }
@@ -283,7 +340,7 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if (list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new NationPermission[0];
                 }
@@ -291,7 +348,7 @@ public class ObjectFetchers {
                 try {
                     r[i] = DefaultNationPermission.valueOf(strings[list.getInt(i)].toUpperCase());
                 } catch(IllegalArgumentException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.nation_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(translate("nations.command.error.nation_permission.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new NationPermission[0];
                 }
             }
@@ -308,14 +365,14 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new int[0];
                 }
                 try {
                     r[i] = (int) Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(translate("nations.command.error.number.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new int[0];
                 }
 
@@ -333,14 +390,14 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new float[0];
                 }
                 try {
                     r[i] = Float.parseFloat(strings[list.getInt(i)]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.number.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(translate("nations.command.error.number.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new float[0];
                 }
 
@@ -358,7 +415,7 @@ public class ObjectFetchers {
 
             for (int i = 0; i < len; i++) {
                 if(list.getInt(i) >= strings.length) {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+                    sender.sendMessage(translate("nations.command.error.arguments.lack"));
 
                     return new boolean[0];
                 }
@@ -368,7 +425,7 @@ public class ObjectFetchers {
                 } else if(strings[list.getInt(i)].equalsIgnoreCase("false")) {
                     r[i] = false;
                 } else {
-                    sender.sendMessage(TranslatableString.translate("nations.command.error.boolean.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
+                    sender.sendMessage(translate("nations.command.error.boolean.not_argument", Integer.toString(i+1), strings[list.getInt(i)]));
                     return new boolean[0];
                 }
             }

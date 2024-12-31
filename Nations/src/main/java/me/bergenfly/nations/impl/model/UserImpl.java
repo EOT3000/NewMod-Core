@@ -44,7 +44,10 @@ public class UserImpl implements User {
 
     @Override
     public void updateName() {
+        String oldName = this.name;
+
         this.name = getPlayer().getName();
+        api.permissionManager().registerHolder(this, oldName);
     }
 
     @Override

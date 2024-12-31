@@ -3,6 +3,7 @@ package me.bergenfly.nations.api.command;
 import it.unimi.dsi.fastutil.ints.IntList;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.Community;
+import me.bergenfly.nations.api.model.organization.Company;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.permission.NationPermission;
@@ -26,6 +27,7 @@ public class RequirementCheckers {
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
     private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+    private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
 
     public static boolean checkNationNotExist(String[] args, int i, CommandSender sender) {
         Player player = (Player) sender;
@@ -59,6 +61,23 @@ public class RequirementCheckers {
                 sender.sendMessage(TranslatableString.translate("nations.command.error.nation.is_argument", nation.getName()));
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    public static boolean checkCompanyNotExist(String[] args, int i, CommandSender sender) {
+        if (i >= args.length) {
+            sender.sendMessage(TranslatableString.translate("nations.command.error.arguments.lack"));
+
+            return false;
+        }
+
+        Company company = COMPANIES.get(args[i]);
+
+        if (company != null) {
+            sender.sendMessage(TranslatableString.translate("nations.command.error.company.is_argument", company.getName()));
+            return false;
         }
 
         return true;

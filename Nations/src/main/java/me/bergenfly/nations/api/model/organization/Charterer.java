@@ -1,6 +1,6 @@
 package me.bergenfly.nations.api.model.organization;
 
-public interface Charterer extends LandAdministrator {
+public interface Charterer {
 
     /**
      * Checks if the given company is chartered here. If yes, the company can own land in the area of this charterer.

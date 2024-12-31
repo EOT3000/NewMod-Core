@@ -63,11 +63,11 @@ public class LoadCommunity {
 
             int count = 1;
 
-            while (api.nationsRegistry().get(name + "_" + Integer.toHexString(count)) != null) {
+            while (api.communitiesRegistry().get(name + "_" + Integer.toHexString(count) + "______") != null) {
                 count++;
             }
 
-            name = name + "_" + Integer.toHexString(count);
+            name = name + "_" + Integer.toHexString(count) + "______";
 
             logError("Community in file " + file.getName() + " is invalid (recoverable), missing current name. Current name set to " + name);
         }
@@ -175,6 +175,10 @@ public class LoadCommunity {
 
             return settlement;
         } else if(type.equals("tribe")) {
+            if(id == null) {
+                id = IdUtil.tribeId1(firstName, creationTime);
+            }
+
             Tribe tribe = new TribeImpl(leader, name, firstName, creationTime, id);
 
             for (User user : members) {
@@ -244,6 +248,7 @@ public class LoadCommunity {
             if(community != null) {
                 api.communitiesRegistry().set(community.getName(), community);
                 api.permissionHoldersByIdRegistry().set(community.getId(), community);
+                api.permissionManager().registerHolder(community, null);
             }
         }
     }

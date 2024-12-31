@@ -29,15 +29,6 @@ public abstract class AbstractCommunity extends AbstractPlayerGroup implements C
     protected final String id;
 
     //TODO figure out what to do with constructor accessiblity
-    public AbstractCommunity(User leader, String name, String firstName, long creationTime) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
-        this.id = IdUtil.settlementId1(firstName, creationTime); //TODO: if firstName is null, will through NPE
-    }
-
-    //TODO figure out what to do with constructor accessiblity
     public AbstractCommunity(User leader, String name, String firstName, long creationTime, String id) {
         this.leader = leader;
         this.name = name;
@@ -87,20 +78,24 @@ public abstract class AbstractCommunity extends AbstractPlayerGroup implements C
     }
 
     @Override
-    public boolean setName(String name) {
+    public boolean setName(String newName) {
+        String oldName = this.name;
+
         if(COMMUNITIES == null) {
             COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
         }
 
-        if(COMMUNITIES.get(name) != null) {
+        if(COMMUNITIES.get(newName) != null) {
             return false;
         }
 
-        COMMUNITIES.set(this.name, null);
+        COMMUNITIES.set(oldName, null);
 
-        this.name = name;
+        this.name = newName;
 
-        COMMUNITIES.set(name, this);
+        COMMUNITIES.set(newName, this);
+
+        NationsPlugin.getInstance().permissionManager().registerHolder(this, oldName);
 
         return true;
     }
