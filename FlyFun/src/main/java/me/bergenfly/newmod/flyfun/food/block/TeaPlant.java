@@ -1,8 +1,8 @@
-package me.bergenfly.newmod.flyfun.plants.block;
+package me.bergenfly.newmod.flyfun.food.block;
 
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
-import me.bergenfly.newmod.flyfun.plants.PlantsTypes;
+import me.bergenfly.newmod.flyfun.food.PlantsTypes;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;

@@ -1,4 +1,4 @@
-package me.bergenfly.newmod.flyfun.plants.listener;
+package me.bergenfly.newmod.flyfun.food.listener;
 
 import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import me.bergenfly.newmod.core.api.NewModAPI;
@@ -6,9 +6,9 @@ import me.bergenfly.newmod.core.api.block.BlockManager;
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.core.api.blockstorage.BlockStorage;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
-import me.bergenfly.newmod.flyfun.plants.PlantsTypes;
-import me.bergenfly.newmod.flyfun.plants.block.Seedling;
-import me.bergenfly.newmod.flyfun.plants.block.TeaPlant;
+import me.bergenfly.newmod.flyfun.food.PlantsTypes;
+import me.bergenfly.newmod.flyfun.food.block.Seedling;
+import me.bergenfly.newmod.flyfun.food.block.TeaPlant;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

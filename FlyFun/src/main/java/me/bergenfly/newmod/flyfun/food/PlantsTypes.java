@@ -1,4 +1,4 @@
-package me.bergenfly.newmod.flyfun.plants;
+package me.bergenfly.newmod.flyfun.food;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BlockManager;
@@ -8,9 +8,9 @@ import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
-import me.bergenfly.newmod.flyfun.plants.block.Seedling;
-import me.bergenfly.newmod.flyfun.plants.block.TeaPlant;
-import me.bergenfly.newmod.flyfun.plants.block.TreeTap;
+import me.bergenfly.newmod.flyfun.food.block.Seedling;
+import me.bergenfly.newmod.flyfun.food.block.TeaPlant;
+import me.bergenfly.newmod.flyfun.food.block.TreeTap;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;

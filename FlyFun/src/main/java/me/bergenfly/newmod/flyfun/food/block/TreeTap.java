@@ -1,4 +1,4 @@
-package me.bergenfly.newmod.flyfun.plants.block;
+package me.bergenfly.newmod.flyfun.food.block;
 
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
