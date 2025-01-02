@@ -51,7 +51,7 @@ public class ShapelessRecipeMatcher {
     }
 
     private static boolean matches(RecipeChoice choice, ItemStack stack, ShapelessRecipe recipe) {
-        ModItem type = NewModPlugin.get().itemManager().getType(stack);
+        ModItem type = NewModPlugin.get().itemManager().getModType(stack);
 
         if(type == null) {
             return choice.test(stack);

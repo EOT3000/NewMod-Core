@@ -19,7 +19,7 @@ public class ModItemStackImpl implements ModItemStack {
     public static ModItemStackImpl makeOrNull(ItemStack stack) {
         ItemManager manager = NewModPlugin.get().itemManager();
 
-        if(manager.getType(stack) == null) {
+        if(manager.getModType(stack) == null) {
             return null;
         }
 
@@ -31,7 +31,7 @@ public class ModItemStackImpl implements ModItemStack {
 
         this.representation = representation;
 
-        this.type = manager.getType(representation);
+        this.type = manager.getModType(representation);
         this.data = manager.getData(representation);
         this.amount = representation.getAmount();
     }

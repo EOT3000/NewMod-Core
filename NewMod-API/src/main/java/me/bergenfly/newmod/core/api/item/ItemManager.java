@@ -25,7 +25,15 @@ public interface ItemManager {
      * @param stack the ItemStack to check.
      * @return the found ModItem, or null if none could be found.
      */
-    ModItem getType(ItemStack stack);
+    ModItem getModType(ItemStack stack);
+
+    /**
+     * Attempts to find this ItemStack's Item type, either vanilla or modded.
+     *
+     * @param stack the ItemStack to check.
+     * @return the found Item, or null of none could be found.
+     */
+    Item getType(ItemStack stack);
 
     /**
      * Attempts to find the ModItem of this NamespacedKey

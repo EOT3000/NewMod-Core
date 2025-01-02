@@ -43,7 +43,7 @@ public class VanillaFoods {
     public static final Food ENCHANTED_GOLDEN_APPLE = new Food(4, 9.6f, 2, 3, fromMaterial(Material.ENCHANTED_GOLDEN_APPLE));
 
     //COOKED PLANTS
-    public static final Food POPPED_CHORUS_FRUIT = new Food(1, 0.4f, 2, 3, fromMaterial(Material.POPPED_CHORUS_FRUIT));
+    public static final Food POPPED_CHORUS_FRUIT = new Food(1, 0.4f, 2, 4, fromMaterial(Material.POPPED_CHORUS_FRUIT));
     public static final Food BAKED_POTATO =     new Food(4, 5.0f, 2, 2, fromMaterial(Material.BAKED_POTATO));
     public static final Food DRIED_KELP =       new Food(1, 1.2f, 1, 0, fromMaterial(Material.DRIED_KELP));
 
@@ -103,6 +103,4 @@ public class VanillaFoods {
     public static final Food ROTTEN_FLESH =     new Food(2, 0.2f, 4, 2, fromMaterial(Material.ROTTEN_FLESH));
     public static final Food POISONOUS_POTATO = new Food(1, 0.4f, 2, 2, fromMaterial(Material.POISONOUS_POTATO));
     public static final Food PUFFERFISH =       new Food(1, 0.2f, 3, 3, fromMaterial(Material.PUFFERFISH));
-
-
 }

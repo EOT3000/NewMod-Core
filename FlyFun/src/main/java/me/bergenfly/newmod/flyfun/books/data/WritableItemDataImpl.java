@@ -56,7 +56,7 @@ public class WritableItemDataImpl extends ModItemData.AbstractModItemMeta implem
             String[] text = container.getOrDefault(TEXT, PersistentDataUtil.STRING_ARRAY, new String[1]);
             boolean signed = container.getOrDefault(SIGNED, PersistentDataType.BOOLEAN, false);
 
-            ModItem item = FlyFunPlugin.get().api.itemManager().getType(stack);
+            ModItem item = FlyFunPlugin.get().api.itemManager().getModType(stack);
 
             if(item == null) {
                 return null;

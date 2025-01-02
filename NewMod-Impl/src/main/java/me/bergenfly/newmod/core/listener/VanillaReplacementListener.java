@@ -99,7 +99,7 @@ public class VanillaReplacementListener implements Listener {
         if(result != null) {
             GearManager gm = NewModPlugin.get().gearManager();
             ItemManager im = NewModPlugin.get().itemManager();
-            DurabilityController controller = gm.getController(im.getType(result));
+            DurabilityController controller = gm.getController(im.getModType(result));
 
             if(controller != null) {
                 gm.setMaxDurability(result, controller.getMaxDurabilityForCraft(result));
@@ -139,7 +139,7 @@ public class VanillaReplacementListener implements Listener {
     }
 
     private void itc(Cancellable cancellable, ItemStack stack) {
-        ModItem type = NewModPlugin.get().itemManager().getType(stack);
+        ModItem type = NewModPlugin.get().itemManager().getModType(stack);
 
         if(type == null) {
             return;
@@ -149,7 +149,7 @@ public class VanillaReplacementListener implements Listener {
     }
 
     private void itc2(SmithingInventory inventory, ItemStack stack) {
-        ModItem type = NewModPlugin.get().itemManager().getType(stack);
+        ModItem type = NewModPlugin.get().itemManager().getModType(stack);
 
         if(type == null) {
             return;
@@ -197,7 +197,7 @@ public class VanillaReplacementListener implements Listener {
 
     @EventHandler
     public void onBrewStart(BrewingStartEvent event) {
-        ModItem type = NewModPlugin.get().itemManager().getType(event.getSource());
+        ModItem type = NewModPlugin.get().itemManager().getModType(event.getSource());
 
         if (type == null) {
             return;
