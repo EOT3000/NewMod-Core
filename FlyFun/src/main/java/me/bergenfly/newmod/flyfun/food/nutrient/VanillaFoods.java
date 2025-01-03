@@ -6,6 +6,10 @@ import static org.bukkit.Material.*;
 import static me.bergenfly.newmod.core.api.item.VanillaItem.fromMaterial;
 
 public class VanillaFoods {
+    public static void init() {
+
+    }
+
     //RAW MEAT
     public static final Food RAW_BEEF =         new Food(3, 1.8f, 5, 3, fromMaterial(BEEF));
     public static final Food RAW_PORK =         new Food(3, 1.8f, 5, 3, fromMaterial(PORKCHOP));
@@ -13,8 +17,8 @@ public class VanillaFoods {
     public static final Food RAW_MUTTON =       new Food(2, 1.2f, 5, 3, fromMaterial(MUTTON));
     public static final Food RAW_CHICKEN =      new Food(2, 1.2f, 5, 3, fromMaterial(CHICKEN));
 
-    public static final Food RAW_COD =          new Food(1, 0.4f, 4, 3, fromMaterial(COD)); //Salmon is replaced with modded item
-    public static final Food RAW_TROPICAL_FISH =new Food(1, 0.2f, 4, 3, fromMaterial(TROPICAL_FISH)); //Salmon is replaced with modded item
+    public static final Food RAW_COD =          new Food(1, 0.4f, 2, 3, fromMaterial(COD)); //Salmon is replaced with modded item
+    public static final Food RAW_TROPICAL_FISH =new Food(1, 0.2f, 2, 3, fromMaterial(TROPICAL_FISH)); //Salmon is replaced with modded item
 
     //COOKED MEAT
     public static final Food COOKED_BEEF =      new Food(7, 12.8f, 4, 2, fromMaterial(Material.COOKED_BEEF));
@@ -23,7 +27,7 @@ public class VanillaFoods {
     public static final Food COOKED_MUTTON =    new Food(6, 9.6f, 4, 2, fromMaterial(Material.COOKED_MUTTON));
     public static final Food COOKED_CHICKEN =   new Food(6, 7.2f, 4, 2, fromMaterial(Material.COOKED_CHICKEN));
 
-    public static final Food COOKED_COD =       new Food(5, 6.0f, 3, 2, fromMaterial(Material.COOKED_COD)); //Salmon is replaced with modded item
+    public static final Food COOKED_COD =       new Food(4, 4.2f, 2, 2, fromMaterial(Material.COOKED_COD)); //Salmon is replaced with modded item
 
     //VEGETABLES
     public static final Food POTATO =           new Food(1, 0.6f, 2, 3, fromMaterial(Material.POTATO));
@@ -102,5 +106,5 @@ public class VanillaFoods {
     public static final Food SPIDER_EYE =       new Food(2, 3.2f, 1, 2, fromMaterial(Material.SPIDER_EYE));
     public static final Food ROTTEN_FLESH =     new Food(2, 0.2f, 4, 2, fromMaterial(Material.ROTTEN_FLESH));
     public static final Food POISONOUS_POTATO = new Food(1, 0.4f, 2, 2, fromMaterial(Material.POISONOUS_POTATO));
-    public static final Food PUFFERFISH =       new Food(1, 0.2f, 3, 3, fromMaterial(Material.PUFFERFISH));
+    public static final Food PUFFERFISH =       new Food(1, 0.2f, 2, 4, fromMaterial(Material.PUFFERFISH));
 }

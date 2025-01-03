@@ -15,7 +15,9 @@ import me.bergenfly.newmod.flyfun.camera.Camera;
 import me.bergenfly.newmod.flyfun.camera.Textures;
 import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
 import me.bergenfly.newmod.flyfun.camera.model.AllSidesBlockModel;
-import me.bergenfly.newmod.flyfun.fortunefix.FortuneListener;
+import me.bergenfly.newmod.flyfun.food.FoodsTypes;
+import me.bergenfly.newmod.flyfun.food.listener.FoodListener;
+import me.bergenfly.newmod.flyfun.food.nutrient.VanillaFoods;
 import me.bergenfly.newmod.flyfun.history.HistoryListener;
 import me.bergenfly.newmod.flyfun.horn.HornListener;
 import me.bergenfly.newmod.flyfun.magic.MagicTypes;
@@ -81,6 +83,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         MetalsTypes.init();
         PlantsTypes.init();
+        FoodsTypes.init();
         BooksTypes.init();
         BasicToolsTypes.init();
         MagicTypes.init();
@@ -89,25 +92,28 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemDataImpl.class);
 
         Bukkit.getPluginManager().registerEvents(new PlantsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FoodListener(), this);
         Bukkit.getPluginManager().registerEvents(new BooksListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
-        Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
         Bukkit.getPluginManager().registerEvents(new TreeBarkListener(), this);
 
+        VanillaFoods.init();
+
         System.out.println(new File("").getAbsolutePath());
-        System.out.println(textureDir.getAbsolutePath());
+        //System.out.println(textureDir.getAbsolutePath());
 
         getLogger().info("Loading textures");
-        Textures.me.loadTextures(textureDir);
+        //Textures.me.loadTextures(textureDir);
 
         getLogger().info("Loading models");
-        Textures.me.loadModels(modelDir);
+        //Textures.me.loadModels(modelDir);
 
         getLogger().info("Loading block states");
-        Textures.me.loadBlockStates(blockStatesDir);
+        //Textures.me.loadBlockStates(blockStatesDir);
     }
 
     @Override

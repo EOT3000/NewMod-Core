@@ -101,4 +101,6 @@ public interface ItemManager {
      * @return true if successful, false if it fails, such as if the data type does not match the stack.
      */
     boolean applyData(ItemStack stack, ModItemData data);
+
+    void setType(ItemStack stack, NamespacedKey key);
 }

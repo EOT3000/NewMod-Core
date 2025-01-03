@@ -9,14 +9,16 @@ import me.bergenfly.newmod.core.api.blockstorage.BlockStorage;
 import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import me.bergenfly.newmod.flyfun.food.nutrient.Food;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.persistence.PersistentDataType;
 
 public class FoodListener implements Listener {
@@ -34,6 +36,69 @@ public class FoodListener implements Listener {
 
         if(stack != null) {
             event.getItem().setItemStack(stack);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        System.out.println(event.getPlayer());
+
+        for(int i = 0; i < event.getInventory().getSize(); i++) {
+            ItemStack old = event.getInventory().getItem(i);
+
+            if(old == null) {
+                continue;
+            }
+
+            ItemStack stack = tryFixFood(old);
+
+            if (stack != null) {
+                event.getInventory().setItem(i, stack);
+            }
+        }
+
+        for(int i = 0; i < event.getView().getBottomInventory().getSize(); i++) {
+            ItemStack old = event.getView().getBottomInventory().getItem(i);
+
+            if(old == null) {
+                continue;
+            }
+
+            ItemStack stack = tryFixFood(old);
+
+            if (stack != null) {
+                event.getView().getBottomInventory().setItem(i, stack);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSwapHand(PlayerSwapHandItemsEvent event) {
+        ItemStack oldMain = event.getMainHandItem();
+
+        ItemStack stackMain = tryFixFood(oldMain);
+
+        if (stackMain != null) {
+            event.setMainHandItem(stackMain);
+        }
+
+        ItemStack oldOff = event.getOffHandItem();
+
+        ItemStack stackOff = tryFixFood(oldOff);
+
+        if (stackOff != null) {
+            event.setOffHandItem(stackOff);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onChangeHand(PlayerItemHeldEvent event) {
+        ItemStack old = event.getPlayer().getInventory().getItemInMainHand();
+
+        ItemStack stackMain = tryFixFood(old);
+
+        if (stackMain != null) {
+            event.getPlayer().getInventory().setItemInMainHand(stackMain);
         }
     }
 

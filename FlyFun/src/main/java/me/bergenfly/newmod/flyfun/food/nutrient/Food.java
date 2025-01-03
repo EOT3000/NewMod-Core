@@ -24,6 +24,10 @@ public class Food {
         this.size = size;
         this.toughness = toughness;
 
+        if(this instanceof ModFood) {
+            item = (ModFood) this;
+        }
+
         foods.put(item, this);
 
         this.item = item;
@@ -46,6 +50,10 @@ public class Food {
     }
 
     public float consumeTimeSeconds() {
+        return (float) (Math.round((((toughness+size)/10.0+toughness*size/10.0)+.3)*5)/5.0);
+    }
+
+    public static float calculateConsumeTimeSeconds(int toughness, int size) {
         return (float) (Math.round((((toughness+size)/10.0+toughness*size/10.0)+.3)*5)/5.0);
     }
 

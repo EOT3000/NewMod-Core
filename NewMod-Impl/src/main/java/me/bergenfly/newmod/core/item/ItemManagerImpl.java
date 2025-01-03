@@ -199,4 +199,13 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
         stack.setDamage((int) Math.ceil(damage * ratio));
     }
+
+    @Override
+    public void setType(ItemStack stack, NamespacedKey key) {
+        ItemMeta meta = stack.getItemMeta();
+
+        meta.getPersistentDataContainer().set(ItemManagerImpl.ID, PersistentDataUtil.NAMESPACED_KEY, key);
+
+        stack.setItemMeta(meta);
+    }
 }
