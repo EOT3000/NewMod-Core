@@ -15,6 +15,7 @@ import me.bergenfly.newmod.flyfun.camera.Camera;
 import me.bergenfly.newmod.flyfun.camera.Textures;
 import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
 import me.bergenfly.newmod.flyfun.camera.model.AllSidesBlockModel;
+import me.bergenfly.newmod.flyfun.food.AnimalsTypes;
 import me.bergenfly.newmod.flyfun.food.FoodsTypes;
 import me.bergenfly.newmod.flyfun.food.listener.FoodListener;
 import me.bergenfly.newmod.flyfun.food.nutrient.VanillaFoods;
@@ -83,6 +84,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         MetalsTypes.init();
         PlantsTypes.init();
+        AnimalsTypes.init();
         FoodsTypes.init();
         BooksTypes.init();
         BasicToolsTypes.init();

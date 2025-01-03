@@ -57,6 +57,7 @@ public class PlantsTypes {
 
     public static final ModItem TEA_SEEDS = item.createBuilder(Material.BEETROOT_SEEDS, plugin, "tea_seeds").block(TEA_SEEDLING).displayName("Tea Seeds", 0xced98f).category(PLANTS).build();
 
+
     private static class VanillaSeedlingConsumer implements Consumer<Block> {
         private final Material set;
 

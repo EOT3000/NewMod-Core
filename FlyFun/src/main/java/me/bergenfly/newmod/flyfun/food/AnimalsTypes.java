@@ -11,13 +11,31 @@ import me.bergenfly.newmod.flyfun.food.nutrient.ModFoodBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapelessRecipe;
 
 public class AnimalsTypes {
     public static void init() {
+        ItemStack rabbitChunks = RABBIT_CHUNKS.create();
 
+        rabbitChunks.setAmount(2);
+
+        Bukkit.addRecipe(new ShapelessRecipe(RABBIT_CHUNKS.getId(), rabbitChunks).addIngredient(Material.COOKED_RABBIT));
+
+        Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(plugin, "rabbit_stew_from_red_mushroom"), new ItemStack(Material.RABBIT_STEW))
+                .addIngredient(RABBIT_CHUNKS.create())
+                .addIngredient(Material.RED_MUSHROOM)
+                .addIngredient(Material.BAKED_POTATO)
+                .addIngredient(Material.CARROT));
+
+        Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(plugin, "rabbit_stew_from_brown_mushroom"), new ItemStack(Material.RABBIT_STEW))
+                .addIngredient(RABBIT_CHUNKS.create())
+                .addIngredient(Material.BROWN_MUSHROOM)
+                .addIngredient(Material.BAKED_POTATO)
+                .addIngredient(Material.CARROT));
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
@@ -48,5 +66,8 @@ public class AnimalsTypes {
 
     public static final ModItem COOKED_GOAT = new ModFoodBuilder(Material.COOKED_MUTTON, plugin, "cooked_goat").displayName("Cooked Goat", 0x7F654B).category(ANIMALS)
             .food(5, 8.2f, 4, 2).build();
+
+    public static final ModItem RABBIT_CHUNKS = new ModFoodBuilder(Material.BEETROOT_SEEDS, plugin, "cooked_rabbit_chunks").displayName("Cooked Rabbit Chunks", 0x7F654B).category(ANIMALS)
+            .food(3, 3.0f, 2, 1).build();
 
 }
