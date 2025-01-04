@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.flyfun.camera.model;
 
+import me.bergenfly.newmod.core.util.ColorUtil;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -21,5 +22,10 @@ public class AllSidesBlockModel implements BlockModel {
             System.out.println("b" + brightness);
         }
         return this.data.storedColor()[brightness*256+x*16+y];
+    }
+
+    @Override
+    public int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+        return ColorUtil.dim(this.data.rawColor()[x*16+y], (brightness+1)/16.0);
     }
 }

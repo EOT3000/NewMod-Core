@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.flyfun.camera.model;
 
+import me.bergenfly.newmod.core.util.ColorUtil;
 import me.bergenfly.newmod.flyfun.camera.Textures;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
 import org.bukkit.block.BlockFace;
@@ -39,5 +40,25 @@ public class SixSidedBlockModel implements BlockModel {
         }
 
         return use.storedColor()[brightness * 256 + x * 16 + y];
+    }
+
+
+    @Override
+    public int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+        TextureData16x16 use;
+
+        switch (face) {
+            case NORTH: use = north; break;
+            case EAST: use = east; break;
+            case SOUTH: use = south; break;
+            case WEST: use = west; break;
+            case UP: use = up; break;
+            case DOWN: use = down; break;
+
+            default:
+                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
+        }
+
+        return ColorUtil.dim(use.rawColor()[x*16+y], (brightness+1)/16.0);
     }
 }

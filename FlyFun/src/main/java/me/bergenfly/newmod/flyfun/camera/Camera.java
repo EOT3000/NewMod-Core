@@ -5,7 +5,9 @@ import it.unimi.dsi.fastutil.ints.IntIntPair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
+import me.bergenfly.newmod.core.util.ColorUtil;
 import me.bergenfly.newmod.core.util.GeometryUtil;
+import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
 import me.bergenfly.newmod.flyfun.camera.texture.GetImagePixel;
 import org.bukkit.Bukkit;
@@ -39,8 +41,10 @@ public class Camera {
 
     private static AtomicInteger number = new AtomicInteger();
 
-    public static void loadFile(File file) {
+    public static void loadFile(File file, Player player) {
         Int2ObjectArrayMap<BlockData> palette = new Int2ObjectArrayMap<>();
+
+        int[][] colors = new int[256][256];
 
         try {
             Scanner scanner = new Scanner(file);
@@ -48,7 +52,7 @@ public class Camera {
             long time = Long.parseLong(scanner.next());
             int count = Integer.parseInt(scanner.next());
 
-            for(int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 String line = scanner.nextLine();
 
                 String[] spl = line.split(":");
@@ -56,22 +60,65 @@ public class Camera {
                 palette.put(Integer.parseInt(spl[0]), Bukkit.createBlockData(spl[1]));
             }
 
+            int c = 0;
+
             while (scanner.hasNext()) {
+                int xM = (int) (c/256.0);
+                int yM = c-xM*256;
+
+                c++;
+
                 String line = scanner.nextLine();
 
-                String[] spl = line.split(":");
+                if(!line.equalsIgnoreCase("null")) {
+                    String[] spl = line.split(":");
 
-                BlockData blockData = palette.get(Integer.parseInt(spl[0]));
-                double x = Integer.parseInt(spl[1])/1000.0;
-                double y = Integer.parseInt(spl[2])/1000.0;
-                double z = Integer.parseInt(spl[3])/1000.0;
-                BlockFace face = BlockFace.values()[Integer.parseInt(spl[4])];
-                int blockB = Integer.parseInt(spl[5]);
-                int skyB = Integer.parseInt(spl[6]);
-                int totB = Integer.parseInt(spl[7]);
+                    BlockData blockData = palette.get(Integer.parseInt(spl[0]));
+                    double x = Integer.parseInt(spl[1]) / 1000.0;
+                    double y = Integer.parseInt(spl[2]) / 1000.0;
+                    double z = Integer.parseInt(spl[3]) / 1000.0;
+                    int faceInt = Integer.parseInt(spl[4]);
+                    BlockFace face = BlockFace.values()[faceInt];
+                    int blockB = Integer.parseInt(spl[5]);
+                    int skyB = Integer.parseInt(spl[6]);
+                    int totB = Integer.parseInt(spl[7]);
+
+                    BlockStates.BlockState state = Textures.me.getStates(blockData.getMaterial()).getState(blockData);
+
+                    Vector adjusted = GetImagePixel.transform(state.x(), state.y(), new Vector(x,y,z)
+                            .subtract(new Vector(0.5, 0.5, 0.5)), false).add(new Vector(0.5, 0.5, 0.5));
+
+                    BlockFace adjustedFace = GetImagePixel.getFace(face, state.x(), state.y(), false);
+
+                    IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted, false);
+
+                    int color = state.model().getColor(pair.firstInt(), pair.secondInt(), adjustedFace,
+                            null, totB);
+                    colors[xM][yM] = color;
+                }
+            }
+
+            byte[][] data = new byte[128][128];
+
+            for(int x = 0; x < 128; x++) {
+                for(int y = 0; y < 128; y++) {
+                    double[] Lab1 = ColorUtil.rgbToOklab(colors[x+0][y+0]);
+                    double[] Lab2 = ColorUtil.rgbToOklab(colors[x+1][y+0]);
+                    double[] Lab3 = ColorUtil.rgbToOklab(colors[x+0][y+1]);
+                    double[] Lab4 = ColorUtil.rgbToOklab(colors[x+1][y+1]);
+
+                    byte close = ColorUtil.findClosestColor(
+                            (Lab1[0]+Lab2[0]+Lab3[0]+Lab4[0])/4.0,
+                            (Lab1[1]+Lab2[1]+Lab3[1]+Lab4[1])/4.0,
+                            (Lab1[2]+Lab2[2]+Lab3[2]+Lab4[2])/4.0
+                    );
+
+                    data[x][y] = close;
+                    FlyFunPlugin.get().giveToPlayer(data, player);
+                }
             }
         } catch (Exception e) {
-            //
+            e.printStackTrace();
         }
     }
 
@@ -90,7 +137,7 @@ public class Camera {
             for(ResultMoreData resultM : results) {
                 RayTraceResult result = resultM.result;
 
-                if(result == null | result.getHitBlock() == null) {
+                if(result == null || result.getHitBlock() == null) {
                     data.add("null");
                     continue;
                 }

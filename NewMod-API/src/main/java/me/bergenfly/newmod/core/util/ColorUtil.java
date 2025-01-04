@@ -1,6 +1,7 @@
 package me.bergenfly.newmod.core.util;
 
 import it.unimi.dsi.fastutil.ints.*;
+import org.bukkit.Color;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,6 +35,25 @@ public class ColorUtil {
         }
     }
 
+    public static int dim(int color, double brightness) {
+        if(brightness == 1) {
+            return color;
+        }
+        if(brightness == 0) {
+            return 0;
+        }
+
+        Color c = Color.fromRGB(color);
+
+        double[] Lab = rgbToOklab(c.getRed(), c.getGreen(), c.getBlue());
+
+        Lab[0] = Lab[0]*brightness;
+
+        int[] rgb = oklabToRGB(Lab[0], Lab[1], Lab[2]);
+
+        return asInt(rgb[0], rgb[1], rgb[2]);
+    }
+
     public static double clamp(double value, double min, double max) {
         return Math.max(Math.min(value, max), min);
     }
@@ -47,6 +67,13 @@ public class ColorUtil {
     public static double linearToGamma(double c) {
         return c >= 0.0031308 ? 1.055 * Math.pow(c, 1 / 2.4) - 0.055 : 12.92 * c;
     }
+
+    public static double[] rgbToOklab(int color) {
+        int[] rgb = toInts(color);
+
+        return rgbToOklab(rgb[0], rgb[1], rgb[2]);
+    }
+
 
     public static double[] rgbToOklab(double r, double g, double b) {
         r = gammaToLinear(r / 255);

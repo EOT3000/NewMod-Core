@@ -202,7 +202,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
             if(args[0].equalsIgnoreCase("load")) {
                 File file = new File("photo" + args[1]);
 
-                Camera.loadFile(file);
+                Camera.loadFile(file, (Player) sender);
             }
         }
 
@@ -218,7 +218,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         return true;
     }
 
-    private void giveToPlayer(byte[][] camera, CommandSender sender) {
+    public void giveToPlayer(byte[][] camera, CommandSender sender) {
         ItemStack stack = new ItemStack(Material.FILLED_MAP);
 
         MapMeta meta = (MapMeta) stack.getItemMeta();
