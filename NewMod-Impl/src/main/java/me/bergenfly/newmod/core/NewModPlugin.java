@@ -46,6 +46,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
 
         this.cheatCommand = new CheatCommand();
 
+        System.out.println("yes it loaded");
         Bukkit.getPluginManager().registerEvents(new CheatInventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new VanillaReplacementListener(), this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);

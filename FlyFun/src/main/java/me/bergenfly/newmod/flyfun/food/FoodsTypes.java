@@ -32,12 +32,22 @@ public class FoodsTypes {
 
         rawCookies.setAmount(5);
 
-        Bukkit.addRecipe(new ShapelessRecipe(RAW_COOKIE.getId(), rawCookies)
-                .addIngredient(FLOUR.create()).addIngredient(FLOUR.create()).addIngredient(FLOUR.create())
-                .addIngredient(Material.SUGAR).addIngredient(Material.SUGAR).addIngredient(Material.COCOA_BEANS));
+        Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(plugin, "raw_cookie"), rawCookies)
+                .addIngredient(3, FLOUR.create())
+                .addIngredient(2, Material.SUGAR)
+                .addIngredient(Material.COCOA_BEANS));
+
+        ShapelessRecipe recipe = (ShapelessRecipe) Bukkit.getRecipe(new NamespacedKey(plugin, "raw_cookie"));
+
+        System.out.println(recipe);
+        System.out.println(recipe.getResult());
+
+        for(RecipeChoice choice : recipe.getChoiceList()) {
+            System.out.println(choice.toString());
+        }
 
         Bukkit.addRecipe(new FurnaceRecipe(new NamespacedKey(plugin, "cookie"),
-                new ItemStack(Material.COOKIE), new RecipeChoice.ExactChoice(RAW_COOKIE.create()), 1, 6));
+                new ItemStack(Material.COOKIE), new RecipeChoice.ExactChoice(RAW_COOKIE.create()), 1, 15));
 
         Bukkit.addRecipe(new CampfireRecipe(new NamespacedKey(plugin, "cookie_from_campfire_cooking"),
                 new ItemStack(Material.COOKIE), new RecipeChoice.ExactChoice(RAW_COOKIE.create()), 1, 15));

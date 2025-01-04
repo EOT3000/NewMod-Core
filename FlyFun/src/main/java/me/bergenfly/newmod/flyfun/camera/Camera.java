@@ -1,13 +1,20 @@
 package me.bergenfly.newmod.flyfun.camera;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import me.bergenfly.newmod.core.util.GeometryUtil;
 import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
 import me.bergenfly.newmod.flyfun.camera.texture.GetImagePixel;
+import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Player;
@@ -22,29 +29,152 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
-import java.util.Random;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Camera {
     private static int asdj = 0;
     private static Random djkjfk = new Random();
 
-    public static byte[][] run(Location location) {
-        byte[][] data = new byte[128][128];
+    private static AtomicInteger number = new AtomicInteger();
+
+    public static void loadFile(File file) {
+        Int2ObjectArrayMap<BlockData> palette = new Int2ObjectArrayMap<>();
+
+        try {
+            Scanner scanner = new Scanner(file);
+
+            long time = Long.parseLong(scanner.next());
+            int count = Integer.parseInt(scanner.next());
+
+            for(int i = 0; i < count; i++) {
+                String line = scanner.nextLine();
+
+                String[] spl = line.split(":");
+
+                palette.put(Integer.parseInt(spl[0]), Bukkit.createBlockData(spl[1]));
+            }
+
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+
+                String[] spl = line.split(":");
+
+                BlockData blockData = palette.get(Integer.parseInt(spl[0]));
+                double x = Integer.parseInt(spl[1])/1000.0;
+                double y = Integer.parseInt(spl[2])/1000.0;
+                double z = Integer.parseInt(spl[3])/1000.0;
+                BlockFace face = BlockFace.values()[Integer.parseInt(spl[4])];
+                int blockB = Integer.parseInt(spl[5]);
+                int skyB = Integer.parseInt(spl[6]);
+                int totB = Integer.parseInt(spl[7]);
+            }
+        } catch (Exception e) {
+            //
+        }
+    }
+
+    public static void run(Location location) {
+        ResultMoreData[] results = capture(location);
+
+        Thread nt = new Thread(() -> {
+            long start = System.currentTimeMillis();
+
+            Object2IntMap<String> palette = new Object2IntOpenHashMap<>();
+            List<String> data = new ArrayList<>(256*256);
+            int count = 0;
+
+            long time = location.getWorld().getTime();
+
+            for(ResultMoreData resultM : results) {
+                RayTraceResult result = resultM.result;
+
+                if(result == null | result.getHitBlock() == null) {
+                    data.add("null");
+                    continue;
+                }
+
+                String type = result.getHitBlock().getBlockData().getAsString();
+
+                Vector relative = result.getHitPosition().subtract(result.getHitBlock().getLocation().toVector());
+
+                int x = (int) Math.round(relative.getX()*1000);
+                int y = (int) Math.round(relative.getX()*1000);
+                int z = (int) Math.round(relative.getX()*1000);
+
+                String pos = x + ":" + y + ":" + z;
+
+                if(palette.containsKey(type)) {
+                    data.add(palette.getInt(type) + ":" + pos + ":" + result.getHitBlockFace().ordinal() + ":" + resultM.blockBrightness + ":" + resultM.skyBrightness);
+                } else {
+                    count++;
+                    palette.put(type, count);
+                    data.add(count + ":" + pos + ":" + result.getHitBlockFace().ordinal() + ":" + resultM.blockBrightness + ":" + resultM.skyBrightness + ":" + resultM.brightness);
+                }
+            }
+
+            try {
+                File file = new File("photo" + number.getAndIncrement());
+
+                file.createNewFile();
+
+                try(FileOutputStream stream = new FileOutputStream(file)) {
+                    PrintWriter writer = new PrintWriter(stream);
+
+                    writer.write(Objects.toString(time));
+                    writer.write('\n');
+
+                    writer.write(Objects.toString(count));
+                    writer.write('\n');
+
+                    for(Object2IntMap.Entry<String> type : palette.object2IntEntrySet()) {
+                        writer.write(type.getIntValue() + ":" + type.getKey());
+                        writer.write('\n');
+                    }
+
+                    for(String dat : data) {
+                        writer.write(dat);
+                        writer.write("\n");
+                    }
+                }
+            } catch (Exception e) {
+                // ):
+            }
+
+            System.out.println("Took " + (System.currentTimeMillis()-start) + " millis to write to file");
+        });
+
+        nt.start();
+    }
+
+    public static ResultMoreData[] capture(Location location) {
+        //byte[][] data = new byte[128][128];
 
         long date = System.currentTimeMillis();
 
-        for(int x = 0; x < 128; x+=1) {
-            for(int y = 0; y < 128; y+=1) {
-                Vector vector = GeometryUtil.getRelative(location, new Vector(0.5-x/128.0, 0.5-y/128.0, 1)).subtract(location.toVector());
+        ResultMoreData[] ret = new ResultMoreData[256*256];
+
+        for(int x = 0; x < 256; x+=1) {
+            for(int y = 0; y < 256; y+=1) {
+                Vector vector = GeometryUtil.getRelative(location, new Vector(0.5-x/256.0, 0.5-y/256.0, 1)).subtract(location.toVector());
 
                 RayTraceResult result = location.getWorld().rayTraceBlocks(location, vector, 512, FluidCollisionMode.ALWAYS, false);
 
-                if(result != null) {
+                if(result != null && result.getHitBlock() != null) {
+                    Block nb = result.getHitBlock().getLocation().add(result.getHitBlockFace().getDirection()).getBlock();
+
+                    ret[x * 256 + y] = new ResultMoreData(result, nb.getLightFromBlocks(), nb.getLightFromSky(), nb.getLightLevel());
+                } else {
+                    ret[x * 256 + y] = new ResultMoreData(result, 0, 0, 0);
+                }
+
+                //if(result != null) {
 
                     //System.out.println("ray " + x + "," + y + "hit!");
                     //System.out.println(result);
 
-                    boolean p = false;
+                    //boolean p = false;
 
                     /*if(asdj++ % 2 == 0) {
                         if(djkjfk.nextInt(10) == 0 && result.getHitBlock().getType().equals(Material.HAY_BLOCK)) {
@@ -57,7 +187,7 @@ public class Camera {
                         }
                     }*/
 
-                    if(x == 64 && y == 64) {
+                    /*if(x == 64 && y == 64) {
                         BlockDisplay display = location.getWorld().spawn(result.getHitPosition().toLocation(location.getWorld()), BlockDisplay.class);
 
                         display.setBlock(Material.STONE.createBlockData());
@@ -67,7 +197,7 @@ public class Camera {
                     BlockStates.BlockState state = Textures.me.getStates(result.getHitBlock().getType()).getState(result.getHitBlock().getBlockData());
 
                     Vector adjusted = GetImagePixel.transform(state.x(), state.y(), result.getHitPosition().clone().subtract(result.getHitBlock().getLocation().toVector())
-                            .subtract(new Vector(0.5,0.5,0.5)), p).add(new Vector(0.5,0.5,0.5));
+                            .subtract(new Vector(0.5,0.5,0.5)), p).add(new Vector(0.5,0.5,0.5));*/
 
                     //
 
@@ -78,28 +208,26 @@ public class Camera {
                         display2.setTransformation(new Transformation(new Vector3f(0, 0, 0), new AxisAngle4f(), new Vector3f(0.05f, 0.05f, 0.05f), new AxisAngle4f()));
                     }*/
 
-                    BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y(), p);
+                    /*BlockFace adjustedFace = GetImagePixel.getFace(result.getHitBlockFace(), state.x(), state.y(), p);
 
                     IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted, p);
                     //IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(result.getHitBlockFace(), result.getHitPosition(), p);
 
                     //System.out.println("adjusted coordinate: " + pair.firstInt() + "," + pair.secondInt());
-                    //System.out.println("adjusted face: " + adjustedFace);
+                    //System.out.println("adjusted face: " + adjustedFace);*/
 
-                    byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
-                            null /*No models use this TODO remove it*/, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
+                    /*byte color = state.model().getMapColor(pair.firstInt(), pair.secondInt(), adjustedFace,
+                            null /*No models use this TODO remove it, result.getHitBlock().getRelative(result.getHitBlockFace()).getLightLevel());
                     data[x][y] = color;
 
                     if(p) {
                         System.out.println();
-                    }
-                } else {
+                    }*/
+                //}
 
-                }
-
-                if(data[x][y] == 0) {
+                /*if(data[x][y] == 0) {
                     data[x][y] = MapPalette.PALE_BLUE;
-                }
+                }*/
             }
 
             //System.out.println("spent " + (System.currentTimeMillis()-date) + " on layer " + x);
@@ -108,8 +236,10 @@ public class Camera {
 
         System.out.println("spent " + (System.currentTimeMillis()-date));
 
-        return data;
+        return ret;
     }
+
+    public record ResultMoreData(RayTraceResult result, int blockBrightness, int skyBrightness, int brightness) {}
 
     public static final class Renderer extends MapRenderer {
         private final byte[][] data;

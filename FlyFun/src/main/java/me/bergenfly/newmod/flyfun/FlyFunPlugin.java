@@ -109,13 +109,13 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         //System.out.println(textureDir.getAbsolutePath());
 
         getLogger().info("Loading textures");
-        //Textures.me.loadTextures(textureDir);
+        Textures.me.loadTextures(textureDir);
 
         getLogger().info("Loading models");
-        //Textures.me.loadModels(modelDir);
+        Textures.me.loadModels(modelDir);
 
         getLogger().info("Loading block states");
-        //Textures.me.loadBlockStates(blockStatesDir);
+        Textures.me.loadBlockStates(blockStatesDir);
     }
 
     @Override
@@ -198,13 +198,21 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
             return true;
         }
 
+        if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("load")) {
+                File file = new File("photo" + args[1]);
+
+                Camera.loadFile(file);
+            }
+        }
+
         HornListener.playAt(new Location(((Player) sender).getWorld(), 0, 64, 0), Sound.ITEM_GOAT_HORN_SOUND_0);
 
         getLogger().info("Beginning picture capture");
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            byte[][] camera = Camera.run(((Player) sender).getEyeLocation());
+            Camera.run(((Player) sender).getEyeLocation());
 
-            giveToPlayer(camera, sender);
+            //giveToPlayer(camera, sender);
         }, 1);
 
         return true;

@@ -29,13 +29,23 @@ public class AnimalsTypes {
                 .addIngredient(RABBIT_CHUNKS.create())
                 .addIngredient(Material.RED_MUSHROOM)
                 .addIngredient(Material.BAKED_POTATO)
-                .addIngredient(Material.CARROT));
+                .addIngredient(Material.CARROT)
+                .addIngredient(Material.BOWL));
+
+
+        Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(plugin, "rabbit_stew_from_green_mushroom"), new ItemStack(Material.RABBIT_STEW))
+                .addIngredient(Material.STICK)
+                .addIngredient(Material.RED_MUSHROOM)
+                .addIngredient(Material.BAKED_POTATO)
+                .addIngredient(Material.CARROT)
+                .addIngredient(Material.BOWL));
 
         Bukkit.addRecipe(new ShapelessRecipe(new NamespacedKey(plugin, "rabbit_stew_from_brown_mushroom"), new ItemStack(Material.RABBIT_STEW))
                 .addIngredient(RABBIT_CHUNKS.create())
                 .addIngredient(Material.BROWN_MUSHROOM)
                 .addIngredient(Material.BAKED_POTATO)
-                .addIngredient(Material.CARROT));
+                .addIngredient(Material.CARROT)
+                .addIngredient(Material.BOWL));
     }
 
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
