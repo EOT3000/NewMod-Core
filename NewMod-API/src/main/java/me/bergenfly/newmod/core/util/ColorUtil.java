@@ -43,7 +43,7 @@ public class ColorUtil {
             return 0;
         }
 
-        Color c = Color.fromRGB(color);
+        Color c = Color.fromARGB(color);
 
         double[] Lab = rgbToOklab(c.getRed(), c.getGreen(), c.getBlue());
 

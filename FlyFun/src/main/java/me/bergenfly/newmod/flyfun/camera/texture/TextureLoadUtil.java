@@ -14,6 +14,10 @@ public class TextureLoadUtil {
 
         //File file = new File(textureDir.get(texture));
 
+        if(file.getName().endsWith("meta")) {
+            return null;
+        }
+
         try {
             BufferedImage image = ImageIO.read(file);
 

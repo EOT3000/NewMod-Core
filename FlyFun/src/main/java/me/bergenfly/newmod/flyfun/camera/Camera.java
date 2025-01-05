@@ -46,16 +46,18 @@ public class Camera {
 
         int[][] colors = new int[256][256];
 
+        int currentLine = 0;
+
         try {
             Scanner scanner = new Scanner(file);
 
-            long time = Long.parseLong(scanner.next());
-            int count = Integer.parseInt(scanner.next());
+            long time = Long.parseLong(scanner.nextLine());
+            int count = Integer.parseInt(scanner.nextLine());
 
             for (int i = 0; i < count; i++) {
                 String line = scanner.nextLine();
 
-                String[] spl = line.split(":");
+                String[] spl = line.split("-");
 
                 palette.put(Integer.parseInt(spl[0]), Bukkit.createBlockData(spl[1]));
             }
@@ -69,6 +71,7 @@ public class Camera {
                 c++;
 
                 String line = scanner.nextLine();
+
 
                 if(!line.equalsIgnoreCase("null")) {
                     String[] spl = line.split(":");
@@ -114,9 +117,10 @@ public class Camera {
                     );
 
                     data[x][y] = close;
-                    FlyFunPlugin.get().giveToPlayer(data, player);
                 }
             }
+
+            FlyFunPlugin.get().giveToPlayer(data, player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,7 +157,7 @@ public class Camera {
                 String pos = x + ":" + y + ":" + z;
 
                 if(palette.containsKey(type)) {
-                    data.add(palette.getInt(type) + ":" + pos + ":" + result.getHitBlockFace().ordinal() + ":" + resultM.blockBrightness + ":" + resultM.skyBrightness);
+                    data.add(palette.getInt(type) + ":" + pos + ":" + result.getHitBlockFace().ordinal() + ":" + resultM.blockBrightness + ":" + resultM.skyBrightness + ":" + resultM.brightness);
                 } else {
                     count++;
                     palette.put(type, count);
@@ -176,7 +180,7 @@ public class Camera {
                     writer.write('\n');
 
                     for(Object2IntMap.Entry<String> type : palette.object2IntEntrySet()) {
-                        writer.write(type.getIntValue() + ":" + type.getKey());
+                        writer.write(type.getIntValue() + "-" + type.getKey());
                         writer.write('\n');
                     }
 
@@ -184,9 +188,12 @@ public class Camera {
                         writer.write(dat);
                         writer.write("\n");
                     }
+
+                    writer.flush();
+                    writer.close();
                 }
             } catch (Exception e) {
-                // ):
+                e.printStackTrace();
             }
 
             System.out.println("Took " + (System.currentTimeMillis()-start) + " millis to write to file");

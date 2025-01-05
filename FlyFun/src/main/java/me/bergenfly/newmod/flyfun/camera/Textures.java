@@ -114,6 +114,10 @@ public class Textures {
             try {
                 TextureData16x16 loaded = TextureLoadUtil.load(file);
 
+                if(loaded == null) {
+                    continue;
+                }
+
                 textures.put(file.getName().replace(".png", ""), loaded);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -150,6 +154,7 @@ public class Textures {
 
                 //if(block instanceof TOP)
             } catch (Exception e) {
+                System.out.println(model.getName());
                 e.printStackTrace();
             }
         }
