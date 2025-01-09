@@ -20,6 +20,7 @@ import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
 import me.bergenfly.nations.impl.model.RankImpl;
 import me.bergenfly.nations.impl.model.SettlementImpl;
+import me.bergenfly.nations.impl.util.ClaimUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -66,8 +67,7 @@ public class NationCommand extends CommandRoot {
         addBranch("claim", new CommandFlower()
                 .addNation(CommandFlower.INVOKER_LEADER)
                 .player()
-                .command((a) -> a.invokerUser().tryClaimChunk(a.nations()[0]))
-                .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
+                .command((a) -> ClaimUtil.tryClaimWithChecks(a.invokerUser(), a.nations()[0], "nation"))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
 

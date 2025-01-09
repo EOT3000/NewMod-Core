@@ -3,6 +3,7 @@ package me.bergenfly.nations.impl.command.community;
 import me.bergenfly.nations.api.command.CommandFlower;
 import me.bergenfly.nations.api.command.TranslatableString;
 import me.bergenfly.nations.impl.model.SettlementImpl;
+import me.bergenfly.nations.impl.util.ClaimUtil;
 
 public class SettlementCommand extends CommunityCommand {
     @Override
@@ -22,8 +23,7 @@ public class SettlementCommand extends CommunityCommand {
         addBranch("claim", new CommandFlower()
                 .addSettlement(CommandFlower.INVOKER_LEADER)
                 .player()
-                .command((a) -> a.invokerUser().tryClaimChunk(a.settlements()[0]))
-                .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
+                .command((a) -> ClaimUtil.tryClaimWithChecks(a.invokerUser(), a.nations()[0], "settlement"))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
     }

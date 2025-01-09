@@ -9,7 +9,7 @@ public interface BlockModel {
     byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness);
 
     default int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
-        int b = getMapColor(x, y, face, data, brightness)+128;
+        int b = Byte.toUnsignedInt(getMapColor(x, y, face, data, brightness));
 
         return MapColor.values()[b/4].variation(b%4);
     }

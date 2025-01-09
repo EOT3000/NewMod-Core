@@ -119,7 +119,11 @@ public class TranslatableString {
         translations.put("nations.general.success", new TranslatableString("&eSuccess"));
         translations.put("nations.general.no_permission", new TranslatableString("&cYou don't have permission to do that"));
 
-        translations.put("nations.claim", new TranslatableString("&eClaimed chunk"));
+        translations.put("nations.claim.error.not_adjacent", new TranslatableString("&cYour new claim must be adjacent to an existing {1} claim"));
+
+        translations.put("nations.claim", new TranslatableString("&eClaimed chunk")); // TODO add .success to the end of the key
+
+        translations.put("nations.claim.error.already_claimed", new TranslatableString("&cThis chunk has already been claimed"));
     }
 
     private static final Map<String, TranslatableString> translations;

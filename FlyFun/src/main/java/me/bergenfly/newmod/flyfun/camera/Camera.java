@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -98,17 +100,21 @@ public class Camera {
                     int color = state.model().getColor(pair.firstInt(), pair.secondInt(), adjustedFace,
                             null, totB);
                     colors[xM][yM] = color;
+                } else {
+                    colors[xM][yM] = 31*4+2;
                 }
             }
 
             byte[][] data = new byte[128][128];
 
+            BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+
             for(int x = 0; x < 128; x++) {
                 for(int y = 0; y < 128; y++) {
-                    double[] Lab1 = ColorUtil.rgbToOklab(colors[x+0][y+0]);
-                    double[] Lab2 = ColorUtil.rgbToOklab(colors[x+1][y+0]);
-                    double[] Lab3 = ColorUtil.rgbToOklab(colors[x+0][y+1]);
-                    double[] Lab4 = ColorUtil.rgbToOklab(colors[x+1][y+1]);
+                    double[] Lab1 = ColorUtil.rgbToOklab(colors[x*2+0][y*2+0]);
+                    double[] Lab2 = ColorUtil.rgbToOklab(colors[x*2+1][y*2+0]);
+                    double[] Lab3 = ColorUtil.rgbToOklab(colors[x*2+0][y*2+1]);
+                    double[] Lab4 = ColorUtil.rgbToOklab(colors[x*2+1][y*2+1]);
 
                     byte close = ColorUtil.findClosestColor(
                             (Lab1[0]+Lab2[0]+Lab3[0]+Lab4[0])/4.0,
@@ -116,9 +122,19 @@ public class Camera {
                             (Lab1[2]+Lab2[2]+Lab3[2]+Lab4[2])/4.0
                     );
 
+                    int[] rgb = ColorUtil.oklabToRGB(
+                            (Lab1[0]+Lab2[0]+Lab3[0]+Lab4[0])/4.0,
+                            (Lab1[1]+Lab2[1]+Lab3[1]+Lab4[1])/4.0,
+                            (Lab1[2]+Lab2[2]+Lab3[2]+Lab4[2])/4.0
+                    );
+
+                    image.setRGB(x, y, ColorUtil.asInt(rgb[0], rgb[1], rgb[2]));
+
                     data[x][y] = close;
                 }
             }
+
+            ImageIO.write(image, "png", new File(file.getName() + ".png"));
 
             FlyFunPlugin.get().giveToPlayer(data, player);
         } catch (Exception e) {
@@ -151,8 +167,8 @@ public class Camera {
                 Vector relative = result.getHitPosition().subtract(result.getHitBlock().getLocation().toVector());
 
                 int x = (int) Math.round(relative.getX()*1000);
-                int y = (int) Math.round(relative.getX()*1000);
-                int z = (int) Math.round(relative.getX()*1000);
+                int y = (int) Math.round(relative.getY()*1000);
+                int z = (int) Math.round(relative.getZ()*1000);
 
                 String pos = x + ":" + y + ":" + z;
 

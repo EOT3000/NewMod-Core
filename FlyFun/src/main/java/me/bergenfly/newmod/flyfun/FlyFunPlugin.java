@@ -203,6 +203,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
                 File file = new File("photo" + args[1]);
 
                 Camera.loadFile(file, (Player) sender);
+                return true;
             }
         }
 
