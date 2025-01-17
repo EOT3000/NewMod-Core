@@ -2,6 +2,7 @@ package me.bergenfly.newmod.flyfun;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.addon.NewModAddon;
+import me.bergenfly.newmod.core.util.skytest;
 import me.bergenfly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.bergenfly.newmod.flyfun.basictools.GoldPanManager;
 import me.bergenfly.newmod.flyfun.basictools.listener.BasicToolsListener;
@@ -28,6 +29,7 @@ import me.bergenfly.newmod.flyfun.magic.recipe.AltarRecipeManager;
 import me.bergenfly.newmod.flyfun.metals.MetalsTypes;
 import me.bergenfly.newmod.flyfun.food.PlantsTypes;
 import me.bergenfly.newmod.flyfun.food.listener.PlantsListener;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +37,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -116,6 +119,21 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         getLogger().info("Loading block states");
         Textures.me.loadBlockStates(blockStatesDir);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            Player player = Bukkit.getOnlinePlayers().iterator().next();
+
+            ServerLevel level = ((CraftWorld) player.getWorld()).getHandle();
+
+            float a = level.getTimeOfDay(1);
+            float c = level.getDayTime();
+            float b = player.getWorld().getTime();
+
+            System.out.println("NMS Gives Sky angle: " + a);
+            System.out.println("NMS Gives day time: " + c);
+            System.out.println("GetTime: " + b);
+            System.out.println();
+        }, 1200, 1200);
     }
 
     @Override
@@ -203,6 +221,23 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
                 File file = new File("photo" + args[1]);
 
                 Camera.loadFile(file, (Player) sender);
+                return true;
+            }
+        }
+
+        if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("data")) {
+                Player player = (Player) sender;
+
+                long time = player.getWorld().getTime();
+                double tod = skytest.timeOfDay(time);
+                double brightness = skytest.getSkyBrightness((float) tod);
+                skytest.vec3 slc = skytest.mix(new skytest.vec3(brightness, brightness, 1.0), new skytest.vec3(1.0,1.0,1.0), .35);
+
+                sender.sendMessage("Time: " + time);
+                sender.sendMessage("Sky angle: " + tod);
+                sender.sendMessage("Sky brightness: " + brightness);
+                sender.sendMessage("Color: " + slc);
                 return true;
             }
         }

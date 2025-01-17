@@ -98,8 +98,13 @@ public class Camera {
                     IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted, false);
 
                     int color = state.model().getColor(pair.firstInt(), pair.secondInt(), adjustedFace,
-                            null, totB);
-                    colors[xM][yM] = color;
+                            null, 15);
+
+                    int shaded = ColorUtil.shade(face, color);
+
+                    int dimmed = ColorUtil.dimMojang(shaded, blockB, skyB, time);
+
+                    colors[xM][yM] = dimmed;
                 } else {
                     colors[xM][yM] = 31*4+2;
                 }
@@ -107,7 +112,8 @@ public class Camera {
 
             byte[][] data = new byte[128][128];
 
-            BufferedImage image = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+            BufferedImage image1 = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
+            BufferedImage image2 = new BufferedImage(256, 256, BufferedImage.TYPE_INT_RGB);
 
             for(int x = 0; x < 128; x++) {
                 for(int y = 0; y < 128; y++) {
@@ -128,13 +134,18 @@ public class Camera {
                             (Lab1[2]+Lab2[2]+Lab3[2]+Lab4[2])/4.0
                     );
 
-                    image.setRGB(x, y, ColorUtil.asInt(rgb[0], rgb[1], rgb[2]));
+                    image1.setRGB(x, y, ColorUtil.asInt(rgb[0], rgb[1], rgb[2]));
+                    image2.setRGB(x*2+0, y*2+0, colors[x*2+0][y*2+0]);
+                    image2.setRGB(x*2+1, y*2+0, colors[x*2+1][y*2+0]);
+                    image2.setRGB(x*2+0, y*2+1, colors[x*2+0][y*2+1]);
+                    image2.setRGB(x*2+1, y*2+1, colors[x*2+1][y*2+1]);
 
                     data[x][y] = close;
                 }
             }
 
-            ImageIO.write(image, "png", new File(file.getName() + ".png"));
+            ImageIO.write(image1, "png", new File(file.getName() + "lowres.png"));
+            ImageIO.write(image2, "png", new File(file.getName() + "highres.png"));
 
             FlyFunPlugin.get().giveToPlayer(data, player);
         } catch (Exception e) {

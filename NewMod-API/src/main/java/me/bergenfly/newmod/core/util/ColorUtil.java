@@ -2,6 +2,8 @@ package me.bergenfly.newmod.core.util;
 
 import it.unimi.dsi.fastutil.ints.*;
 import org.bukkit.Color;
+import org.bukkit.block.BlockFace;
+import org.bukkit.util.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,6 +35,63 @@ public class ColorUtil {
         for(IntObjectPair<double[]> x : colorsLab) {
             System.out.println(x.firstInt() + " " + idToName(x.keyInt()) + " Lab: " + Arrays.toString(x.value()) + " rgb: " + Arrays.toString(colors.get(x.keyInt())));
         }
+    }
+
+    private static int count = 0;
+
+    private static final skytest.vec3 shadeVector = new skytest.vec3(.6,1,.8);
+
+    public static int shade(BlockFace face, int color) {
+        double shade = new skytest.vec3(face).abs().multiply(shadeVector).magnitude();
+
+        skytest.vec3 colorvec = toVector(color).multiply(shade);
+
+        return asInt((int) colorvec.a, (int) colorvec.b, (int) colorvec.c);
+    }
+
+    public static int dimMojang(int color, int block, int sky, long time) {
+        /*if(count++%1000 == 0) {
+            System.out.println("Starting color:");
+            System.out.println(Arrays.toString(toInts(color)));
+            System.out.println();
+
+            double skyBrightness = skytest.getSkyBrightness((float) skytest.timeOfDay(time));
+
+            System.out.println("Time: " + time);
+            System.out.println("Brightness: " + skyBrightness);
+            System.out.println("Block light: " + block);
+            System.out.println("Sky light: " + sky);
+
+            skytest.vec3 slc = skytest.mix(new skytest.vec3(skyBrightness, skyBrightness, 1.0), new skytest.vec3(1.0,1.0,1.0), .35);
+
+            System.out.println("slc: " + slc);
+
+            skytest.vec3 mult = skytest.calculate(block/15.0, sky/15.0, skyBrightness*.95+.05, 1.5, 0, slc, 0, 0, 1);
+
+            System.out.println("mult: " + mult);
+
+            int[] rgb = toInts(color);
+
+            int newColor = asInt((int) (rgb[0]*mult.a), (int) (rgb[1]*mult.b), (int) (rgb[2]*mult.c));
+
+            System.out.println("Ending color:");
+            System.out.println(Arrays.toString(toInts(newColor)));
+            System.out.println();
+
+            return newColor;
+        }*/
+
+        double skyBrightness = skytest.getSkyBrightness((float) skytest.timeOfDay(time));
+
+        skytest.vec3 slc = skytest.mix(new skytest.vec3(skyBrightness, skyBrightness, 1.0), new skytest.vec3(1.0,1.0,1.0), .35);
+
+        skytest.vec3 mult = skytest.calculate(block/15.0, sky/15.0, skyBrightness*.95+.05, 1.5, 0, slc, 0, 0, 1);
+
+        int[] rgb = toInts(color);
+
+        int newColor = asInt((int) (rgb[0]*mult.a), (int) (rgb[1]*mult.b), (int) (rgb[2]*mult.c));
+
+        return newColor;
     }
 
     public static int dim(int color, double brightness) {
@@ -136,6 +195,10 @@ public class ColorUtil {
 
     public static int[] toInts(int intt) {
         return new int[]{intt >> 16 & 255, intt >> 8 & 255, intt & 255};
+    }
+
+    public static skytest.vec3 toVector(int intt) {
+        return new skytest.vec3(intt >> 16 & 255, intt >> 8 & 255, intt & 255);
     }
 
     private interface DistanceCalculator {

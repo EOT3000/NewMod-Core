@@ -42,15 +42,52 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
                         textures.getTexture(texturesObj.get("west").getAsString()),
                         textures.getTexture(texturesObj.get("up").getAsString()),
                         textures.getTexture(texturesObj.get("down").getAsString()));
-            } else if (parent.equals("block/stairs") || parent.equals("block/inner_stairs") || parent.equals("block/outer_stairs") || parent.equals("block/slab") || parent.equals("block/slab_top")) {
+            } else if (parent.equals("block/stairs") || parent.equals("block/inner_stairs") || parent.equals("block/outer_stairs")
+                    || parent.equals("block/slab") || parent.equals("block/slab_top")
+                    || parent.equals("block/cube_bottom_top")) {
                 return new TopBottomSideBlockModel(
                         textures.getTexture(texturesObj.get("top").getAsString()),
                         textures.getTexture(texturesObj.get("bottom").getAsString()),
                         textures.getTexture(texturesObj.get("side").getAsString()));
+            } else if (parent.equals("block/block")) {
+                return tryLoadBlock(texturesObj);
             }
+
+            return new UnknownModel(parent, texturesObj.keySet());
 
         }
 
         return Textures.FAILED_TO_LOAD;
+    }
+
+    private BlockModel tryLoadBlock(JsonObject texturesObj) {
+        if(texturesObj.has("side")) {
+            return new TopBottomSideBlockModel(
+                    textures.getTexture(texturesObj.get("top").getAsString()),
+                    textures.getTexture(texturesObj.get("bottom").getAsString()),
+                    textures.getTexture(texturesObj.get("side").getAsString()));
+        }
+
+        if(texturesObj.has("east")) {
+            if(texturesObj.has("top")) {
+                return new SixSidedBlockModel(
+                        textures.getTexture(texturesObj.get("north").getAsString()),
+                        textures.getTexture(texturesObj.get("east").getAsString()),
+                        textures.getTexture(texturesObj.get("south").getAsString()),
+                        textures.getTexture(texturesObj.get("west").getAsString()),
+                        textures.getTexture(texturesObj.get("top").getAsString()),
+                        textures.getTexture(texturesObj.get("bottom").getAsString()));
+            } else {
+                return new SixSidedBlockModel(
+                        textures.getTexture(texturesObj.get("north").getAsString()),
+                        textures.getTexture(texturesObj.get("east").getAsString()),
+                        textures.getTexture(texturesObj.get("south").getAsString()),
+                        textures.getTexture(texturesObj.get("west").getAsString()),
+                        textures.getTexture(texturesObj.get("up").getAsString()),
+                        textures.getTexture(texturesObj.get("down").getAsString()));
+            }
+        }
+
+        return new UnknownModel("block/block", texturesObj.keySet());
     }
 }

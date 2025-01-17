@@ -2,10 +2,7 @@ package me.bergenfly.newmod.flyfun.camera;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
-import me.bergenfly.newmod.flyfun.camera.model.BlockModelDeserializer;
-import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
-import me.bergenfly.newmod.flyfun.camera.model.BlockStatesDeserializer;
+import me.bergenfly.newmod.flyfun.camera.model.*;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureLoadUtil;
 import org.bukkit.Color;
@@ -149,6 +146,14 @@ public class Textures {
                 JsonReader reader = new JsonReader(new FileReader(model));
 
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
+
+                if(block instanceof UnknownModel um) {
+                    System.out.println("Unable to load");
+                    System.out.println(model.getName());
+                    System.out.println("parent: " + um.parent);
+                    System.out.println("textures: " + um.textures);
+                    System.out.println();
+                }
 
                 this.models.put(model.getName().replace(".json", ""), block);
 
