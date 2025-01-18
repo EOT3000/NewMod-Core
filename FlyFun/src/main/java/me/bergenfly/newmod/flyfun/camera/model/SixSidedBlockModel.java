@@ -44,7 +44,7 @@ public class SixSidedBlockModel implements BlockModel {
 
 
     @Override
-    public int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+    public int getColor(int x, int y, BlockFace face, BlockData data) {
         TextureData16x16 use;
 
         switch (face) {
@@ -56,9 +56,20 @@ public class SixSidedBlockModel implements BlockModel {
             case DOWN: use = down; break;
 
             default:
-                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
+                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, 15);
         }
 
-        return ColorUtil.dim(use.rawColor()[x*16+y], (brightness+1)/16.0);
+        return use.rawColor()[x*16+y];
+    }
+
+    @Override
+    public String texturesString() {
+        return
+                "n: " + north.id() +
+                        ";e: " + east.id() +
+                        ";s: " + south.id() +
+                        ";w: " + west.id() +
+                        ";u: " + up.id() +
+                        ";d: " + down.id();
     }
 }

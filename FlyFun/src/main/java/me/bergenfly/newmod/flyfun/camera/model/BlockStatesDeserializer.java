@@ -36,6 +36,10 @@ public class BlockStatesDeserializer implements JsonDeserializer<BlockStates> {
                 int x = getOrDefaultInt(variantInfo, "x", 0);
                 int y = getOrDefaultInt(variantInfo, "y", 0);
 
+
+                //Came back some time later, I think what this means is
+                // If empty variants, then just 1 state, so can return with 1
+                // If stairs, or slabs, then all states would be equivalent (the other half of a slab would never get hit, so just 1 state is enough)
                 if(variantKey.isEmpty()) {
                     states.addState((j) -> true, new BlockStates.BlockState(textures.getModel(variantInfo.get("model").getAsString()), x, y));
 

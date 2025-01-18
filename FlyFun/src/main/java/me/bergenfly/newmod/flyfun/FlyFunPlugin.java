@@ -16,6 +16,7 @@ import me.bergenfly.newmod.flyfun.camera.Camera;
 import me.bergenfly.newmod.flyfun.camera.Textures;
 import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
 import me.bergenfly.newmod.flyfun.camera.model.AllSidesBlockModel;
+import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
 import me.bergenfly.newmod.flyfun.food.AnimalsTypes;
 import me.bergenfly.newmod.flyfun.food.FoodsTypes;
 import me.bergenfly.newmod.flyfun.food.listener.FoodListener;
@@ -171,6 +172,14 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         if(args.length == 1) {
             BlockModel model = Textures.me.getStates(Material.getMaterial(args[0])).getStates().get(0).model();
+
+            Material material = Material.getMaterial(args[0]);
+
+            BlockStates states = Textures.me.getStates(material);
+
+            for(BlockStates.BlockState state : states.getStates()) {
+                sender.sendMessage("Model: " + state.model().texturesString());
+            }
 
             byte[][] camera = new byte[128][128];
 

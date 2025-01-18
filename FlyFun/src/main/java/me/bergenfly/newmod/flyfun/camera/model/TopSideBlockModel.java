@@ -45,7 +45,7 @@ public class TopSideBlockModel implements BlockModel {
     }
 
     @Override
-    public int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
+    public int getColor(int x, int y, BlockFace face, BlockData data) {
         TextureData16x16 use;
 
         switch (face) {
@@ -57,15 +57,22 @@ public class TopSideBlockModel implements BlockModel {
                 break;
             case UP:
                 if(horizontal) {
-                    return end.storedColor()[brightness * 256 + (15-x) * 16 + (15-y)];
+                    return end.rawColor()[(15-x) * 16 + (15-y)];
                 }
             case DOWN:
                 use = end;
                 break;
             default:
-                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
+                return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, 15);
         }
 
-        return ColorUtil.dim(use.rawColor()[x*16+y], (brightness+1)/16.0);
+        return use.rawColor()[x*16+y];
+    }
+
+    @Override
+    public String texturesString() {
+        return
+                "e: " + end.id() +
+                        ";s: " + side.id();
     }
 }

@@ -73,7 +73,7 @@ public class TextureLoadUtil {
                 }
             }
 
-            return new TextureData16x16(rawColor, storedColor);
+            return new TextureData16x16(rawColor, storedColor, file.getName().replace(".png", ""));
         } catch (Exception e) {
             System.err.println("error loading image file " + file.getPath());
 

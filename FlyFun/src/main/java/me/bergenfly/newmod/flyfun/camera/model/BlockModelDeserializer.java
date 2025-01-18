@@ -24,6 +24,12 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
 
             if (parent.equals("block/cube_all") || parent.equals("block/leaves")) {
                 return new AllSidesBlockModel(textures.getTexture(texturesObj.get("all").getAsString()));
+            } else if (parent.equals("block/button") || parent.equals("block/fence_post") || parent.equals("block/fence_side")) {
+                return new AllSidesBlockModel(textures.getTexture(texturesObj.get("texture").getAsString()));
+            } else if (parent.equals("block/carpet")) {
+                return new AllSidesBlockModel(textures.getTexture(texturesObj.get("wool").getAsString()));
+            } else if (parent.equals("block/template_wall_post") || parent.equals("block/template_wall_side") || parent.equals("block/template_wall_side_tall")) {
+                return tryLoadBlockFenceWall(parent, texturesObj);
             } else if (parent.equals("block/cube_column")
                     //I have no idea what uv_locked means
                     || parent.equals("block/cube_column_uv_locked_x") || parent.equals("block/cube_column_uv_locked_y") || parent.equals("block/cube_column_uv_locked_z")) {
@@ -90,4 +96,15 @@ public class BlockModelDeserializer implements JsonDeserializer<BlockModel> {
 
         return new UnknownModel("block/block", texturesObj.keySet());
     }
+
+    private BlockModel tryLoadBlockFenceWall(String parent, JsonObject texturesObj) {
+        if(texturesObj.has("texture")) {
+            return new AllSidesBlockModel(textures.getTexture(texturesObj.get("texture").getAsString()));
+        } else if(texturesObj.has("wall")) {
+            return new AllSidesBlockModel(textures.getTexture(texturesObj.get("wall").getAsString()));
+        }
+
+        return new UnknownModel(parent, texturesObj.keySet());
+    }
+
 }

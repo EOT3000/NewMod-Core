@@ -8,9 +8,13 @@ import org.bukkit.block.data.BlockData;
 public interface BlockModel {
     byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness);
 
-    default int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
-        int b = Byte.toUnsignedInt(getMapColor(x, y, face, data, brightness));
+    default int getColor(int x, int y, BlockFace face, BlockData data) {
+        int b = Byte.toUnsignedInt(getMapColor(x, y, face, data, 15));
 
         return MapColor.values()[b/4].variation(b%4);
+    }
+
+    default String texturesString() {
+        return "Custom";
     }
 }

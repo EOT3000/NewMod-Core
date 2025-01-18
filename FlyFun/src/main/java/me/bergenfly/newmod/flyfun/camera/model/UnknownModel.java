@@ -20,4 +20,9 @@ public class UnknownModel implements BlockModel {
     public byte getMapColor(int x, int y, BlockFace face, BlockData data, int brightness) {
         return Textures.FAILED_TO_LOAD.getMapColor(x, y, face, data, brightness);
     }
+
+    @Override
+    public String texturesString() {
+        return textures.toString();
+    }
 }

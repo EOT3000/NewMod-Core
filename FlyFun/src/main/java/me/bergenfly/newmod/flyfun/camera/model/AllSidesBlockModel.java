@@ -25,7 +25,12 @@ public class AllSidesBlockModel implements BlockModel {
     }
 
     @Override
-    public int getColor(int x, int y, BlockFace face, BlockData data, int brightness) {
-        return ColorUtil.dim(this.data.rawColor()[x*16+y], (brightness+1)/16.0);
+    public int getColor(int x, int y, BlockFace face, BlockData data) {
+        return this.data.rawColor()[x*16+y];
+    }
+
+    @Override
+    public String texturesString() {
+        return data.id();
     }
 }

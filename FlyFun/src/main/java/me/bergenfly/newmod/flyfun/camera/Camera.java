@@ -66,6 +66,8 @@ public class Camera {
 
             int c = 0;
 
+            int counter = 0;
+
             while (scanner.hasNext()) {
                 int xM = (int) (c/256.0);
                 int yM = c-xM*256;
@@ -98,11 +100,23 @@ public class Camera {
                     IntIntPair pair = GetImagePixel.getImagePixelFromFaceAndLocation(adjustedFace, adjusted, false);
 
                     int color = state.model().getColor(pair.firstInt(), pair.secondInt(), adjustedFace,
-                            null, 15);
+                            null);
 
                     int shaded = ColorUtil.shade(face, color);
 
                     int dimmed = ColorUtil.dimMojang(shaded, blockB, skyB, time);
+
+                    if(blockData.getMaterial().equals(Material.HAY_BLOCK)) {
+                        if(counter++%512==0) {
+                            System.out.println("Pixel");
+                            System.out.println("Model Type: " + state.model().getClass());
+                            System.out.println("Textures: " + state.model().texturesString());
+                            System.out.println("Color: " + Arrays.toString(ColorUtil.toInts(color)));
+                            System.out.println("Shaded: " + Arrays.toString(ColorUtil.toInts(shaded)));
+                            System.out.println("Dimmed: " + Arrays.toString(ColorUtil.toInts(dimmed)));
+                            System.out.println();
+                        }
+                    }
 
                     colors[xM][yM] = dimmed;
                 } else {
