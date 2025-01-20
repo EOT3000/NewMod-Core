@@ -33,7 +33,7 @@ public class ColorUtil {
         }
 
         for(IntObjectPair<double[]> x : colorsLab) {
-            System.out.println(x.firstInt() + " " + idToName(x.keyInt()) + " Lab: " + Arrays.toString(x.value()) + " rgb: " + Arrays.toString(colors.get(x.keyInt())));
+            //System.out.println(x.firstInt() + " " + idToName(x.keyInt()) + " Lab: " + Arrays.toString(x.value()) + " rgb: " + Arrays.toString(colors.get(x.keyInt())));
         }
     }
 

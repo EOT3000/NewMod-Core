@@ -8,9 +8,7 @@ import me.bergenfly.nations.api.command.CommandStem;
 import me.bergenfly.nations.api.command.TranslatableString;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.LandAdministrator;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Rank;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.permission.DefaultNationPermission;
@@ -71,23 +69,27 @@ public class NationCommand extends CommandRoot {
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
 
+        CommandStem community = addBranch("community", null);
+
         {
-            addBranch("invite", new CommandFlower()
-                    .addNation(CommandFlower.INVOKER_LEADER)
-                    .addSettlement(0)
+            community.addBranch("invite", new CommandFlower()
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .nationPermission(DefaultNationPermission.INVITE_SETTLEMENT)
+                    .addCommunity(0)
                     .player()
                     .command((a) -> {
-                        if (a.nations()[0].getSettlements().contains(a.settlements()[0])) {
-                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_member", a.settlements()[0].getName()));
+                        if (a.nations()[0].getCommunities().contains(a.communities()[0])) {
+                            //TODO: message change to community/tribe/settlement variable on which it is
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_member", a.communities()[0].getName()));
                             return false;
                         }
-                        if (a.nations()[0].getInvitations().contains(a.settlements()[0])) {
-                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_invited", a.settlements()[0].getName()));
+                        if (a.nations()[0].getInvitations().contains(a.communities()[0])) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.already_invited", a.communities()[0].getName()));
                             return false;
                         }
-                        a.nations()[0].addInvitation(a.settlements()[0]);
-                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.invite.settlement", a.invoker().getName(), a.settlements()[0].getName()));
-                        a.settlements()[0].broadcastString(TranslatableString.translate("nations.broadcast.invited.settlement", a.invoker().getName(), a.nations()[0].getName()));
+                        a.nations()[0].addInvitation(a.communities()[0]);
+                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.invite.settlement", a.invoker().getName(), a.communities()[0].getName()));
+                        a.communities()[0].broadcastString(TranslatableString.translate("nations.broadcast.invited.settlement", a.invoker().getName(), a.nations()[0].getName()));
                         return true;
                     })
                     .make());
@@ -95,35 +97,82 @@ public class NationCommand extends CommandRoot {
 
         //TODO: uninvite command, and add a join confirmation for settlements w/ a nation
         {
-            addBranch("join", new CommandFlower()
-                    .addSettlement(CommandFlower.INVOKER_LEADER)
+            community.addBranch("join", new CommandFlower()
+                    .addCommunity(CommandFlower.INVOKER_LEADER)
                     .addNation(0)
                     .player()
                     .command((a) -> {
-                        if (!a.nations()[0].getInvitations().contains(a.settlements()[0])) {
+                        if (!a.nations()[0].getInvitations().contains(a.communities()[0])) {
                             a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.not_invited"));
                             return false;
                         }
 
-                        Nation on = a.settlements()[0].getNation();
+                        Nation on = a.communities()[0].getNation();
 
                         if (on != null) {
-                            if (on.getCapital() == a.settlements()[0]) {
+                            if (on.getCapital() == a.communities()[0]) {
                                 a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.is_capital"));
                                 return false;
                             }
 
-                            on.broadcastString(TranslatableString.translate("nations.broadcast.left.nation", a.settlements()[0].getName()));
+                            on.broadcastString(TranslatableString.translate("nations.broadcast.left.nation", a.communities()[0].getName()));
                         }
 
                         a.settlements()[0].setNation(a.nations()[0]);
 
-                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.joined.nation", a.settlements()[0].getName()));
+                        a.nations()[0].broadcastString(TranslatableString.translate("nations.broadcast.joined.nation", a.communities()[0].getName()));
 
                         return true;
                     })
                     .make());
         } //join
+
+        {
+            community.addBranch("leave", new CommandFlower()
+                    .player()
+                    .addCommunity(CommandFlower.INVOKER_LEADER)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .command((a) -> {
+                        Nation n = a.nations()[0];
+                        Community s = a.communities()[0];
+
+                        if (n.getCapital() == s) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.is_capital"));
+                            return false;
+                        }
+
+                        s.setNation(null);
+                        return true;
+                    })
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.nations()[0])
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.communities()[0])
+                    .make());
+        } //leave
+
+        {
+            community.addBranch("kick", new CommandFlower()
+                    .player()
+                    .addCommunity(0)
+                    .addNation(CommandFlower.INVOKER_MEMBER)
+                    .nationPermission(DefaultNationPermission.KICK_SETTLEMENT)
+                    .command((a) -> {
+                        Nation n = a.nations()[0];
+                        Community s = a.communities()[0];
+
+                        if (n.getCapital() == s) {
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.settlement.is_capital"));
+                            return false;
+                        }
+
+                        s.setNation(null);
+                        return true;
+                    })
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.nations()[0])
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.communities()[0])
+                    .make());
+        } //kick
 
         {
             addBranch("map", new CommandFlower()
@@ -175,7 +224,7 @@ public class NationCommand extends CommandRoot {
                         //Make all these if statements single lines
 
                         if(r == null) {
-                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", a.args()[0]));
+                            a.invoker().sendMessage(TranslatableString.translate("nations.command.error.rank.not_argument", "2", a.args()[0]));
                             return false;
                         }
 
@@ -184,7 +233,7 @@ public class NationCommand extends CommandRoot {
                             return false;
                         }
 
-                        if(n.getLeader() == a.invokerUser() || r.getLeader() == a.invokerUser()) {
+                        if(n.getLeader() != a.invokerUser() || r.getLeader() != a.invokerUser()) {
                             a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
                             return false;
                         }
@@ -218,7 +267,7 @@ public class NationCommand extends CommandRoot {
                             return false;
                         }
 
-                        if(n.getLeader() == a.invokerUser() || r.getLeader() == a.invokerUser()) {
+                        if(n.getLeader() != a.invokerUser() || r.getLeader() != a.invokerUser()) {
                             a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
                             return false;
                         }
@@ -278,7 +327,7 @@ public class NationCommand extends CommandRoot {
                             return false;
                         }
 
-                        if(!n.hasPermission(a.users()[0], a.nationPermissions()[0])) {
+                        if(!n.hasPermission(a.invokerUser(), a.nationPermissions()[0])) {
                             a.invoker().sendMessage(TranslatableString.translate("nations.general.no_permission"));
                             return false;
                         }

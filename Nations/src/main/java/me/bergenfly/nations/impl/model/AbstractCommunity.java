@@ -119,6 +119,11 @@ public abstract class AbstractCommunity extends AbstractPlayerGroup implements C
     }
 
     @Override
+    public void removeInvitation(User user) {
+        invitations.remove(user);
+    }
+
+    @Override
     public Set<User> getInvitations() {
         return new HashSet<>(invitations);
     }

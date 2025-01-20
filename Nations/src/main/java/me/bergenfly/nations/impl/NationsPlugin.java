@@ -20,6 +20,7 @@ import me.bergenfly.nations.impl.registry.StringRegistryImpl;
 import me.bergenfly.nations.impl.save.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,11 +28,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
+public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener, PlayerGroup {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
@@ -142,6 +146,21 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     @Override
     public NationsPermissionManager permissionManager() {
         return permissionManager;
+    }
+
+    @Override
+    public void sendInfo(CommandSender user) {
+
+    }
+
+    @Override
+    public Set<User> getMembers() {
+        return new HashSet<>(USERS.list());
+    }
+
+    @Override
+    public Set<User> getOnlineMembers() {
+        return USERS.list().stream().filter(User::isOnline).collect(Collectors.toSet());
     }
 
     //Don't use this. Only internal code can use this

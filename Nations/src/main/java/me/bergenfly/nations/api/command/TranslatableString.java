@@ -85,6 +85,7 @@ public class TranslatableString {
 
         translations.put("nations.command.error.user.already_invited", new TranslatableString("&cThe user &4{1}&c has already been invited to the {2}"));
         translations.put("nations.command.error.user.already_member", new TranslatableString("&cThe user &4{1}&c is already a member of the {2}"));
+        translations.put("nations.command.error.user.not_member", new TranslatableString("&cThe user &4{1}&c is not a member of the {2}"));
 
         translations.put("nations.command.error.player.not_argument", new TranslatableString("&4{2}&c is not a valid player (&7{1o} &cargument)"));
 
@@ -109,6 +110,9 @@ public class TranslatableString {
         translations.put("nations.broadcast.invite.user", new TranslatableString("&e{1} &ahas invited &e{2} to the {3}"));
         translations.put("nations.broadcast.invited.user", new TranslatableString("&e{1} &ahas invited you to the {3} of &e{2}"));
 
+        translations.put("nations.broadcast.kick.user", new TranslatableString("&e{1} &ahas kicked &e{2} from the {3}"));
+        translations.put("nations.broadcast.kicked.user", new TranslatableString("&e{1} &ahas kicked you from the {3} of &e{2}"));
+
         translations.put("nations.broadcast.left.nation", new TranslatableString("&aThe settlement of &e{1} &ahas left your nation"));
         translations.put("nations.broadcast.joined.nation", new TranslatableString("&aThe settlement of &e{1} &ahas joined your nation"));
 
@@ -117,7 +121,7 @@ public class TranslatableString {
 
         translations.put("nations.general.failure", new TranslatableString("&cSomething went wrong"));
         translations.put("nations.general.success", new TranslatableString("&eSuccess"));
-        translations.put("nations.general.no_permission", new TranslatableString("&cYou don't have permission to do that"));
+        translations.put("nations.general.no_permission", new TranslatableString("&cYou don't have permission to do that")); //TODO better message for different plot permissions
 
         translations.put("nations.claim.error.not_adjacent", new TranslatableString("&cYour new claim must be adjacent to an existing {1} claim"));
 

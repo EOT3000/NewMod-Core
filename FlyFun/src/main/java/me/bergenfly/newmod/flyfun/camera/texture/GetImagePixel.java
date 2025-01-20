@@ -18,11 +18,11 @@ public class GetImagePixel {
                 break;
             }
 
-            System.out.println("Beginning " + face.name());
+            //System.out.println("Beginning " + face.name());
 
             for(int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
-                    System.out.println("Rotating forward " + x + " x and " + y + " y");
+                    //System.out.println("Rotating forward " + x + " x and " + y + " y");
 
                     int mx = face.getModX();
                     int my = face.getModY();
@@ -35,7 +35,7 @@ public class GetImagePixel {
                         mx = nx;
                         mz = nz;
 
-                        System.out.println(yy + " time y: " + getFace(mx, my, mz));
+                        //System.out.println(yy + " time y: " + getFace(mx, my, mz));
                     }
 
                     for(int xx = 0; xx < x; xx++) {
@@ -45,19 +45,19 @@ public class GetImagePixel {
                         my = ny;
                         mz = nz;
 
-                        System.out.println(xx + " time x: " + getFace(mx, my, mz));
+                        //System.out.println(xx + " time x: " + getFace(mx, my, mz));
                     }
 
                     //Reverse order of x and y?
 
-                    System.out.println();
+                    //System.out.println();
 
                     transformed[face.ordinal()][x][y] = getFace(mx, my, mz);
                 }
             }
         }
 
-        System.out.println(Arrays.deepToString(transformed));
+        //System.out.println(Arrays.deepToString(transformed));
     }
 
     public static BlockFace getFace(int x, int y, int z) {

@@ -17,7 +17,7 @@ public interface Community extends Organization, LandPermissionHolder, PlayerGro
     /**
      * Should only be used by inheritors of {@link User}.
      * <p>
-     * @deprecated use {@link User#setSettlement} instead
+     * @deprecated use {@link User#setCommunity(Community)} instead
      */
     @Deprecated
     @Override
@@ -30,6 +30,8 @@ public interface Community extends Organization, LandPermissionHolder, PlayerGro
     String getFirstName();
 
     void addInvitation(User user);
+
+    void removeInvitation(User user);
 
     Set<User> getInvitations();
 

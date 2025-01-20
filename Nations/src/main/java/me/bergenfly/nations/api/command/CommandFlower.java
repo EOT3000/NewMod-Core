@@ -77,7 +77,7 @@ public class CommandFlower {
 
     private boolean mustBePlayer = false;
 
-    public Function<NationsCommandInvocation, String> successBroadcast = null;
+    public Consumer<NationsCommandInvocation> successBroadcast = (a) -> {};
     public Function<NationsCommandInvocation, String> successMessage = null;
     public Function<NationsCommandInvocation, String> failureMessage = null;
 
@@ -208,9 +208,14 @@ public class CommandFlower {
     }
 
     public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function) {
-        this.successBroadcast = function;
+        return successBroadcast(function, (a) -> NationsPlugin.getInstance());
+    }
+
+    public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function, Function<NationsCommandInvocation, PlayerGroup> where) {
+        this.successBroadcast = this.successBroadcast.andThen((a) -> where.apply(a).broadcastString(function.apply(a)));
         return this;
     }
+
     public CommandFlower successMessage(Function<NationsCommandInvocation, String> function) {
         this.successMessage = function;
         return this;
@@ -236,17 +241,14 @@ public class CommandFlower {
         NationsCommandInvocation made = maker.make(commandSender, strings);
 
         if(!made.valid) {
+            System.out.println("Invalid");
             return false;
         }
 
         try {
             if (this.command.test(made)) {
                 if (successBroadcast != null) {
-                    String send = successBroadcast.apply(made);
-
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.sendMessage(send);
-                    }
+                    successBroadcast.accept(made);
                 }
 
                 if (successMessage != null) commandSender.sendMessage(successMessage.apply(made));
@@ -297,7 +299,7 @@ public class CommandFlower {
             }
 
             if(!companies_.isEmpty()) {
-                companies = ObjectFetchers.createCompanyFetcher(communities_);
+                companies = ObjectFetchers.createCompanyFetcher(companies_);
             }
 
             if(!users_.isEmpty()) {
@@ -369,9 +371,9 @@ public class CommandFlower {
                 valid = false;
             } else if (ints != null && ints.length == 0) {
                 valid = false;
-            } else if (floats != null && floats.length != 0) {
+            } else if (floats != null && floats.length == 0) {
                 valid = false;
-            } else if (booleans != null && booleans.length != 0) {
+            } else if (booleans != null && booleans.length == 0) {
                 valid = false;
             }
 

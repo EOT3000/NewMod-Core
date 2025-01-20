@@ -57,11 +57,11 @@ public class ClaimUtil {
                 ClaimedChunk chunk = getRelative(chunkX, chunkZ, world, face);
 
                 if(isChunkTouchingSpecific(chunk, n.getCapital(), face.getOppositeFace())) {
-                    return 1;
+                    return 1; //Good
                 }
             }
 
-            return -2;
+            return -2; //Not touching capital
         } else {
             for(int i = 0; i < 4; i++) {
                 BlockFace face = BlockFace.values()[i];
@@ -69,11 +69,13 @@ public class ClaimUtil {
                 ClaimedChunk chunk = getRelative(chunkX, chunkZ, world, face);
 
                 if(isChunkTouchingSpecific(chunk, administrator, face.getOppositeFace())) {
-                    return 1;
+                    return 1; //Good
                 }
             }
 
-            return -1;
+            if(administrator instanceof Settlement && administrator.getLand().isEmpty()) return 1;
+
+            return -1; //Not touching itself
         }
     }
 

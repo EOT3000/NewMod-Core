@@ -149,16 +149,16 @@ public class Textures {
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
 
                 if(block instanceof UnknownModel um) {
-                    System.out.println("Unable to load " + model.getName() + " (" + um.parent + ")");
-                    System.out.println("textures: " + um.textures + "\n");
+                    //System.out.println("Unable to load " + model.getName() + " (" + um.parent + ")");
+                    //System.out.println("textures: " + um.textures + "\n");
                 }
 
                 this.models.put(model.getName().replace(".json", ""), block);
 
                 //if(block instanceof TOP)
             } catch (Exception e) {
-                System.out.println(model.getName());
-                e.printStackTrace();
+                //System.out.println(model.getName());
+                //e.printStackTrace();
             }
         }
     }
