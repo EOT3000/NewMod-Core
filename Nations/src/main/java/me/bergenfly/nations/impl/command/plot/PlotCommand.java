@@ -5,6 +5,7 @@ import me.bergenfly.nations.api.command.*;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
@@ -68,6 +69,35 @@ public class PlotCommand extends CommandRoot {
                     .make());
         } //fs (for sale)
 
+
+        {
+            addBranch("split", new CommandFlower()
+                    .player()
+                    .command((a) -> {
+                        PlotSection section = a.invokerUser().currentlyAt();
+
+                        if(section == null)  {
+                            a.invokerUser().sendMessage(TranslatableString.translate("nations.command.error.not_in_territory"));
+                            return false;
+                        }
+
+                        ClaimedChunk chunk = section.in();
+
+                        for(PlotSection sec : chunk.getSections(false)) {
+                            if(!sec.getAdministrator().isAdministratedLandManager(a.invokerUser())) {
+                                a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                                return false;
+                            }
+                        }
+
+
+
+                        return true;
+                    })
+                    .successMessage((a) -> TranslatableString.translate("nations.general.success"))
+                    .make());
+        } //split
+
         {
             addBranch("claim", new CommandFlower()
                     .addSettlement(CommandFlower.CURRENT_LOCATION)
@@ -91,7 +121,7 @@ public class PlotCommand extends CommandRoot {
 
                                 if (!checkFs(section, a)) return false;
 
-                                if(m.right().isLandManager(a.invokerUser())) {
+                                if(m.right().isOwnedLandManager(a.invokerUser())) {
                                     ((PermissiblePlotSection) section).setOwner(m.right());
                                     return true;
                                 }
@@ -151,7 +181,7 @@ public class PlotCommand extends CommandRoot {
 
     private static boolean checkPlotOwner(PlotSection section, CommandFlower.NationsCommandInvocation a) {
         if(section instanceof PermissiblePlotSection s) {
-            if (s.getOwner().isLandManager(a.invokerUser())) {
+            if (s.getOwner().isOwnedLandManager(a.invokerUser())) {
                 return true;
             } else {
                 a.invokerUser().sendMessage(TranslatableString.translate("nations.general.no_permission"));

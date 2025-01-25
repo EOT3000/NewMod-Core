@@ -90,7 +90,7 @@ public class RankImpl extends AbstractLedPlayerGroup implements Rank {
     }
 
     @Override
-    public boolean isLandManager(User user) {
+    public boolean isOwnedLandManager(User user) {
         return user.equals(leader);
     }
 

@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
@@ -23,15 +24,15 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
     private boolean claimable = false;
 
-    public PermissiblePlotSectionImpl(LandAdministrator administrator) {
-        super(administrator);
+    public PermissiblePlotSectionImpl(LandAdministrator administrator, ClaimedChunk in) {
+        super(administrator, in);
 
         this.owner = administrator;
     }
 
     @Override
     public boolean hasPermission(PlotPermission permission, User user) {
-        if(owner.isLandManager(user)) return true;
+        if(owner.isOwnedLandManager(user)) return true;
 
         //Tested this: pretty but slow
         OptionalInt i = permissions.keySet().stream()

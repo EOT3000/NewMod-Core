@@ -112,12 +112,12 @@ public class SettlementImpl extends AbstractCommunity implements Settlement {
     }
 
     @Override
-    public PlotSection createEmptyPlotSection() {
-        return new PermissiblePlotSectionImpl(this);
+    public PlotSection createEmptyPlotSection(ClaimedChunk in) {
+        return new PermissiblePlotSectionImpl(this, in);
     }
 
     @Override
-    public boolean isUserAdmin(User user) {
+    public boolean isAdministratedLandManager(User user) {
         return leader.equals(user);
     }
 

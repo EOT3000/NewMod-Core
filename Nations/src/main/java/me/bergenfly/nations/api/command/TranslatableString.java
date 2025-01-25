@@ -58,8 +58,11 @@ public class TranslatableString {
         translations.put("nations.command.error.settlement.is_capital", new TranslatableString("&cThe capital may not leave its nation"));
         translations.put("nations.command.error.user.is_leader", new TranslatableString("&cThe leader may not leave their {1}"));
 
+        translations.put("nations.command.error.not_in_territory", new TranslatableString("&cYou must be within a nation or settlement's territory to do that"));
+
+
         translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
-        translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to run that command"));
+        translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to do that"));
         translations.put("nations.command.error.nation.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
 
         translations.put("nations.command.error.nation.is_member", new TranslatableString("&cYou must leave your nation to do that"));

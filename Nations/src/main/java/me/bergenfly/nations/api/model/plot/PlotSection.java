@@ -10,4 +10,6 @@ import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
  */
 public interface PlotSection {
     LandAdministrator getAdministrator();
+
+    ClaimedChunk in();
 }
