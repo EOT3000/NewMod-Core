@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.command.plot;
 
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.command.*;
+import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
@@ -12,6 +13,7 @@ import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
+import me.bergenfly.nations.impl.model.plot._2x2_Chunk;
 import org.bukkit.ChatColor;
 
 import static me.bergenfly.nations.api.command.TranslatableString.translate;
@@ -20,6 +22,7 @@ import static me.bergenfly.nations.api.manager.NationsPermissionManager.*;
 public class PlotCommand extends CommandRoot {
 
     private static NationsPermissionManager PERMISSION_MANAGER = NationsPlugin.getInstance().permissionManager();
+    private static NationsLandManager LAND_MANAGER = NationsPlugin.getInstance().landManager();
 
     public PlotCommand() {
         super("plot");
@@ -90,7 +93,14 @@ public class PlotCommand extends CommandRoot {
                             }
                         }
 
+                        if(chunk.getDivision() > 0) {
+                            a.invokerUser().sendMessage(TranslatableString.translate("nations.command.error.plot.split"));
+                            return false;
+                        }
 
+                        _2x2_Chunk newChunk = new _2x2_Chunk(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld(), section.getAdministrator());
+
+                        LAND_MANAGER.replaceChunk(chunk, newChunk);
 
                         return true;
                     })

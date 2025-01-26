@@ -3,6 +3,7 @@ package me.bergenfly.nations.impl.model.plot;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import org.jetbrains.annotations.NotNull;
 
 public class PlotSectionImpl implements PlotSection {
     private LandAdministrator administrator;
@@ -14,7 +15,7 @@ public class PlotSectionImpl implements PlotSection {
     }
 
     @Override
-    public LandAdministrator getAdministrator() {
+    public @NotNull LandAdministrator getAdministrator() {
         return administrator;
     }
 

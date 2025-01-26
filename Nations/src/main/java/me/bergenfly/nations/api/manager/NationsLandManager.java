@@ -17,6 +17,11 @@ public class NationsLandManager {
         Plots.init();
     }
 
+    public void replaceChunk(ClaimedChunk old, ClaimedChunk neew) {
+        old.unclaim();
+        PLOTS.set(Plots.getLocationId(neew.getChunkX(), neew.getChunkZ(), neew.getWorld()), neew);
+    }
+
     public ClaimedChunk getClaimedChunkAtLocation(Location location) {
         return getClaimedChunkAtChunk(location.getWorld(), location.getChunk().getX(), location.getChunk().getZ());
     }

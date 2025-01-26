@@ -36,12 +36,28 @@ public class _1x1_Chunk implements ClaimedChunk {
 
     @Override
     public @Nullable PlotSection setAt(int x0_15, int z0_15, LandAdministrator admin) {
-        return null;
+        if(data != null && data.getAdministrator().equals(admin)) {
+            return data;
+        }
+
+        PlotSection old = data;
+
+        this.data = admin.createEmptyPlotSection(this);
+
+        return old;
     }
 
     @Override
     public @Nullable PlotSection setAt(int x0_15, int z0_15, PlotSection section) {
-        return null;
+        if(data == section) {
+            return data;
+        }
+
+        PlotSection old = data;
+
+        this.data = section;
+
+        return old;
     }
 
     @Override

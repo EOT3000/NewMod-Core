@@ -7,9 +7,7 @@ import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class _2x2_Chunk implements ClaimedChunk {
     private LandAdministrator[] data;
@@ -30,6 +28,36 @@ public class _2x2_Chunk implements ClaimedChunk {
                 administrator,
                 administrator,
                 administrator
+        };
+    }
+
+    public _2x2_Chunk(int x, int z, World w, PlotSection... sections) {
+        this.x = x;
+        this.z = z;
+        this.w = w;
+
+        Set<PlotSection> s = new HashSet<>();
+        Set<LandAdministrator> a = new HashSet<>();
+
+        for(int i = 0; i < 4; i++) {
+            s.add(sections[i]);
+            a.add(sections[i] == null ? null : sections[i].getAdministrator());
+        }
+
+        if(s.size() != a.size()) {
+            throw new IllegalArgumentException();
+        }
+
+        admin2Section.put(sections[0] == null ? null : sections[0].getAdministrator(), sections[0]);
+        admin2Section.put(sections[1] == null ? null : sections[1].getAdministrator(), sections[1]);
+        admin2Section.put(sections[2] == null ? null : sections[2].getAdministrator(), sections[2]);
+        admin2Section.put(sections[3] == null ? null : sections[3].getAdministrator(), sections[3]);
+
+        this.data = new LandAdministrator[] {
+                sections[0] == null ? null : sections[0].getAdministrator(),
+                sections[1] == null ? null : sections[1].getAdministrator(),
+                sections[2] == null ? null : sections[2].getAdministrator(),
+                sections[3] == null ? null : sections[3].getAdministrator()
         };
     }
 

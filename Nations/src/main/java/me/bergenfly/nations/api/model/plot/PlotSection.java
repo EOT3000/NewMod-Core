@@ -2,6 +2,7 @@ package me.bergenfly.nations.api.model.plot;
 
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A section of a {@link ClaimedChunk}, administrated by one {@link LandAdministrator}, and owned by one {@link LandPermissionHolder}
@@ -9,7 +10,7 @@ import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
  * A PlotSection can hold ownership information.
  */
 public interface PlotSection {
-    LandAdministrator getAdministrator();
+    @NotNull LandAdministrator getAdministrator();
 
     ClaimedChunk in();
 }
