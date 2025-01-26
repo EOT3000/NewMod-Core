@@ -30,7 +30,7 @@ public class SavePlot {
         chunkMap.put("z", chunk.getChunkZ());
         chunkMap.put("id", Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld()));
         chunkMap.put("world", chunk.getWorld().getName());
-        chunkMap.put("type", chunk.getDivision());
+        chunkMap.put("divisions", chunk.getDivision());
 
         int count = 0;
 

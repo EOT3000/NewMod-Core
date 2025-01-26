@@ -18,6 +18,12 @@ public class _1x1_Chunk implements ClaimedChunk {
         this.data = administrator.createEmptyPlotSection(this);
     }
 
+    public _1x1_Chunk(int x, int z, World w) {
+        this.x = x;
+        this.z = z;
+        this.w = w;
+    }
+
     private final int x;
     private final int z;
     private final World w;
@@ -42,7 +48,7 @@ public class _1x1_Chunk implements ClaimedChunk {
 
         PlotSection old = data;
 
-        this.data = admin.createEmptyPlotSection(this);
+        this.data = admin == null ? null : admin.createEmptyPlotSection(this);
 
         return old;
     }
