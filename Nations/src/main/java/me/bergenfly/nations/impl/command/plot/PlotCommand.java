@@ -100,7 +100,7 @@ public class PlotCommand extends CommandRoot {
 
                         _2x2_Chunk newChunk = new _2x2_Chunk(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld(), section.getAdministrator());
 
-                        LAND_MANAGER.replaceChunk(chunk, newChunk);
+                        LAND_MANAGER.replaceChunk(newChunk);
 
                         return true;
                     })

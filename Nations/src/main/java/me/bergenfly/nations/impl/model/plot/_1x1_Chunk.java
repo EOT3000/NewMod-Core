@@ -1,8 +1,10 @@
 package me.bergenfly.nations.impl.model.plot;
 
+import me.bergenfly.nations.api.manager.Plots;
 import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.impl.NationsPlugin;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,8 +37,10 @@ public class _1x1_Chunk implements ClaimedChunk {
 
     @Override
     public PlotSection[] getSections(boolean a) {
-        return new PlotSection[] {
-                data
+        return data == null && !a
+                ? new PlotSection[0]
+                : new PlotSection[] {
+                        data
         };
     }
 
@@ -88,6 +92,12 @@ public class _1x1_Chunk implements ClaimedChunk {
 
     @Override
     public void unclaim() {
+        if(data != null) {
+            data.getAdministrator().removeLand(data);
+        }
+
+        NationsPlugin.getInstance().landManager().getPLOTS().set(Plots.getLocationId(x, z, Plots.getWorldId(w)), null);
+
         data = null;
     }
 

@@ -105,6 +105,7 @@ public class TranslatableString {
         translations.put("nations.command.error.plot.nfs", new TranslatableString("&cThis plot is not for sale"));
 
         translations.put("nations.command.error.plot.split", new TranslatableString("&cThis plot is already split"));
+        translations.put("nations.command.error.plot.not_split", new TranslatableString("&cThis plot is not split"));
 
         translations.put("nations.broadcast.created.community", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));

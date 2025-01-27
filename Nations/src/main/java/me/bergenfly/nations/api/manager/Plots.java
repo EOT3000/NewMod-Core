@@ -1,6 +1,7 @@
 package me.bergenfly.nations.api.manager;
 
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 
@@ -104,6 +105,10 @@ public class Plots {
 
     public static Integer getLocationId(int x, int z, World world) {
         return getLocationId(x, z, getWorldId(world));
+    }
+
+    public static Integer getLocationId(ClaimedChunk chunk) {
+        return getLocationId(chunk.getChunkX(), chunk.getChunkZ(), getWorldId(chunk.getWorld()));
     }
 
     public static Integer getLocationId(int x, int z, int world) {

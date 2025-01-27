@@ -23,7 +23,7 @@ public class SettlementCommand extends CommunityCommand {
         addBranch("claim", new CommandFlower()
                 .addSettlement(CommandFlower.INVOKER_LEADER)
                 .player()
-                .command((a) -> ClaimUtil.tryClaimWithChecks(a.invokerUser(), a.settlements()[0], "settlement"))
+                .command((a) -> ClaimUtil.tryClaimWithChecksAndArgs(a.invokerUser(), a.settlements()[0], "settlement", a.args()))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
     }

@@ -80,6 +80,8 @@ public class LoadPlot {
                 int num = (int) Math.pow(2, divisions);
                 int each = 16/num;
 
+                List<Runnable> ifCompletedDo = new ArrayList<>();
+
                 if(divisions == 0 && sectionsList.size() == 1) {
                     chunk.setAt(0, 0, sectionsList.values().iterator().next());
                 } else if(divisions == 1 && sectionsList.size() == 4) {
@@ -98,10 +100,18 @@ public class LoadPlot {
                             PlotSection at = sectionsList.get(columns[xg]);
 
                             chunk.setAt(xg*each, rowNumber*each, at);
+
+                            ifCompletedDo.add(() -> {
+                                at.getAdministrator().addLand(at);
+                            });
                         }
                     }
                 } else {
                     logError("Error loading chunk with id: " + key + " in file " + file.getName() + " : mismatched divisions and section count " + divisions + "," + sectionsList.size());
+                }
+
+                for(Runnable runnable : ifCompletedDo) {
+                    runnable.run();
                 }
 
                 map.put(id, chunk);

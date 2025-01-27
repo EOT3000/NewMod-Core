@@ -65,7 +65,7 @@ public class NationCommand extends CommandRoot {
         addBranch("claim", new CommandFlower()
                 .addNation(CommandFlower.INVOKER_LEADER)
                 .player()
-                .command((a) -> ClaimUtil.tryClaimWithChecks(a.invokerUser(), a.nations()[0], "nation"))
+                .command((a) -> ClaimUtil.tryClaimWithChecksAndArgs(a.invokerUser(), a.nations()[0], "nation", a.args()))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
                 .make());
 
@@ -169,8 +169,8 @@ public class NationCommand extends CommandRoot {
                         return true;
                     })
                     .successMessage((a) -> TranslatableString.translate("nations.general.success"))
-                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.nations()[0])
-                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community left", a.communities()[0].getName()), (a) -> a.communities()[0])
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community kicked", a.communities()[0].getName()), (a) -> a.nations()[0])
+                    .successBroadcast((a) -> TranslatableString.translate("NationCommand: community kicked", a.communities()[0].getName()), (a) -> a.communities()[0])
                     .make());
         } //kick
 
