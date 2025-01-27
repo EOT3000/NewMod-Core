@@ -83,7 +83,11 @@ public class LoadPlot {
                 List<Runnable> ifCompletedDo = new ArrayList<>();
 
                 if(divisions == 0 && sectionsList.size() == 1) {
-                    chunk.setAt(0, 0, sectionsList.values().iterator().next());
+                    PlotSection s = sectionsList.values().iterator().next();
+
+                    chunk.setAt(0, 0, s);
+
+                    s.getAdministrator().addLand(s);
                 } else if(divisions == 1 && sectionsList.size() == 4) {
                     ConfigurationSection rows = chunkData.getConfigurationSection("geometry");
 

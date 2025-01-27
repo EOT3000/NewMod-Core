@@ -6,6 +6,7 @@ import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
 import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.command.community.SettlementCommand;
 import me.bergenfly.nations.impl.command.company.CompanyCommand;
@@ -185,8 +186,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener, P
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        ClaimedChunk from = landManager.getClaimedChunkAtLocation(event.getFrom());
-        ClaimedChunk to = landManager.getClaimedChunkAtLocation(event.getTo());
+        PlotSection from = landManager.getPlotSectionAtLocation(event.getFrom());
+        PlotSection to = landManager.getPlotSectionAtLocation(event.getTo());
 
         if (to == from) {
             return;
@@ -195,10 +196,10 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener, P
         if (to == null) {
             event.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
         } else {
-            LandAdministrator admin = to.getAt(0,0).getAdministrator();
+            LandAdministrator admin = to.getAdministrator();
 
             if(from != null) {
-                LandAdministrator adminOld = from.getAt(0, 0).getAdministrator();
+                LandAdministrator adminOld = from.getAdministrator();
 
                 if(adminOld == admin) {
                     return;

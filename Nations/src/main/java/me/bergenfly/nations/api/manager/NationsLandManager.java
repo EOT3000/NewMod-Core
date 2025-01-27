@@ -145,6 +145,10 @@ public class NationsLandManager {
     }
 
     private void simplifyAt(ClaimedChunk chunk) {
+        if(chunk == null) {
+            return;
+        }
+
         if(chunk.getSections(false).length == 0) {
             PLOTS.set(Plots.getLocationId(chunk), null);
         }

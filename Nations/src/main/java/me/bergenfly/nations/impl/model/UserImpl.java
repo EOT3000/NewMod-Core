@@ -129,7 +129,7 @@ public class UserImpl implements User {
 
         Location location = getPlayer().getLocation();
 
-        return api.landManager().tryClaimChunkAtLocation(location, admin);
+        return api.landManager().tryClaimFullChunkAtLocationOtherwiseFail(location, admin);
     }
 
     @Override
