@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class SavePlot {
     public static Map<String, Object> plotToMap(ClaimedChunk chunk) {
-        if(chunk.getAt(0, 0) == null) {
+        if(chunk.getSections(false).length == 0) {
             return null;
         }
 

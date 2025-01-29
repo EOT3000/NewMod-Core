@@ -56,22 +56,26 @@ public class LoadPlot {
                 for (String sectionId : sections.getKeys(false)) {
                     ConfigurationSection section = sections.getConfigurationSection(sectionId);
 
-                    String administrator = section.getString("administrator");
-
-                    LandAdministrator landObject = (LandAdministrator) (api.permissionHoldersByIdRegistry().get(administrator));
-
-                    boolean hasPermissions = section.contains("permissions");
-
                     PlotSection plotSection;
 
-                    if(hasPermissions) {
-                        PermissiblePlotSection pps = new PermissiblePlotSectionImpl(landObject, chunk);
-
-                        pps.loadPermissions(section.getStringList("permissions"));
-
-                        plotSection = pps;
+                    if(section.getString("claimed", "false").equalsIgnoreCase("false")) {
+                        plotSection = null;
                     } else {
-                        plotSection = new PlotSectionImpl(landObject, chunk);
+                        String administrator = section.getString("administrator");
+
+                        LandAdministrator landObject = (LandAdministrator) (api.permissionHoldersByIdRegistry().get(administrator));
+
+                        boolean hasPermissions = section.contains("permissions");
+
+                        if (hasPermissions) {
+                            PermissiblePlotSection pps = new PermissiblePlotSectionImpl(landObject, chunk);
+
+                            pps.loadPermissions(section.getStringList("permissions"));
+
+                            plotSection = pps;
+                        } else {
+                            plotSection = new PlotSectionImpl(landObject, chunk);
+                        }
                     }
 
                     sectionsList.put(sectionId, plotSection);
@@ -88,7 +92,7 @@ public class LoadPlot {
                     chunk.setAt(0, 0, s);
 
                     s.getAdministrator().addLand(s);
-                } else if(divisions == 1 && sectionsList.size() == 4) {
+                } else if(divisions == 1 && sectionsList.size() <= 4) {
                     ConfigurationSection rows = chunkData.getConfigurationSection("geometry");
 
                     for(String row : rows.getKeys(false)) {
@@ -105,9 +109,11 @@ public class LoadPlot {
 
                             chunk.setAt(xg*each, rowNumber*each, at);
 
-                            ifCompletedDo.add(() -> {
-                                at.getAdministrator().addLand(at);
-                            });
+                            if(at != null) {
+                                ifCompletedDo.add(() -> {
+                                    at.getAdministrator().addLand(at);
+                                });
+                            }
                         }
                     }
                 } else {

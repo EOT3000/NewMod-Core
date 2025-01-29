@@ -111,20 +111,21 @@ public class NationsLandManager {
             } else {
                 return false;
             }
+        } else {
+            _2x2_Chunk newChunk = new _2x2_Chunk(location.getChunk().getX(), location.getChunk().getZ(), location.getWorld(), null, null, null, null);
+
+            newChunk.setAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ(), administrator);
+
+            //This should not happen
+            if (administrator != null) {
+                administrator.addLand(newChunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
+            }
+
+
+            PLOTS.set(Plots.getLocationId(newChunk), newChunk);
+
+            simplifyAt(newChunk);
         }
-
-        _2x2_Chunk newChunk = new _2x2_Chunk(location.getChunk().getX(), location.getChunk().getZ(), location.getWorld(), null, null, null, null);
-
-        newChunk.setAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ(), administrator);
-
-        //This should not happen
-        if(administrator != null) {
-            administrator.addLand(newChunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
-        }
-
-        PLOTS.set(Plots.getLocationId(newChunk), newChunk);
-
-        simplifyAt(newChunk);
 
         return true;
     }
@@ -199,8 +200,10 @@ public class NationsLandManager {
     }
 
     public PlotSection getPlotSectionAtLocation(int x, int z, World world) {
-        ClaimedChunk chunk = getClaimedChunkAtChunk(world, x, z);
-        return chunk == null ? null : chunk.getAt(x-chunk.getChunkX()*16, z-chunk.getChunkZ()*16);
+        ChunkLocation location = new ChunkLocation(x,z);
+
+        ClaimedChunk chunk = getClaimedChunkAtChunk(world, location.chunkX(), location.chunkZ());
+        return chunk == null ? null : chunk.getAt(location.coordWithinChunkX(), location.coordWithinChunkZ());
     }
 
     public Registry<ClaimedChunk, Integer> getPLOTS() {

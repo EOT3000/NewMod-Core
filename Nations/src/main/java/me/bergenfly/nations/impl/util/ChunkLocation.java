@@ -14,7 +14,7 @@ public record ChunkLocation(int x, int z) {
     }
 
     public int coordWithinChunkZ() {
-        return z-chunkX()*16;
+        return z-chunkZ()*16;
     }
 
     public int minCoordChunkX() {

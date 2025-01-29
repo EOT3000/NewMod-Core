@@ -122,7 +122,7 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
 
     @Override
     public PermissiblePlotSection cloneAt(ClaimedChunk claimedChunk) {
-        PermissiblePlotSectionImpl section = new PermissiblePlotSectionImpl(getAdministrator(), in());
+        PermissiblePlotSectionImpl section = new PermissiblePlotSectionImpl(getAdministrator(), claimedChunk);
 
         section.setOwner(owner);
 

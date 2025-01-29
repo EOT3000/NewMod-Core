@@ -127,6 +127,7 @@ public class _2x2_Chunk implements ClaimedChunk {
 
         LandAdministrator newAdmin = section.getAdministrator();
 
+        //Keep this here just in case
         if(newAdmin == null) {
             throw new IllegalArgumentException("PlotSection's admin is null");
         }

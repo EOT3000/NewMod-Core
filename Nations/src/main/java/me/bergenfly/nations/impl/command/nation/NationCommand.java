@@ -425,21 +425,22 @@ public class NationCommand extends CommandRoot {
                     }
 
                     line = line.append(Component.text('#').color(TextColor.color(r/c, g/c, b/c)));
-                }
+                } else {
 
-                LandAdministrator admin = chunk.getAt(0, 0).getAdministrator();
+                    LandAdministrator admin = chunk.getAt(0, 0).getAdministrator();
 
-                if (!map.containsKey(admin)) {
-                    if (admin instanceof Nation) {
-                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.DARK_RED)));
-                    } else {
-                        map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.RED)));
+                    if (!map.containsKey(admin)) {
+                        if (admin instanceof Nation) {
+                            map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.DARK_RED)));
+                        } else {
+                            map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.RED)));
+                        }
+
+                        cur++;
                     }
 
-                    cur++;
+                    line = line.append(map.get(admin));
                 }
-
-                line = line.append(map.get(admin));
             }
 
             player.sendMessage(line);

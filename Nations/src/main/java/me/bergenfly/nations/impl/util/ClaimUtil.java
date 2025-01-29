@@ -195,28 +195,16 @@ public class ClaimUtil {
     // If settlement, then must be next to existing settlement claim
     public static int adjacentToSettlementOrNation(int chunkX, int chunkZ, World world, @Nullable LandAdministrator administrator) {
         if(administrator instanceof Nation n && n.getNationLand().isEmpty()) {
-            for(int i = 0; i < 4; i++) {
-                BlockFace face = BlockFace.values()[i];
-
-                ClaimedChunk chunk = getRelative(chunkX, chunkZ, world, face);
-
-                if(isChunkTouchingSpecific(chunk, n.getCapital(), face.getOppositeFace())) {
-                    return 1; //Good
-                }
+            if (isChunkTouchingSpecific(chunkX, chunkZ, world, n.getCapital())) {
+                return 1; //Good
             }
 
             return -2; //Not touching capital
         } else {
             if(administrator instanceof Settlement && administrator.getLand().isEmpty()) return 1;
 
-            for(int i = 0; i < 4; i++) {
-                BlockFace face = BlockFace.values()[i];
-
-                ClaimedChunk chunk = getRelative(chunkX, chunkZ, world, face);
-
-                if(isChunkTouchingSpecific(chunk, administrator, face.getOppositeFace())) {
-                    return 1; //Good
-                }
+            if (isChunkTouchingSpecific(chunkX, chunkZ, world, administrator)) {
+                return 1; //Good
             }
 
             return -1; //Not touching itself
@@ -246,7 +234,7 @@ public class ClaimUtil {
     }
 
     private static boolean isAreaTouchingSpecific(int xMin, int zMin, int xMax, int zMax, World world, LandAdministrator administrator) {
-        for(int x = xMin; x < xMax; x++) {
+        for(int x = xMin; x <= xMax; x++) {
             int z = zMin-1;
 
             PlotSection section = manager.getPlotSectionAtLocation(x, z, world);
@@ -264,7 +252,7 @@ public class ClaimUtil {
             }
         }
 
-        for(int z = zMin; z < zMax; z++) {
+        for(int z = zMin; z <= zMax; z++) {
             int x = xMin-1;
 
             PlotSection section = manager.getPlotSectionAtLocation(x, z, world);
@@ -285,24 +273,7 @@ public class ClaimUtil {
         return false;
     }
 
-    public static boolean isChunkTouchingSpecific(ClaimedChunk chunk, LandAdministrator administrator, BlockFace fromThe) {
-        if(chunk == null) {
-            return false;
-        }
-
-        for(int i = 0; i < 16; i++) {
-            int x = fromThe.getModZ()*i+(int) (7.5 + 7.5*fromThe.getModX());
-            int z = fromThe.getModX()*i+(int) (7.5 + 7.5*fromThe.getModZ());
-
-            PlotSection section = chunk.getAt(x,z);
-
-            if(section != null) {
-                if(section.getAdministrator().equals(administrator)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    public static boolean isChunkTouchingSpecific(int chunkX, int chunkZ, World world, LandAdministrator administrator) {
+        return isAreaTouchingSpecific(chunkX*16, chunkZ*16, chunkX*16+15, chunkX*16+15, world, administrator);
     }
 }
