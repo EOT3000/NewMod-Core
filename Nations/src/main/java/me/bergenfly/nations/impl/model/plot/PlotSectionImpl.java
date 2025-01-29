@@ -23,4 +23,9 @@ public class PlotSectionImpl implements PlotSection {
     public ClaimedChunk in() {
         return in;
     }
+
+    @Override
+    public PlotSection cloneAt(ClaimedChunk claimedChunk) {
+        return new PlotSectionImpl(administrator, claimedChunk);
+    }
 }

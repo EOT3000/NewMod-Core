@@ -12,17 +12,108 @@ import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.impl.model.plot._2x2_Chunk;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class ClaimUtil {
     public static final NationsLandManager manager = NationsPlugin.getInstance().landManager();
 
+    public static ClaimedChunk split(ClaimedChunk chunk, PlotSection section) {
+        _2x2_Chunk newChunk = new _2x2_Chunk(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld(), section.getAdministrator());
+
+        PlotSection sec = section.cloneAt(newChunk);
+
+        newChunk.setAt(0, 0, (PlotSection) null);
+        newChunk.setAt(0, 15, (PlotSection) null);
+        newChunk.setAt(15, 0, (PlotSection) null);
+        newChunk.setAt(15, 15, (PlotSection) null);
+
+        newChunk.setAt(0, 0, sec);
+        newChunk.setAt(0, 15, sec);
+        newChunk.setAt(15, 0, sec);
+        newChunk.setAt(15, 15, sec);
+
+        manager.replaceChunk(newChunk);
+
+        return newChunk;
+    }
+
+    public static boolean tryUnclaimWithChecksAndArgs(User user, LandAdministrator administrator, String[] args) {
+        Location location = user.getPlayer().getLocation();
+
+        if(args.length == 0 || args[0].equalsIgnoreCase("chunk")) {
+            ClaimedChunk chunk = manager.getClaimedChunkAtLocation(user.getPlayer().getLocation());
+
+            if(manager.chunkIsOnly(chunk, administrator)) {
+                manager.unclaimChunk(location.getWorld(), location.getChunk().getX(), location.getChunk().getZ());
+                return true;
+            }
+
+            user.sendMessage(TranslatableString.translate("nations.general.no_permission"));
+
+            return false;
+        }
+
+        if(args[0].equalsIgnoreCase("quarter")) {
+            PlotSection section = manager.getPlotSectionAtLocation(location);
+
+            if(section == null) {
+                user.sendMessage(TranslatableString.translate("nations.claim.error.not_claimed"));
+                return false;
+            }
+
+            if(section.getAdministrator() != administrator) {
+                user.sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                return false;
+            }
+
+            ChunkLocation cl = new ChunkLocation(location.getBlockX(), location.getBlockZ());
+
+            ClaimedChunk chunk = section.in();
+
+            if(chunk.getDivision() == 0) {
+                chunk = split(section.in(), section);
+            }
+
+            if(chunk.getDivision() == 1) {
+                chunk.setAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ(), (LandAdministrator) null);
+
+                return true;
+            }
+
+            if(chunk.getDivision() > 1) {
+                for(int x = cl.minCoordQuarterWithinChunkX(); x < cl.maxCoordQuarterWithinChunkX(); x++) {
+                    for(int z = cl.minCoordQuarterWithinChunkZ(); z < cl.maxCoordQuarterWithinChunkZ(); z++) {
+                        PlotSection at = chunk.getAt(x, z);
+
+                        if(at == null || at.getAdministrator().equals(administrator)) {
+                            user.sendMessage(TranslatableString.translate("nations.general.no_permission"));
+                            return false;
+                        }
+                    }
+                }
+
+                for(int x = cl.minCoordQuarterWithinChunkX(); x < cl.maxCoordQuarterWithinChunkX(); x++) {
+                    for(int z = cl.minCoordQuarterWithinChunkZ(); z < cl.maxCoordQuarterWithinChunkZ(); z++) {
+                        chunk.setAt(x, z, (LandAdministrator) null);
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        user.sendMessage("ClaimUtil: unknown argument");
+        return false;
+    }
+
     public static boolean tryClaimWithChecksAndArgs(User user, LandAdministrator administrator, String type, String[] args) {
-        if(args.length == 0) {
+        if(args.length == 0 || args[0].equalsIgnoreCase("chunk")) {
             return tryClaimFullChunkWithChecks(user, administrator, type);
         }
 
@@ -34,7 +125,7 @@ public class ClaimUtil {
         return false;
     }
 
-    public static boolean tryClaimQuarterWithChecks(User user, LandAdministrator administrator, String type) {
+    public static boolean tryClaimQuarterWithChecks(User user, @Nullable LandAdministrator administrator, String type) {
         Location location = user.getPlayer().getLocation();
 
         ClaimedChunk chunk = manager.getClaimedChunkAtLocation(location);
@@ -48,28 +139,32 @@ public class ClaimUtil {
 
         ChunkLocation cl = new ChunkLocation(location.getBlockX(), location.getBlockZ());
 
-        switch(adjacentToSettlementOrNationQuarter(cl, chunk.getWorld(), administrator)) {
-            case -1: {
-                user.sendMessage(TranslatableString.translate("nations.claim.error.not_adjacent", type));
-                return false;
-            }
-            case -2: {
-                user.sendMessage(TranslatableString.translate("nations.claim.error.not_adjacent", "capital settlement"));
-                return false;
+        if(administrator != null) {
+            switch (adjacentToSettlementOrNationQuarter(cl, location.getWorld(), administrator)) {
+                case -1: {
+                    user.sendMessage(TranslatableString.translate("nations.claim.error.not_adjacent", type));
+                    return false;
+                }
+                case -2: {
+                    user.sendMessage(TranslatableString.translate("nations.claim.error.not_adjacent", "capital settlement"));
+                    return false;
+                }
             }
         }
 
         boolean result = manager.tryClaimQuarterAtLocationOtherwiseFail(location, administrator);
 
         if(!result) {
-            user.sendMessage(TranslatableString.translate("nations.claim.error.already_claimed"));
+            if(administrator != null) {
+                user.sendMessage(TranslatableString.translate("nations.claim.error.already_claimed", "quarter"));
+            }
             return false;
         }
 
         return true;
     }
 
-    public static boolean tryClaimFullChunkWithChecks(User user, LandAdministrator administrator, String type) {
+    public static boolean tryClaimFullChunkWithChecks(User user, @Nullable LandAdministrator administrator, String type) {
         Chunk chunk = user.getPlayer().getLocation().getChunk();
 
         switch(adjacentToSettlementOrNation(chunk.getX(), chunk.getZ(), chunk.getWorld(), administrator)) {
@@ -86,7 +181,7 @@ public class ClaimUtil {
         boolean result = manager.tryClaimFullChunkOtherwiseFail(chunk, administrator);
 
         if(!result) {
-            user.sendMessage(TranslatableString.translate("nations.claim.error.already_claimed"));
+            user.sendMessage(TranslatableString.translate("nations.claim.error.already_claimed", "chunk"));
             return false;
         }
 
@@ -98,7 +193,7 @@ public class ClaimUtil {
     // However, if nation has no nation claims yet, then must be adjacent to capital settlement claim
     //
     // If settlement, then must be next to existing settlement claim
-    public static int adjacentToSettlementOrNation(int chunkX, int chunkZ, World world, LandAdministrator administrator) {
+    public static int adjacentToSettlementOrNation(int chunkX, int chunkZ, World world, @Nullable LandAdministrator administrator) {
         if(administrator instanceof Nation n && n.getNationLand().isEmpty()) {
             for(int i = 0; i < 4; i++) {
                 BlockFace face = BlockFace.values()[i];

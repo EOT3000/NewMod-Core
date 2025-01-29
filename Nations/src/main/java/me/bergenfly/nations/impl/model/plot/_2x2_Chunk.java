@@ -79,6 +79,14 @@ public class _2x2_Chunk implements ClaimedChunk {
             newMap.put(administrator, admin2Section.get(administrator));
         }
 
+        for(LandAdministrator old : admin2Section.keySet()) {
+            if(!newMap.containsKey(old)) {
+                if(old != null) {
+                    old.removeLand(admin2Section.get(old));
+                }
+            }
+        }
+
         this.admin2Section = newMap;
     }
 

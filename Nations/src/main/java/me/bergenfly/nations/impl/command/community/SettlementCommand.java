@@ -2,6 +2,7 @@ package me.bergenfly.nations.impl.command.community;
 
 import me.bergenfly.nations.api.command.CommandFlower;
 import me.bergenfly.nations.api.command.TranslatableString;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
 import me.bergenfly.nations.impl.model.SettlementImpl;
 import me.bergenfly.nations.impl.util.ClaimUtil;
 
@@ -22,9 +23,18 @@ public class SettlementCommand extends CommunityCommand {
 
         addBranch("claim", new CommandFlower()
                 .addSettlement(CommandFlower.INVOKER_LEADER)
+                .tabCompleteOptions(0, "quarter", "chunk")
                 .player()
                 .command((a) -> ClaimUtil.tryClaimWithChecksAndArgs(a.invokerUser(), a.settlements()[0], "settlement", a.args()))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
+                .make());
+
+        addBranch("unclaim", new CommandFlower()
+                .addSettlement(CommandFlower.INVOKER_LEADER)
+                .tabCompleteOptions(0, "quarter", "chunk")
+                .player()
+                .command((a) -> ClaimUtil.tryUnclaimWithChecksAndArgs(a.invokerUser(), a.settlements()[0], a.args()))
+                .successMessage((a) -> TranslatableString.translate("nations.unclaim"))
                 .make());
     }
 

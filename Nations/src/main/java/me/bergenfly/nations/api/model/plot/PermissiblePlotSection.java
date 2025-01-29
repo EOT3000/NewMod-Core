@@ -49,4 +49,7 @@ public interface PermissiblePlotSection extends PlotSection {
     boolean isClaimable();
 
     void setClaimable(boolean claimable);
+
+    @Override
+    PermissiblePlotSection cloneAt(ClaimedChunk claimedChunk);
 }

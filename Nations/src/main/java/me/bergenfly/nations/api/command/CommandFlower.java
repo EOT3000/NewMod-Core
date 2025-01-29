@@ -1,5 +1,6 @@
 package me.bergenfly.nations.api.command;
 
+import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -22,10 +23,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -84,6 +82,42 @@ public class CommandFlower {
     private NationsCommandInvocationMaker maker;
 
     public CommandFlower() {
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String first) {
+        List<String> list = Collections.singletonList(first);
+
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String first, String second) {
+        List<String> list = new ArrayList<>();
+
+        list.add(first);
+        list.add(second);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String first, String second, String third) {
+        List<String> list = new ArrayList<>();
+
+        list.add(first);
+        list.add(second);
+        list.add(third);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String... options) {
+        List<String> list = Arrays.asList(options);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
     }
 
     public CommandFlower addNation(int i) {

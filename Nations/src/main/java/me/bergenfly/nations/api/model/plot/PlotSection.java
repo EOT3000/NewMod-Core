@@ -13,4 +13,6 @@ public interface PlotSection {
     @NotNull LandAdministrator getAdministrator();
 
     ClaimedChunk in();
+
+    PlotSection cloneAt(ClaimedChunk claimedChunk);
 }

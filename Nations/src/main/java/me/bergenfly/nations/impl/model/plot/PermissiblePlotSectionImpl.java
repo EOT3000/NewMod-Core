@@ -9,6 +9,7 @@ import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.permission.DefaultPlotPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.impl.NationsPlugin;
@@ -117,5 +118,20 @@ public class PermissiblePlotSectionImpl extends PlotSectionImpl implements Permi
     @Override
     public void setClaimable(boolean claimable) {
         this.claimable = claimable;
+    }
+
+    @Override
+    public PermissiblePlotSection cloneAt(ClaimedChunk claimedChunk) {
+        PermissiblePlotSectionImpl section = new PermissiblePlotSectionImpl(getAdministrator(), in());
+
+        section.setOwner(owner);
+
+        for(LandPermissionHolder holder : permissions.keySet()) {
+            section.permissions.put(holder, new Object2ByteOpenHashMap<>(permissions.get(holder)));
+        }
+
+        section.claimable = claimable;
+
+        return section;
     }
 }

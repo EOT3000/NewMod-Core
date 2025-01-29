@@ -14,6 +14,7 @@ import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.NationImpl;
 import me.bergenfly.nations.impl.model.plot._2x2_Chunk;
+import me.bergenfly.nations.impl.util.ClaimUtil;
 import org.bukkit.ChatColor;
 
 import static me.bergenfly.nations.api.command.TranslatableString.translate;
@@ -98,9 +99,7 @@ public class PlotCommand extends CommandRoot {
                             return false;
                         }
 
-                        _2x2_Chunk newChunk = new _2x2_Chunk(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld(), section.getAdministrator());
-
-                        LAND_MANAGER.replaceChunk(newChunk);
+                        ClaimUtil.split(chunk, section);
 
                         return true;
                     })

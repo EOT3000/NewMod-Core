@@ -63,10 +63,21 @@ public class NationCommand extends CommandRoot {
                 .make());
 
         addBranch("claim", new CommandFlower()
-                .addNation(CommandFlower.INVOKER_LEADER)
+                .addNation(CommandFlower.INVOKER_MEMBER)
+                .nationPermission(DefaultNationPermission.TERRITORY)
+                .tabCompleteOptions(0, "quarter", "chunk")
                 .player()
                 .command((a) -> ClaimUtil.tryClaimWithChecksAndArgs(a.invokerUser(), a.nations()[0], "nation", a.args()))
                 .successMessage((a) -> TranslatableString.translate("nations.claim"))
+                .make());
+
+        addBranch("unclaim", new CommandFlower()
+                .addNation(CommandFlower.INVOKER_MEMBER)
+                .nationPermission(DefaultNationPermission.TERRITORY)
+                .tabCompleteOptions(0, "quarter", "chunk")
+                .player()
+                .command((a) -> ClaimUtil.tryUnclaimWithChecksAndArgs(a.invokerUser(), a.nations()[0], a.args()))
+                .successMessage((a) -> TranslatableString.translate("nations.unclaim"))
                 .make());
 
         CommandStem community = addBranch("community", null);
@@ -351,7 +362,7 @@ public class NationCommand extends CommandRoot {
         } //rank subcommand
     }
 
-    private String chars = "ABCDFEGHKLMNOPRSUWXZ";
+    private String chars = "ABCDFEGHKLMNPRSUWXZ";
 
     private void sendMap(Player player, User user) {
         int minX = player.getChunk().getX() - 5;
@@ -364,8 +375,8 @@ public class NationCommand extends CommandRoot {
 
         Map<Object, TextComponent> map = new HashMap<>();
 
-        map.put(user.getCommunity(), Component.text('#').color(TextColor.color(0x154000)));
-        map.put(user.getNation(), Component.text('#').color(TextColor.color(0xccffb3)));
+        map.put(user.getCommunity(), Component.text('O').color(TextColor.color(0x154000)));
+        map.put(user.getNation(), Component.text('O').color(TextColor.color(0xccffb3)));
 
         for (int z = minZ; z < maxZ; z++) {
             TextComponent line = Component.empty();
@@ -376,6 +387,44 @@ public class NationCommand extends CommandRoot {
                 if(chunk == null) {
                     line = line.append(Component.text('-').color(NamedTextColor.GRAY));
                     continue;
+                }
+
+                if(chunk.getDivision() > 0 && chunk.getSections(true).length > 1) {
+                    int r = 0;
+                    int g = 0;
+                    int b = 0;
+
+                    int c = 0;
+
+                    for(PlotSection section : chunk.getSections(true)) {
+                        c++;
+
+                        TextColor color;
+
+                        if(section == null) {
+                            color = NamedTextColor.GRAY;
+                        } else {
+                            LandAdministrator admin = section.getAdministrator();
+
+                            if (!map.containsKey(admin)) {
+                                if (admin instanceof Nation) {
+                                    map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.DARK_RED)));
+                                } else {
+                                    map.put(admin, Component.text(chars.charAt(cur)).color(TextColor.color(NamedTextColor.RED)));
+                                }
+
+                                cur++;
+                            }
+
+                            color = map.get(admin).color();
+                        }
+
+                        r+=color.red();
+                        g+=color.green();
+                        b+=color.blue();
+                    }
+
+                    line = line.append(Component.text('#').color(TextColor.color(r/c, g/c, b/c)));
                 }
 
                 LandAdministrator admin = chunk.getAt(0, 0).getAdministrator();

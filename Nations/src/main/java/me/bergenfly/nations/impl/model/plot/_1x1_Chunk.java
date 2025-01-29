@@ -54,6 +54,10 @@ public class _1x1_Chunk implements ClaimedChunk {
 
         this.data = admin == null ? null : admin.createEmptyPlotSection(this);
 
+        if(old != null) {
+            old.getAdministrator().removeLand(old);
+        }
+
         return old;
     }
 

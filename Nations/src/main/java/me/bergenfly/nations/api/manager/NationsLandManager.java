@@ -11,6 +11,7 @@ import me.bergenfly.nations.impl.util.ChunkLocation;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -51,11 +52,16 @@ public class NationsLandManager {
 
     public void unclaimChunk(World w, int chunkX, int chunkZ) {
         int id = Plots.getLocationId(chunkX, chunkZ, w);
+
+        if(PLOTS.get(id) == null) {
+            return;
+        }
+
         PLOTS.get(id).unclaim();
         PLOTS.set(id, null);
     }
 
-    public boolean tryClaimQuarterAtLocationOtherwiseFail(Location location, LandAdministrator administrator) {
+    public boolean tryClaimQuarterAtLocationOtherwiseFail(Location location, @Nullable LandAdministrator administrator) {
         ClaimedChunk chunk = getClaimedChunkAtLocation(location);
 
         ChunkLocation cl = new ChunkLocation(location.getBlockX(), location.getBlockZ());
@@ -75,7 +81,9 @@ public class NationsLandManager {
 
                 chunk.setAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ(), administrator);
 
-                administrator.addLand(chunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
+                if(administrator != null) {
+                    administrator.addLand(chunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
+                }
             } else if(chunk.getDivision() > 1) {
                 //Check, are all sixteenths/sixtyfourths, etc unclaimed?
 
@@ -93,7 +101,9 @@ public class NationsLandManager {
                     for(int z = cl.minCoordQuarterWithinChunkZ(); z < cl.maxCoordQuarterWithinChunkZ(); z++) {
                         chunk.setAt(x, z, administrator);
 
-                        administrator.addLand(chunk.getAt(x, z));
+                        if(administrator != null) {
+                            administrator.addLand(chunk.getAt(x, z));
+                        }
                     }
                 }
 
@@ -107,22 +117,49 @@ public class NationsLandManager {
 
         newChunk.setAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ(), administrator);
 
-        administrator.addLand(newChunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
+        //This should not happen
+        if(administrator != null) {
+            administrator.addLand(newChunk.getAt(cl.coordWithinChunkX(), cl.coordWithinChunkZ()));
+        }
 
         PLOTS.set(Plots.getLocationId(newChunk), newChunk);
 
+        simplifyAt(newChunk);
+
         return true;
     }
+
+    public boolean chunkIsOnly(ClaimedChunk chunk, LandAdministrator administrator) {
+        if(chunk == null) {
+            return true;
+        }
+
+        for(PlotSection section : chunk.getSections(false)) {
+            if(!section.getAdministrator().equals(administrator)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*public boolean tryUnclaimFullChunkOtherwiseFail(Chunk chunk, LandAdministrator administrator) {
+        return tryClaimFullChunkOtherwiseFail(chunk.getWorld(), chunk.getX(), chunk.getZ(), administrator);
+    }
+
+    public boolean tryUnclaimFullChunkOtherwiseFail(World world, int x, int z, LandAdministrator administrator) {
+        return tryClaimFullChunkOtherwiseFail(world, x, z, administrator);
+    }*/
 
     public boolean tryClaimFullChunkAtLocationOtherwiseFail(Location location, LandAdministrator administrator) {
         return tryClaimFullChunkOtherwiseFail(location.getChunk(), administrator);
     }
 
-    public boolean tryClaimFullChunkOtherwiseFail(Chunk chunk, LandAdministrator administrator) {
+    public boolean tryClaimFullChunkOtherwiseFail(Chunk chunk, @Nullable LandAdministrator administrator) {
         return tryClaimFullChunkOtherwiseFail(chunk.getWorld(), chunk.getX(), chunk.getZ(), administrator);
     }
 
-    public boolean tryClaimFullChunkOtherwiseFail(World w, int chunkX, int chunkZ, LandAdministrator administrator) {
+    public boolean tryClaimFullChunkOtherwiseFail(World w, int chunkX, int chunkZ, @Nullable LandAdministrator administrator) {
         int id = Plots.getLocationId(chunkX, chunkZ, w);
 
         ClaimedChunk chunk = PLOTS.get(id);
@@ -143,6 +180,8 @@ public class NationsLandManager {
 
         return true;
     }
+
+    //public boolean tryUnclaimFullChunkOtherwiseFail()
 
     private void simplifyAt(ClaimedChunk chunk) {
         if(chunk == null) {

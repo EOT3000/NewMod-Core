@@ -131,9 +131,11 @@ public class TranslatableString {
 
         translations.put("nations.claim.error.not_adjacent", new TranslatableString("&cYour new claim must be adjacent to an existing {1} claim"));
 
-        translations.put("nations.claim", new TranslatableString("&eClaimed chunk")); // TODO add .success to the end of the key
+        translations.put("nations.claim", new TranslatableString("&eClaimed")); // TODO add .success to the end of the key
+        translations.put("nations.unclaim", new TranslatableString("&eUnclaimed")); // TODO add .success to the end of the key
 
-        translations.put("nations.claim.error.already_claimed", new TranslatableString("&cThis chunk has already been claimed"));
+        translations.put("nations.claim.error.already_claimed", new TranslatableString("&cThis {1} has already been claimed"));
+        translations.put("nations.claim.error.not_claimed", new TranslatableString("&cThis {1} is not claimed"));
     }
 
     private static final Map<String, TranslatableString> translations;
