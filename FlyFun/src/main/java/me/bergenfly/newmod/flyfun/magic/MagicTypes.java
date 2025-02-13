@@ -4,6 +4,7 @@ import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BasicBlock;
 import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
+import me.bergenfly.newmod.core.api.item.builder.meta.MetaModifier;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import me.bergenfly.newmod.flyfun.magic.block.altar.AncientPedestal;
@@ -35,6 +36,19 @@ public class MagicTypes {
 
         plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(SOUL_INGOT.create(), plugin, "soul_ingot")
                 .setRecipe(is(HONEYCOMB), is(BLAZE_POWDER), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create(), SOUL_NUGGET.create()));
+
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(GUARDIAN_SCALE, 6)
+                .setRecipe(
+                        is(HEART_OF_THE_SEA),
+                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD),
+                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD)));
+
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(GUARDIAN_SCALE, 6)
+                .setRecipe(
+                        is(HEART_OF_THE_SEA),
+                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD),
+                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD)));
+
 
         Bukkit.addRecipe(new ShapelessRecipe(SOUL_JAR.getId(), SOUL_JAR.create())
                 .addIngredient(GLASS_BOTTLE)
@@ -77,6 +91,14 @@ public class MagicTypes {
     public static final ModItem BROKEN_SPAWNER = item.createBuilder(SPAWNER, plugin, "broken_spawner").displayName("Broken Spawner", 0x8da2c4).category(MAGIC).build();
 
     public static final ModItem REPAIRED_SPAWNER = item.createBuilder(SPAWNER, plugin, "repaired_spawner").displayName("Repaired Spawner", 0x8da2c4).category(MAGIC).build();
+
+
+    public static final ModItem GUARDIAN_SPIKE = item.createBuilder(BLAZE_ROD, plugin, "guardian_spike").displayName("Guardian Spike", 0xf46f2e).category(MAGIC).build();
+    public static final ModItem ELDER_GUARDIAN_SPIKE = item.createBuilder(BREEZE_ROD, plugin, "elder_guardian_spike").displayName("Elder Guardian Spike", 0x50537b).category(MAGIC).build();
+
+    public static final ModItem STRAY_CLOTH = item.createBuilder(DRIED_KELP, plugin, "stray_cloth").displayName("Stray's Cloth", 0x607576).category(MAGIC).build();
+
+    public static final ModItem GUARDIAN_SCALE = item.createBuilder(PRISMARINE_SHARD, plugin, "guardian_scale").displayName("Guardian Scale", 0xf46f2e).addModifier(MetaModifier.GLOW).category(MAGIC).build();
 
 
 }
