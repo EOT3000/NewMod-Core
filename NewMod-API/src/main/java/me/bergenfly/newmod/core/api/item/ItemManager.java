@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.core.api.item;
 
+import me.bergenfly.newmod.core.api.gear.ArmorSetBuilder;
 import me.bergenfly.newmod.core.api.item.builder.ModItemBuilder;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.api.item.data.ModItemDataSerializer;
@@ -92,6 +93,8 @@ public interface ItemManager {
      * @return the created builder.
      */
     ModItemBuilder createBuilder(Material material, JavaPlugin plugin, String id);
+
+    ArmorSetBuilder createArmorBuilder(JavaPlugin plugin, String id);
 
     /**
      * Applies data to an item stack.

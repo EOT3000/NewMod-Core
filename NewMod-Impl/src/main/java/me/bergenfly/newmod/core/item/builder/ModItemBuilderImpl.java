@@ -98,6 +98,11 @@ public class ModItemBuilderImpl implements ModItemBuilder {
         return this;
     }
 
+    protected ModItem factory(NamespacedKey id, Material material, TextComponent component,
+                              ModBlock block, Class<? extends ModItemData> data, List<MetaModifier> modifiers) {
+        return new BuiltModItemImpl(id, material, component, block, data, modifiers);
+    }
+
     @Override
     public ModItem build() {
         if(displayName == null) {
@@ -118,7 +123,7 @@ public class ModItemBuilderImpl implements ModItemBuilder {
             modifiers.add(new LoreModifier(lore));
         }
 
-        ModItem item = new BuiltModItemImpl(key, material, displayName, block, data, modifiers);
+        ModItem item = factory(key, material, displayName, block, data, modifiers);
 
         if(category != null) {
             category.addItem(item);
@@ -140,4 +145,6 @@ public class ModItemBuilderImpl implements ModItemBuilder {
 
         return item;
     }
+
+
 }

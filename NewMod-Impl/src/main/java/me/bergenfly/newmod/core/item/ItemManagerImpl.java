@@ -1,6 +1,7 @@
 package me.bergenfly.newmod.core.item;
 
 import me.bergenfly.newmod.core.NewModPlugin;
+import me.bergenfly.newmod.core.api.gear.ArmorSetBuilder;
 import me.bergenfly.newmod.core.api.gear.DurabilityController;
 import me.bergenfly.newmod.core.api.gear.GearManager;
 import me.bergenfly.newmod.core.api.item.*;
@@ -107,6 +108,11 @@ public class ItemManagerImpl implements ItemManager, GearManager {
     @Override
     public ModItemBuilder createBuilder(Material material, JavaPlugin plugin, String id) {
         return new ModItemBuilderImpl(material, new NamespacedKey(plugin, id));
+    }
+
+    @Override
+    public ArmorSetBuilder createArmorBuilder(JavaPlugin plugin, String id) {
+        return null;
     }
 
     @Override
