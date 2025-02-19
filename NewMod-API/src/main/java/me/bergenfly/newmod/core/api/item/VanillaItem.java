@@ -1,6 +1,8 @@
 package me.bergenfly.newmod.core.api.item;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,5 +28,15 @@ public class VanillaItem implements Item {
         vanillaItems.putIfAbsent(material, new VanillaItem(material));
 
         return vanillaItems.get(material);
+    }
+
+    @Override
+    public ItemStack create() {
+        return new ItemStack(material);
+    }
+
+    @Override
+    public void setIngredient(char c, ShapedRecipe recipe) {
+        recipe.setIngredient(c, material);
     }
 }

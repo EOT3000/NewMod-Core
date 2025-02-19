@@ -2,6 +2,8 @@ package me.bergenfly.newmod.flyfun.magic;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BasicBlock;
+import me.bergenfly.newmod.core.api.gear.ArmorSet;
+import me.bergenfly.newmod.core.api.gear.GearManager;
 import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.builder.meta.MetaModifier;
@@ -19,6 +21,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 
 import static org.bukkit.Material.*;
 
@@ -40,14 +44,35 @@ public class MagicTypes {
         plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(GUARDIAN_SCALE, 6)
                 .setRecipe(
                         is(HEART_OF_THE_SEA),
-                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD),
-                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD)));
+                        is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD), is(NAUTILUS_SHELL),
+                        is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD), is(NAUTILUS_SHELL)));
 
-        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(GUARDIAN_SCALE, 6)
+
+
+        //TODO fix altar recipes
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(ELDER_GUARDIAN_HELMET)
                 .setRecipe(
-                        is(HEART_OF_THE_SEA),
-                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD),
-                        is(NAUTILUS_SHELL), is(PRISMARINE_SHARD), GUARDIAN_SPIKE.create(), is(PRISMARINE_SHARD)));
+                        GUARDIAN_HELMET.create(),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS)));
+
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(ELDER_GUARDIAN_CHESTPLATE)
+                .setRecipe(
+                        GUARDIAN_CHESTPLATE.create(),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS)));
+
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(ELDER_GUARDIAN_LEGGINGS)
+                .setRecipe(
+                        GUARDIAN_LEGGINGS.create(),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS)));
+
+        plugin.getAltarRecipeManager().addRecipe(new AltarRecipe(ELDER_GUARDIAN_BOOTS)
+                .setRecipe(
+                        GUARDIAN_BOOTS.create(),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS),
+                        is(NAUTILUS_SHELL), ELDER_GUARDIAN_SPIKE.create(), is(NAUTILUS_SHELL), is(PRISMARINE_CRYSTALS)));
 
 
         Bukkit.addRecipe(new ShapelessRecipe(SOUL_JAR.getId(), SOUL_JAR.create())
@@ -100,5 +125,48 @@ public class MagicTypes {
 
     public static final ModItem GUARDIAN_SCALE = item.createBuilder(PRISMARINE_SHARD, plugin, "guardian_scale").displayName("Guardian Scale", 0xf46f2e).addModifier(MetaModifier.GLOW).category(MAGIC).build();
 
+    public static final ArmorSet GUARDIAN_ARMOR = item.createArmorBuilder(plugin, "guardian")
+            .definePiece(GearManager.ArmorSection.HELMET, LEATHER_HELMET, "guardian_helmet", 3, 1, -1)
+            .definePiece(GearManager.ArmorSection.CHESTPLATE, LEATHER_CHESTPLATE, "guardian_chestplate", 6, 1, -1)
+            .definePiece(GearManager.ArmorSection.LEGGINGS, LEATHER_LEGGINGS, "guardian_leggings", 5, 1, -1)
+            .definePiece(GearManager.ArmorSection.LEGGINGS, LEATHER_BOOTS, "guardian_boots", 2, 1, -1)
+            .color(GearManager.ArmorSection.HELMET, 0x57080D)
+            .color(GearManager.ArmorSection.CHESTPLATE, 0x567E6E)
+            .color(GearManager.ArmorSection.LEGGINGS, 0x689281)
+            .color(GearManager.ArmorSection.BOOTS, 0x705A37)
+            .displayName(GearManager.ArmorSection.HELMET, "Guardian Helmet", 0x57080D)
+            .displayName(GearManager.ArmorSection.CHESTPLATE, "Guardian Chestplate", 0x567E6E)
+            .displayName(GearManager.ArmorSection.LEGGINGS, "Guardian Leggings", 0x689281)
+            .displayName(GearManager.ArmorSection.BOOTS, "Guardian Boots", 0x705A37)
+            .trim(null, TrimMaterial.RESIN, TrimPattern.RIB)
+            .material(GUARDIAN_SCALE)
+            .category(MAGIC)
+            .build();
 
+    public static final ModItem GUARDIAN_HELMET = GUARDIAN_ARMOR.getHelmet();
+    public static final ModItem GUARDIAN_CHESTPLATE = GUARDIAN_ARMOR.getChestplate();
+    public static final ModItem GUARDIAN_LEGGINGS = GUARDIAN_ARMOR.getLeggings();
+    public static final ModItem GUARDIAN_BOOTS = GUARDIAN_ARMOR.getBoots();
+
+    public static final ArmorSet ELDER_GUARDIAN_ARMOR = item.createArmorBuilder(plugin, "elder_guardian")
+            .definePiece(GearManager.ArmorSection.HELMET, LEATHER_HELMET, "elder_guardian_helmet", 3, 2, -1)
+            .definePiece(GearManager.ArmorSection.CHESTPLATE, LEATHER_CHESTPLATE, "elder_guardian_chestplate", 7, 2, -1)
+            .definePiece(GearManager.ArmorSection.LEGGINGS, LEATHER_LEGGINGS, "elder_guardian_leggings", 5, 2, -1)
+            .definePiece(GearManager.ArmorSection.LEGGINGS, LEATHER_BOOTS, "elder_guardian_boots", 2, 2, -1)
+            .color(GearManager.ArmorSection.HELMET, 0x9A705B)
+            .color(GearManager.ArmorSection.CHESTPLATE, 0xA8A492)
+            .color(GearManager.ArmorSection.LEGGINGS, 0xBAB8A5)
+            .color(GearManager.ArmorSection.BOOTS, 0x585347)
+            .displayName(GearManager.ArmorSection.HELMET, "Elder Guardian Helmet", 0x9A705B)
+            .displayName(GearManager.ArmorSection.CHESTPLATE, "Elder Guardian Chestplate", 0xA8A492)
+            .displayName(GearManager.ArmorSection.LEGGINGS, "Elder Guardian Leggings", 0xBAB8A5)
+            .displayName(GearManager.ArmorSection.BOOTS, "Elder Guardian Boots", 0x585347)
+            .trim(null, TrimMaterial.LAPIS, TrimPattern.RIB)
+            .category(MAGIC)
+            .build();
+
+    public static final ModItem ELDER_GUARDIAN_HELMET = ELDER_GUARDIAN_ARMOR.getHelmet();
+    public static final ModItem ELDER_GUARDIAN_CHESTPLATE = ELDER_GUARDIAN_ARMOR.getChestplate();
+    public static final ModItem ELDER_GUARDIAN_LEGGINGS = ELDER_GUARDIAN_ARMOR.getLeggings();
+    public static final ModItem ELDER_GUARDIAN_BOOTS = ELDER_GUARDIAN_ARMOR.getBoots();
 }

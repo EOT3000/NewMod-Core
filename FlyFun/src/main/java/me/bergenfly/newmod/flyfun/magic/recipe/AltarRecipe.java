@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see AltarRecipeManager
  */
+
+//TODO redo this whole class
 public class AltarRecipe implements Recipe, Keyed {
     private static final String[] RECIPE_ORDER = {"MIDDLE", "VERTEX", "CORNER", "VERTEX", "CORNER", "VERTEX", "CORNER", "VERTEX", "CORNER"};
 

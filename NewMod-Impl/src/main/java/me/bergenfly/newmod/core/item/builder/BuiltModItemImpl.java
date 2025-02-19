@@ -11,6 +11,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
@@ -83,5 +84,10 @@ public class BuiltModItemImpl implements ModItem {
         stack.setItemMeta(meta);
 
         return stack;
+    }
+
+    @Override
+    public void setIngredient(char c, ShapedRecipe recipe) {
+        recipe.setIngredient(c, create());
     }
 }

@@ -7,6 +7,7 @@ import me.bergenfly.newmod.core.api.gear.ArmorSetBuilder;
 import me.bergenfly.newmod.core.api.gear.GearManager;
 import me.bergenfly.newmod.core.api.item.Item;
 import me.bergenfly.newmod.core.api.item.ModArmor;
+import me.bergenfly.newmod.core.api.item.VanillaItem;
 import me.bergenfly.newmod.core.api.item.builder.ModItemBuilder;
 import me.bergenfly.newmod.core.api.item.builder.meta.MetaModifier;
 import me.bergenfly.newmod.core.api.item.builder.modifiers.TrimModifier;
@@ -14,10 +15,12 @@ import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.core.armor.ArmorSetImpl;
 import me.bergenfly.newmod.core.item.builder.ModItemBuilderImpl;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +38,17 @@ public class ArmorSetBuilderImpl implements ArmorSetBuilder {
 
     private final NamespacedKey id;
 
+    private Item material;
+
     public ArmorSetBuilderImpl(NamespacedKey key) {
         this.id = key;
     }
 
     @Override
     public ArmorSetBuilder material(Item item) {
-        return null;
+        this.material = item;
+
+        return this;
     }
 
     @Override
@@ -154,6 +161,48 @@ public class ArmorSetBuilderImpl implements ArmorSetBuilder {
         ModArmor feet  = b4 == null ? null : b4.build();
 
         ArmorSet set = new ArmorSetImpl(head, chest, legs, feet);
+
+        if(material != null) {
+            if (head != null) {
+                ShapedRecipe r = new ShapedRecipe(head.getId(), head.create());
+
+                r.shape("AAA", "A A");
+
+                material.setIngredient('A', r);
+
+                Bukkit.addRecipe(r);
+            }
+
+            if (chest != null) {
+                ShapedRecipe r = new ShapedRecipe(chest.getId(), chest.create());
+
+                r.shape("A A", "AAA", "AAA");
+
+                material.setIngredient('A', r);
+
+                Bukkit.addRecipe(r);
+            }
+
+            if (legs != null) {
+                ShapedRecipe r = new ShapedRecipe(legs.getId(), legs.create());
+
+                r.shape("A A", "AAA", "AAA");
+
+                material.setIngredient('A', r);
+
+                Bukkit.addRecipe(r);
+            }
+
+            if (feet != null) {
+                ShapedRecipe r = new ShapedRecipe(feet.getId(), feet.create());
+
+                r.shape("A A", "AAA", "AAA");
+
+                material.setIngredient('A', r);
+
+                Bukkit.addRecipe(r);
+            }
+        }
 
         return set;
     }

@@ -8,6 +8,7 @@ import me.bergenfly.newmod.core.api.item.*;
 import me.bergenfly.newmod.core.api.item.builder.ModItemBuilder;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.api.item.data.ModItemDataSerializer;
+import me.bergenfly.newmod.core.armor.builder.ArmorSetBuilderImpl;
 import me.bergenfly.newmod.core.util.PersistentDataUtil;
 import me.bergenfly.newmod.core.item.builder.ModItemBuilderImpl;
 import org.bukkit.Material;
@@ -112,7 +113,7 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public ArmorSetBuilder createArmorBuilder(JavaPlugin plugin, String id) {
-        return null;
+        return new ArmorSetBuilderImpl(new NamespacedKey(plugin, id));
     }
 
     @Override

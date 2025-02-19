@@ -1,8 +1,10 @@
 package me.bergenfly.newmod.core.armor;
 
+import me.bergenfly.newmod.core.NewModPlugin;
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.core.api.item.ModArmor;
 import me.bergenfly.newmod.core.api.item.builder.meta.MetaModifier;
+import me.bergenfly.newmod.core.api.item.builder.modifiers.ArmorModifier;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.item.builder.BuiltModItemImpl;
 import net.kyori.adventure.text.TextComponent;
@@ -20,10 +22,11 @@ public class ArmorItemImpl extends BuiltModItemImpl implements ModArmor {
                          int armor, int toughness, int durability) {
         super(id, material, component, block, data, modifiers);
 
-
         this.toughness = toughness;
         this.armor = armor;
         this.durability = durability;
+
+        modifiers.add(new ArmorModifier(id.getNamespace(), armor, toughness, durability));
     }
 
     @Override
