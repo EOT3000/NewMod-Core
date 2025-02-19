@@ -78,15 +78,17 @@ public interface GearManager {
      * The four armor sections.
      */
     enum ArmorSection {
-        HELMET(0.3f),
-        CHESTPLATE(0.3f),
-        LEGGINGS(0.25f),
-        BOOTS(0.15f);
+        HELMET(0.3f, "armor.helmet"),
+        CHESTPLATE(0.3f, "armor.chestplate"),
+        LEGGINGS(0.25f, "armor.leggings"),
+        BOOTS(0.15f, "armor.boots");
 
         public final float modifier;
+        public final String attribute;
 
-        ArmorSection(float modifier) {
+        ArmorSection(float modifier, String attribute) {
             this.modifier = modifier;
+            this.attribute = attribute;
         }
     }
 

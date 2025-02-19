@@ -56,7 +56,7 @@ public class ArmorSetBuilderImpl implements ArmorSetBuilder {
         this.armor.put(section, armor);
         this.toughness.put(section, toughness);
         this.durability.put(section, durability);
-        this.builders.put(section, new ArmorItemBuilder(material, new NamespacedKey(this.id.getNamespace(), id), armor, toughness, durability));
+        this.builders.put(section, new ArmorItemBuilder(material, new NamespacedKey(this.id.getNamespace(), id), section, armor, toughness, durability));
 
         return this;
     }
@@ -186,7 +186,7 @@ public class ArmorSetBuilderImpl implements ArmorSetBuilder {
             if (legs != null) {
                 ShapedRecipe r = new ShapedRecipe(legs.getId(), legs.create());
 
-                r.shape("A A", "AAA", "AAA");
+                r.shape("AAA", "A A", "A A");
 
                 material.setIngredient('A', r);
 
@@ -196,7 +196,7 @@ public class ArmorSetBuilderImpl implements ArmorSetBuilder {
             if (feet != null) {
                 ShapedRecipe r = new ShapedRecipe(feet.getId(), feet.create());
 
-                r.shape("A A", "AAA", "AAA");
+                r.shape("A A", "A A");
 
                 material.setIngredient('A', r);
 

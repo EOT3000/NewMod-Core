@@ -1,4 +1,4 @@
-package me.fly.newmod.flyfun.magic.item;
+package me.bergenfly.newmod.flyfun.magic.item;
 
 import me.bergenfly.newmod.core.api.block.ModBlock;
 import me.bergenfly.newmod.core.api.item.ModItem;
@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 
 public class RepairedSpawner implements ModItem {
     @Override
@@ -42,5 +43,10 @@ public class RepairedSpawner implements ModItem {
     @Override
     public ItemStack create() {
         return null;
+    }
+
+    @Override
+    public void setIngredient(char c, ShapedRecipe recipe) {
+
     }
 }
