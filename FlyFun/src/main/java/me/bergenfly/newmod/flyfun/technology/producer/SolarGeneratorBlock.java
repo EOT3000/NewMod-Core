@@ -80,9 +80,19 @@ public class SolarGeneratorBlock implements ModBlock, EnergyComponent {
 
         EnergyUtil.addCharge(block.getLocation(), (int) Math.round(power), capacity);
 
-        if(bm.getType(block.getLocation().clone().subtract(0, 1, 0)) instanceof Object) {
-        
-        }
+        int sent = EnergyUtil.push(block, 0, -1, 0, EnergyUtil.getCharge(block.getLocation()));
+
+        EnergyUtil.subtractCharge(block.getLocation(), sent, capacity);
+    }
+
+    @Override
+    public Block getDestination(Block from, Block to, int stack) {
+        return null;
+    }
+
+    @Override
+    public int push(Block from, Block to, int energy) {
+        return 0;
     }
 
     private boolean isSP(Location location, BlockFace face) {
