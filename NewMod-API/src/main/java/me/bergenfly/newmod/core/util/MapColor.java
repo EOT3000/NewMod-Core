@@ -89,6 +89,16 @@ public enum MapColor {
         this.var3 = asInt((int) (r*VAR3), (int) (g*VAR3), (int) (b*VAR3));
     }
 
+    public int variation(int a) {
+        return switch (a) {
+            case 0 -> var0;
+            case 1 -> var1;
+            case 2 -> color;
+            case 3 -> var3;
+            default -> color;
+        };
+    }
+
     int[] toInts(int intt) {
         return new int[]{intt >> 16 & 255, intt >> 8 & 255, intt & 255};
     }
@@ -101,7 +111,7 @@ public enum MapColor {
         BufferedImage image = new BufferedImage(300, 6, BufferedImage.TYPE_INT_RGB);
         int x = 0;
 
-        Map<Double, Integer> syrianRefugees = new TreeMap<>();
+        Map<Double, Integer> map = new TreeMap<>();
 
         for(MapColor color : values()) {
             int[] ints0 = ColorUtil.toInts(color.var0);
@@ -129,12 +139,12 @@ public enum MapColor {
 
                     //System.out.println(Arrays.toString(a.get(b)));
 
-                    syrianRefugees.put(b[0], a.get(b)[0] << 16 | a.get(b)[1] << 8 | a.get(b)[2]);
+                    map.put(b[0], a.get(b)[0] << 16 | a.get(b)[1] << 8 | a.get(b)[2]);
                 }
             }
         }
 
-        for(Map.Entry<Double, Integer> i : syrianRefugees.entrySet()) {
+        for(Map.Entry<Double, Integer> i : map.entrySet()) {
 
             System.out.println(i);
             System.out.println(Arrays.toString(ColorUtil.toInts(i.getValue())));

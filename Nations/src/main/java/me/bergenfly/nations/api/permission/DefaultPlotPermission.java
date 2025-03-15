@@ -20,7 +20,7 @@ public enum DefaultPlotPermission implements PlotPermission {
     VEHICLE("vehicle"),                             //Place boats and minecarts
     LEVER("lever"),                                 //Click buttons and flick levers
     DOOR("door"),                                   //Open/close trapdoors, doors, fence gates
-    OTHER_INTERACT("other_interact");               //Other interactions
+    INTERACT("interact");                           //Other interactions
 
     //TODO move this
     private static Map<NamespacedKey, DefaultPlotPermission> permissions = new HashMap<>();
@@ -45,6 +45,11 @@ public enum DefaultPlotPermission implements PlotPermission {
     @Override
     public @NotNull NamespacedKey getKey() {
         return key;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return name();
     }
 
     public static DefaultPlotPermission of(String s) {

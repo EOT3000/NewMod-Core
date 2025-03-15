@@ -3,7 +3,7 @@ package me.bergenfly.obfuscator;
 
 import com.comphenix.protocol.events.PacketContainer;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.world.entity.RelativeMovement;
+import net.minecraft.world.entity.Relative;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Iterator;
@@ -29,24 +29,24 @@ public class NMS {
 
 
 
-        public static Set<MovementFlag> fromNMS(Set<RelativeMovement> nms) {
+        public static Set<MovementFlag> fromNMS(Set<Relative> nms) {
             return nms.stream().map((x) -> MovementFlag.values()[x.ordinal()]).collect(Collectors.toSet());
         }
 
-        public static Set<RelativeMovement> toNMS(Set<MovementFlag> buk) {
-            return buk.stream().map((x) -> RelativeMovement.values()[x.ordinal()]).collect(Collectors.toSet());
+        public static Set<Relative> toNMS(Set<MovementFlag> buk) {
+            return buk.stream().map((x) -> Relative.values()[x.ordinal()]).collect(Collectors.toSet());
         }
 
         public static Set<MovementFlag> fromInt(int mask) {
-            Set<RelativeMovement> set = RelativeMovement.unpack(mask);
+            Set<Relative> set = Relative.unpack(mask);
 
             return fromNMS(set);
         }
 
         public static int toInt(Set<MovementFlag> flags) {
-            Set<RelativeMovement> nms = toNMS(flags);
+            Set<Relative> nms = toNMS(flags);
 
-            return RelativeMovement.pack(nms);
+            return Relative.pack(nms);
         }
     }
 }

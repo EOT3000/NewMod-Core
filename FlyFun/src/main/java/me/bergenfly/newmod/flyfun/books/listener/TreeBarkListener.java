@@ -17,6 +17,10 @@ public class TreeBarkListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onStrip(PlayerInteractEvent event) {
+        if(event.getItem() == null) {
+            return;
+        }
+
         //TODO: not this weird way with the contains _AXE, make it right
         if(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getItem().getType().name().contains("_AXE")
                 && (event.getClickedBlock().getType().equals(Material.BIRCH_LOG) || event.getClickedBlock().getType().equals(Material.BIRCH_WOOD))) {

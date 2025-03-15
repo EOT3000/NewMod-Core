@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.flyfun.magic.recipe;
 
+import me.bergenfly.newmod.core.api.item.ModItem;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -12,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see AltarRecipeManager
  */
+
+//TODO redo this whole class
 public class AltarRecipe implements Recipe, Keyed {
     private static final String[] RECIPE_ORDER = {"MIDDLE", "VERTEX", "CORNER", "VERTEX", "CORNER", "VERTEX", "CORNER", "VERTEX", "CORNER"};
 
@@ -26,6 +29,14 @@ public class AltarRecipe implements Recipe, Keyed {
 
     public AltarRecipe(ItemStack result, JavaPlugin plugin, String key) {
         this(result, new NamespacedKey(plugin, key));
+    }
+
+    public AltarRecipe(ModItem item) {
+        this(item.create(), item.getId());
+    }
+
+    public AltarRecipe(ModItem item, int count) {
+        this(item.create().asQuantity(count), item.getId());
     }
 
     /**

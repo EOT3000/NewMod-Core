@@ -5,9 +5,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class CommandRoot implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public abstract class CommandRoot implements TabExecutor {
 
     public abstract void loadSubcommands();
 
@@ -59,6 +65,43 @@ public abstract class CommandRoot implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Pair<CommandFlower, String[]> result = getFinal(strings);
 
-        return result.getLeft().onCommand(commandSender, command, s, result.getRight());
+        return result.getLeft().onCommand(commandSender, command, s, result.getRight(), strings);
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        Pair<CommandFlower, String[]> result = getFinal(strings);
+
+        CommandFlower left = result.getLeft();
+
+        String last = strings[strings.length-1];
+
+        if(result.getRight().length == 0) {
+            return new ArrayList<>();
+        }
+
+        if(left instanceof HelpCommandFlower h) {
+            List<String> ret = new ArrayList<>();
+
+            for(String option : h.stem.branches.keySet()) {
+                if(option.startsWith(last)) {
+                    ret.add(option);
+                }
+            }
+
+            if(!ret.isEmpty()) {
+                return ret;
+            }
+
+            return new ArrayList<>(h.stem.branches.keySet());
+        }
+
+        ArgumentTabCompleter completer = left.tabCompleters.get(result.getRight().length-1);
+
+        if(completer == null) {
+            return new ArrayList<>();
+        } else {
+            return completer.complete(commandSender);
+        }
     }
 }

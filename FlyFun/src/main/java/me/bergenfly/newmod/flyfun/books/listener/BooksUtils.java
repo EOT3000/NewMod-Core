@@ -65,7 +65,7 @@ public class BooksUtils {
             return false;
         }
 
-        ModItem type = item.getType(stack);
+        ModItem type = item.getModType(stack);
 
         if(type != null && plugin.getBooksManager().writable(type)) {
             return !((WritableItemData) item.getStack(stack).getData()).isSigned();
@@ -105,7 +105,7 @@ public class BooksUtils {
             return false;
         }
 
-        ModItem type = item.getType(stack);
+        ModItem type = item.getModType(stack);
 
         if(type == null || !plugin.getBooksManager().writable(type)) {
             return false;
@@ -119,7 +119,7 @@ public class BooksUtils {
             return new String[0];
         }
 
-        ModItem type = item.getType(stack);
+        ModItem type = item.getModType(stack);
 
         if(type == null || !plugin.getBooksManager().writable(type)) {
             return new String[0];

@@ -45,7 +45,7 @@ public class BasicToolsListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        ModItem modItem = item.getType(event.getItem());
+        ModItem modItem = item.getModType(event.getItem());
 
         if(BasicToolsTypes.GOLD_PAN.equals(modItem)) {
             if(event.hasBlock()) {
@@ -175,12 +175,12 @@ public class BasicToolsListener implements Listener {
         if(event.getEntity() instanceof Player player) {
             PersistentDataContainer pdc = event.getEntity().getPersistentDataContainer();
 
-            if(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()-player.getHealth()-event.getAmount() < pdc.getOrDefault(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, 0.0)) {
+            if(player.getAttribute(Attribute.MAX_HEALTH).getValue()-player.getHealth()-event.getAmount() < pdc.getOrDefault(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, 0.0)) {
                 switch (event.getRegainReason()) {
                     case SATIATED, EATING, MAGIC_REGEN, MAGIC -> event.setAmount(event.getAmount() / 4);
                 }
 
-                pdc.set(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()-player.getHealth()-event.getAmount());
+                pdc.set(BANDAGE_DAMAGE, PersistentDataType.DOUBLE, player.getAttribute(Attribute.MAX_HEALTH).getValue()-player.getHealth()-event.getAmount());
             }
         }
     }
@@ -211,7 +211,7 @@ public class BasicToolsListener implements Listener {
     }
 
     private boolean noBandage(PlayerInventory inv) {
-        return !BasicToolsTypes.BANDAGE.equals(item.getType(inv.getItemInMainHand()));
+        return !BasicToolsTypes.BANDAGE.equals(item.getModType(inv.getItemInMainHand()));
     }
 
     private boolean isBandaging(PersistentDataContainer pdc) {

@@ -1,27 +1,24 @@
 package me.bergenfly.nations.impl.model;
 
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.PlayerGroup;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
+import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PlotSection;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
+import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
-import me.bergenfly.nations.impl.model.plot.PlotSectionImpl;
+import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class NationImpl implements Nation {
+public class NationImpl implements Nation, DeletionSubscriber {
     private static Registry<Nation, String> NATIONS;
 
     private final String firstName;
@@ -33,23 +30,21 @@ public class NationImpl implements Nation {
 
     private Settlement capital;
 
-    private Set<Settlement> settlements = new HashSet<>();
+    private final Set<Community> communities = new HashSet<>();
+
+    private final Set<Community> invitations = new HashSet<>();
 
     //Does not include settlement land
-    private Set<PlotSection> nationLand = new HashSet<>();
+    private final Set<PlotSection> nationLand = new HashSet<>();
 
-    private File file;
+    private final Map<String, Rank> ranks = new HashMap<>();
+
+    private final String id;
+
+    private final Set<Company> charters = new HashSet<>();
 
     private NationImpl(String name, User leader) {
-        this(leader, name, name, System.currentTimeMillis());
-    }
-
-    public NationImpl(User leader, String name, String firstName, long creationTime) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
-        this.capital = leader.getSettlement();
+        this(leader, name, name, System.currentTimeMillis(), (Settlement) leader.getCommunity());
     }
 
     public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital) {
@@ -58,11 +53,25 @@ public class NationImpl implements Nation {
         this.firstName = firstName;
         this.creationTime = creationTime;
         this.capital = capital;
+        this.id = IdUtil.nationId1(firstName, creationTime);
+    }
+
+    public NationImpl(User leader, String name, String firstName, long creationTime, Settlement capital, String id) {
+        this.leader = leader;
+        this.name = name;
+        this.firstName = firstName;
+        this.creationTime = creationTime;
+        this.capital = capital;
+        this.id = id;
     }
 
     public static NationImpl tryCreate(String name, User leader) {
         if(NATIONS == null) {
             NATIONS = NationsPlugin.getInstance().nationsRegistry();
+        }
+
+        if(!(leader.getCommunity() instanceof Settlement)) {
+            return null;
         }
 
         NationImpl s = new NationImpl(name, leader);
@@ -71,38 +80,60 @@ public class NationImpl implements Nation {
             return null;
         }
 
-        if(leader.getSettlement() == null) {
-            return null;
-        }
-
         NATIONS.set(name, s);
 
-        leader.getSettlement().setNation(s);
+        NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
+
+        leader.getCommunity().setNation(s);
 
         return s;
     }
 
     @Override
+    public String getFullName() {
+        return "Nation " + name.replaceAll("_", " ");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
 
-        String settlements = "Capital " + capital.getName();
+        StringBuilder settlements = new StringBuilder("Capital " + capital.getName());
 
-        for(Settlement member : this.settlements) {
+        for(Settlement member : this.getSettlements()) {
             if(!member.equals(capital)) {
-                settlements += (", " + member.getName());
+                settlements.append(", ").append(member.getName());
             }
         }
 
+        StringBuilder tribes = new StringBuilder();
+
+        for(Tribe member : this.getTribes()) {
+            tribes.append(", ").append(member.getName());
+        }
+
+        tribes = new StringBuilder(tribes.length() > 2 ? ChatColor.AQUA + tribes.substring(0, tribes.length() - 2) : ChatColor.GRAY + "None");
+
+        StringBuilder ranks = new StringBuilder();
+
+        for(Rank rank : getRanks()) {
+            ranks.append(rank.getName()).append(", ");
+        }
+
+        ranks = new StringBuilder(ranks.length() > 2 ? ChatColor.AQUA + ranks.substring(0, ranks.length() - 2) : ChatColor.GRAY + "None");
+
+        user.sendMessage(ChatColor.DARK_AQUA + "Ranks: " + ranks);
         user.sendMessage(ChatColor.DARK_AQUA + "Settlements: " + ChatColor.AQUA + settlements);
+        user.sendMessage(ChatColor.DARK_AQUA + "Tribes: " + ChatColor.AQUA + tribes);
         user.sendMessage(ChatColor.DARK_AQUA + "Claimed Chunks: " + ChatColor.AQUA + nationLand.size());
     }
 
     @Override
     public Set<User> getMembers() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(PlayerGroup::getMembers)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
@@ -110,7 +141,7 @@ public class NationImpl implements Nation {
 
     @Override
     public Set<User> getOnlineMembers() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(PlayerGroup::getMembers)
                 .flatMap(Collection::stream)
                 .filter(User::isOnline)
@@ -120,7 +151,7 @@ public class NationImpl implements Nation {
     @Override
     public Set<PlotSection> getLand() {
         return Stream.concat(nationLand.stream(),
-                        settlements.stream()
+                        getSettlements().stream()
                                 .map(Settlement::getLand)
                                 .flatMap(Collection::stream))
                 .collect(Collectors.toSet());
@@ -128,12 +159,12 @@ public class NationImpl implements Nation {
 
     @Override
     public void addLand(PlotSection section) {
-        nationLand.remove(section);
+        nationLand.add(section);
     }
 
     @Override
     public void removeLand(PlotSection section) {
-        nationLand.add(section);
+        nationLand.remove(section);
     }
 
     @Override
@@ -150,7 +181,7 @@ public class NationImpl implements Nation {
 
     @Override
     public @NotNull String getId() {
-        return "nation_" + firstName.toLowerCase() + "_" + creationTime;
+        return id;
     }
 
     @Override
@@ -160,12 +191,12 @@ public class NationImpl implements Nation {
 
     @Override
     public Set<PlotSection> getNationLand() {
-        return nationLand;
+        return new HashSet<>(nationLand);
     }
 
     @Override
     public Set<PlotSection> getSettlementLand() {
-        return settlements.stream()
+        return getSettlements().stream()
                 .map(Settlement::getLand)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
@@ -173,7 +204,17 @@ public class NationImpl implements Nation {
 
     @Override
     public Set<Settlement> getSettlements() {
-        return new HashSet<>(settlements);
+        return communities.stream().filter(Community::isSettlement).map((a) -> (Settlement) a).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Tribe> getTribes() {
+        return communities.stream().filter((a) -> !a.isSettlement()).map((a) -> (Tribe) a).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Community> getCommunities() {
+        return new HashSet<>(communities);
     }
 
     @Override
@@ -182,28 +223,89 @@ public class NationImpl implements Nation {
     }
 
     @Override
-    public void addSettlement(Settlement settlement) {
-        settlements.add(settlement);
+    public void removeRank(Rank rank) {
+        ranks.remove(rank.getName());
+
+        rank.delete();
     }
 
     @Override
-    public void removeSettlement(Settlement settlement) {
-        settlements.remove(settlement);
+    public void addRank(Rank rank) {
+        ranks.put(rank.getName().toLowerCase(), rank);
+
+        NationsPlugin.getInstance().permissionManager().registerHolder(rank, null);
+    }
+
+    public boolean hasRankWithName(String name) {
+        return ranks.containsKey(name.toLowerCase());
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public boolean hasPermission(User user, NationPermission permission) {
+        if(!getMembers().contains(user)) {
+            return false;
+        }
+
+        for(Rank rank : getRanks()) {
+            if(rank.isPartOf(user) && rank.hasPermission(permission)) {
+                return true;
+            }
+        }
+
+        return leader == user;
     }
 
     @Override
-    public PlotSection createEmptyPlotSection() {
-        return new PermissiblePlotSectionImpl(this);
+    public Set<Rank> getRanks() {
+        return new HashSet<>(ranks.values());
     }
 
     @Override
-    public boolean isUserAdmin(User user) {
-        return leader.equals(user);
+    public Rank getRank(String name) {
+        return ranks.get(name.toLowerCase());
+    }
+
+    @Override
+    public void addCommunity(Community settlement) {
+        communities.add(settlement);
+    }
+
+    @Override
+    public void removeCommunity(Community settlement) {
+        communities.remove(settlement);
+    }
+
+    @Override
+    public boolean setName(String newName) {
+        String oldName = this.name;
+
+        if(NATIONS == null) {
+            NATIONS = NationsPlugin.getInstance().nationsRegistry();
+        }
+
+        if(NATIONS.get(newName) != null) {
+            return false;
+        }
+
+        NATIONS.set(oldName, null);
+
+        this.name = newName;
+
+        NATIONS.set(newName, this);
+
+        NationsPlugin.getInstance().permissionManager().registerHolder(this, oldName);
+
+        return true;
+    }
+
+    @Override
+    public PlotSection createEmptyPlotSection(ClaimedChunk in) {
+        return new PermissiblePlotSectionImpl(this, in);
+    }
+
+    @Override
+    public boolean isAdministratedLandManager(User user) {
+        return hasPermission(user, DefaultNationPermission.TERRITORY);
     }
 
     @Override
@@ -216,14 +318,42 @@ public class NationImpl implements Nation {
         return firstName;
     }
 
-    public void setFile(File file) {
-        this.file = file;
-    }
-
     @Override
     public int priority() {
         return 3;
     }
 
+    @Override
+    public void addInvitation(Community community) {
+        invitations.add(community);
+    }
+
+    @Override
+    public Set<Community> getInvitations() {
+        return new HashSet<>(invitations);
+    }
+
     //TODO organize method order in similar classes
+
+    //TODO; figure out deletion management
+
+    @Override
+    public void deleted(Deletable deletable) {
+        if(ranks.containsValue(deletable)) {
+            ranks.remove(((Rank) deletable).getName());
+        }
+    }
+
+
+
+    //CHARTERING
+    @Override
+    public void charter(Company company) {
+        charters.add(company);
+    }
+
+    @Override
+    public boolean isChartered(Company company) {
+        return charters.contains(company);
+    }
 }

@@ -41,4 +41,15 @@ public interface PermissiblePlotSection extends PlotSection {
     List<String> savedPermissionList();
 
     void loadPermissions(List<String> list);
+
+    LandPermissionHolder getOwner();
+
+    void setOwner(LandPermissionHolder holder);
+
+    boolean isClaimable();
+
+    void setClaimable(boolean claimable);
+
+    @Override
+    PermissiblePlotSection cloneAt(ClaimedChunk claimedChunk);
 }

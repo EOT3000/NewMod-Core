@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.core.api.item;
 
+import me.bergenfly.newmod.core.api.gear.ArmorSetBuilder;
 import me.bergenfly.newmod.core.api.item.builder.ModItemBuilder;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.api.item.data.ModItemDataSerializer;
@@ -25,7 +26,15 @@ public interface ItemManager {
      * @param stack the ItemStack to check.
      * @return the found ModItem, or null if none could be found.
      */
-    ModItem getType(ItemStack stack);
+    ModItem getModType(ItemStack stack);
+
+    /**
+     * Attempts to find this ItemStack's Item type, either vanilla or modded.
+     *
+     * @param stack the ItemStack to check.
+     * @return the found Item, or null of none could be found.
+     */
+    Item getType(ItemStack stack);
 
     /**
      * Attempts to find the ModItem of this NamespacedKey
@@ -85,6 +94,8 @@ public interface ItemManager {
      */
     ModItemBuilder createBuilder(Material material, JavaPlugin plugin, String id);
 
+    ArmorSetBuilder createArmorBuilder(JavaPlugin plugin, String id);
+
     /**
      * Applies data to an item stack.
      *
@@ -93,4 +104,6 @@ public interface ItemManager {
      * @return true if successful, false if it fails, such as if the data type does not match the stack.
      */
     boolean applyData(ItemStack stack, ModItemData data);
+
+    void setType(ItemStack stack, NamespacedKey key);
 }

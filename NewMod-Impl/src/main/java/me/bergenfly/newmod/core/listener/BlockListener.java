@@ -62,7 +62,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        ModItem type = NewModPlugin.get().itemManager().getType(event.getItemInHand());
+        ModItem type = NewModPlugin.get().itemManager().getModType(event.getItemInHand());
 
         if(type != null) {
             if(type.getBlock() != null) {

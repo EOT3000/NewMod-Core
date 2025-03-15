@@ -16,42 +16,42 @@ public class ShapelessRecipeMatcher {
         //System.out.println();
         List<ItemStack> so = fromArray(stacks);
 
-        /*System.out.println("start");
+        System.out.println("start");
         System.out.println("list: " + so);
         System.out.println("list size: " + so.size());
         System.out.println("choices: " + recipe.getChoiceList());
-        System.out.println("choices size: " + recipe.getChoiceList().size());*/
+        System.out.println("choices size: " + recipe.getChoiceList().size());
 
         if(recipe.getChoiceList().size() != so.size()) {
             return false;
         }
 
         a: for(RecipeChoice choice : recipe.getChoiceList()) {
-            //System.out.println("choice: " + choice);
+            System.out.println("choice: " + choice);
 
             for(ItemStack stack : new ArrayList<>(so)) {
-                //System.out.println("option: " + stack);
+                System.out.println("option: " + stack);
                 if(matches(choice, stack, recipe)) {
-                    //System.out.println("matches");
+                    System.out.println("matches");
                     so.remove(stack);
-                    //System.out.println("");
+                    System.out.println("");
 
                     continue a;
                 }
             }
 
-            //System.out.println("left: " + so);
+            System.out.println("left: " + so);
 
             return false;
         }
 
-        //System.out.println("final left: " + so);
+        System.out.println("final left: " + so);
 
         return true;
     }
 
     private static boolean matches(RecipeChoice choice, ItemStack stack, ShapelessRecipe recipe) {
-        ModItem type = NewModPlugin.get().itemManager().getType(stack);
+        ModItem type = NewModPlugin.get().itemManager().getModType(stack);
 
         if(type == null) {
             return choice.test(stack);

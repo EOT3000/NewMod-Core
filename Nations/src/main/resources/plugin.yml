@@ -4,4 +4,11 @@ version: 1.0.0
 api-version: 1.21
 commands:
   settlement:
+    aliases: [town, t, s, set]
   nation:
+    aliases: [n, nat]
+  plot:
+  tribe:
+  community:
+  company:
+    aliases: [comp]

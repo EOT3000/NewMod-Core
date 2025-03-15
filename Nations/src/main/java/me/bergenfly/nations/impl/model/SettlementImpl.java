@@ -2,6 +2,8 @@ package me.bergenfly.nations.impl.model;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import me.bergenfly.nations.api.model.User;
+import me.bergenfly.nations.api.model.organization.Community;
+import me.bergenfly.nations.api.model.organization.Company;
 import me.bergenfly.nations.api.model.organization.Nation;
 import me.bergenfly.nations.api.model.organization.Settlement;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -9,6 +11,7 @@ import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
 import me.bergenfly.nations.impl.model.plot.PermissiblePlotSectionImpl;
+import me.bergenfly.nations.impl.util.IdUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -17,73 +20,47 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
+public class SettlementImpl extends AbstractCommunity implements Settlement {
 
-    private static Registry<Settlement, String> SETTLEMENTS;
-
-    private final String firstName;
-    private final long creationTime;
-
-    private User leader;
-
-    private String name;
-
-    private Nation nation;
+    private static Registry<Community, String> COMMUNITIES;
 
     private Set<PlotSection> land = new HashSet<>();
+
+    private final Set<Company> charters = new HashSet<>();
 
     private SettlementImpl(String name, User leader) {
         this(leader, name, name, System.currentTimeMillis());
     }
 
-    //TODO figure out what to do with constructor accessiblity
     public SettlementImpl(User leader, String name, String firstName, long creationTime) {
-        this.leader = leader;
-        this.name = name;
-        this.firstName = firstName;
-        this.creationTime = creationTime;
+        super(leader, name, firstName, creationTime, IdUtil.settlementId1(firstName, creationTime));
+    }
+
+    public SettlementImpl(User leader, String name, String firstName, long creationTime, String id) {
+        super(leader, name, firstName, creationTime, id);
     }
 
     public static SettlementImpl tryCreate(String name, User leader) {
-        if(SETTLEMENTS == null) {
-            SETTLEMENTS = NationsPlugin.getInstance().settlementsRegistry();
+        if(COMMUNITIES == null) {
+            COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+        }
+
+        if(COMMUNITIES.get(name) != null) {
+            return null;
+        }
+
+        if(leader.getCommunity() != null) {
+            return null;
         }
 
         SettlementImpl s = new SettlementImpl(name, leader);
 
-        if(SETTLEMENTS.get(name) != null) {
-            return null;
-        }
+        COMMUNITIES.set(name, s);
 
-        if(leader.getSettlement() != null) {
-            return null;
-        }
-
-        SETTLEMENTS.set(name, s);
-
-        leader.setSettlement(s);
+        leader.setCommunity(s);
+        NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
 
         return s;
-    }
-
-    @Override
-    public @NotNull String getId() {
-        return "settlement_" + firstName.toLowerCase() + "_" + creationTime;
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return name;
-    }
-
-    @Override
-    public User getLeader() {
-        return leader;
-    }
-
-    @Override
-    public void setLeader(User leader) {
-        this.leader = leader;
     }
 
     @Override
@@ -93,38 +70,23 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
 
     @Override
     public void addLand(PlotSection section) {
-        land.remove(section);
-    }
-
-    @Override
-    public void removeLand(PlotSection section) {
         land.add(section);
     }
 
     @Override
-    public Nation getNation() {
-        return nation;
+    public void removeLand(PlotSection section) {
+        land.remove(section);
     }
 
     @Override
-    public void setNation(Nation nation) {
-        this.nation = nation;
-
-        if(this.nation != null) {
-            this.nation.removeSettlement(this);
-        }
-
-        if(nation != null) {
-            nation.addSettlement(this);
-        }
-
-        this.nation = nation;
+    public String getFullName() {
+        return "Settlement " + name.replaceAll("_", " ");
     }
 
     @Override
     public void sendInfo(CommandSender user) {
         //TODO convert to translation keys
-        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + name.replaceAll("_", " ") + ChatColor.GOLD +" ] ---");
+        user.sendMessage(ChatColor.GOLD + "--- [ " + ChatColor.YELLOW + getFullName() + ChatColor.GOLD +" ] ---");
         user.sendMessage(ChatColor.DARK_AQUA + "Leader: " + ChatColor.AQUA + leader.getName());
         user.sendMessage(ChatColor.DARK_AQUA + "Nation" + (nation == null ? "less" : ": " + ChatColor.AQUA + nation.getName()));
 
@@ -150,34 +112,23 @@ public class SettlementImpl extends AbstractPlayerGroup implements Settlement {
     }
 
     @Override
-    public void setName(String name) {
-        SETTLEMENTS.set(this.name, null);
-
-        this.name = name;
-
-        SETTLEMENTS.set(name, this);
+    public PlotSection createEmptyPlotSection(ClaimedChunk in) {
+        return new PermissiblePlotSectionImpl(this, in);
     }
 
     @Override
-    public PlotSection createEmptyPlotSection() {
-        return new PermissiblePlotSectionImpl(this);
-    }
-
-    @Override
-    public boolean isUserAdmin(User user) {
+    public boolean isAdministratedLandManager(User user) {
         return leader.equals(user);
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public long getCreationTime() {
-        return creationTime;
+    //CHARTERING
+    @Override
+    public void charter(Company company) {
+        charters.add(company);
     }
 
     @Override
-    public int priority() {
-        return 1;
+    public boolean isChartered(Company company) {
+        return charters.contains(company);
     }
 }

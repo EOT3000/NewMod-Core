@@ -2,6 +2,7 @@ package me.bergenfly.newmod.flyfun;
 
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.addon.NewModAddon;
+import me.bergenfly.newmod.core.util.skytest;
 import me.bergenfly.newmod.flyfun.basictools.BasicToolsTypes;
 import me.bergenfly.newmod.flyfun.basictools.GoldPanManager;
 import me.bergenfly.newmod.flyfun.basictools.listener.BasicToolsListener;
@@ -15,7 +16,11 @@ import me.bergenfly.newmod.flyfun.camera.Camera;
 import me.bergenfly.newmod.flyfun.camera.Textures;
 import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
 import me.bergenfly.newmod.flyfun.camera.model.AllSidesBlockModel;
-import me.bergenfly.newmod.flyfun.fortunefix.FortuneListener;
+import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
+import me.bergenfly.newmod.flyfun.food.AnimalsTypes;
+import me.bergenfly.newmod.flyfun.food.FoodsTypes;
+import me.bergenfly.newmod.flyfun.food.listener.FoodListener;
+import me.bergenfly.newmod.flyfun.food.nutrient.VanillaFoods;
 import me.bergenfly.newmod.flyfun.history.HistoryListener;
 import me.bergenfly.newmod.flyfun.horn.HornListener;
 import me.bergenfly.newmod.flyfun.magic.MagicTypes;
@@ -23,8 +28,9 @@ import me.bergenfly.newmod.flyfun.magic.listener.AltarListener;
 import me.bergenfly.newmod.flyfun.magic.listener.SoulToolListener;
 import me.bergenfly.newmod.flyfun.magic.recipe.AltarRecipeManager;
 import me.bergenfly.newmod.flyfun.metals.MetalsTypes;
-import me.bergenfly.newmod.flyfun.plants.PlantsTypes;
-import me.bergenfly.newmod.flyfun.plants.listener.PlantsListener;
+import me.bergenfly.newmod.flyfun.food.PlantsTypes;
+import me.bergenfly.newmod.flyfun.food.listener.PlantsListener;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,6 +38,7 @@ import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -81,6 +88,8 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         MetalsTypes.init();
         PlantsTypes.init();
+        AnimalsTypes.init();
+        FoodsTypes.init();
         BooksTypes.init();
         BasicToolsTypes.init();
         MagicTypes.init();
@@ -89,16 +98,19 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         api.itemManager().registerSerializer(new WritableItemDataImpl.WritableItemDataSerializer(), WritableItemDataImpl.class);
 
         Bukkit.getPluginManager().registerEvents(new PlantsListener(), this);
+        Bukkit.getPluginManager().registerEvents(new FoodListener(), this);
         Bukkit.getPluginManager().registerEvents(new BooksListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicToolsListener(), this);
         Bukkit.getPluginManager().registerEvents(new AltarListener(), this);
         Bukkit.getPluginManager().registerEvents(new SoulToolListener(), this);
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
-        Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
         Bukkit.getPluginManager().registerEvents(new TreeBarkListener(), this);
 
+        VanillaFoods.init();
+
         System.out.println(new File("").getAbsolutePath());
-        System.out.println(textureDir.getAbsolutePath());
+        //System.out.println(textureDir.getAbsolutePath());
 
         getLogger().info("Loading textures");
         Textures.me.loadTextures(textureDir);
@@ -108,6 +120,21 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         getLogger().info("Loading block states");
         Textures.me.loadBlockStates(blockStatesDir);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            Player player = Bukkit.getOnlinePlayers().iterator().next();
+
+            ServerLevel level = ((CraftWorld) player.getWorld()).getHandle();
+
+            float a = level.getTimeOfDay(1);
+            float c = level.getDayTime();
+            float b = player.getWorld().getTime();
+
+            System.out.println("NMS Gives Sky angle: " + a);
+            System.out.println("NMS Gives day time: " + c);
+            System.out.println("GetTime: " + b);
+            System.out.println();
+        }, 1200, 1200);
     }
 
     @Override
@@ -145,6 +172,14 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
 
         if(args.length == 1) {
             BlockModel model = Textures.me.getStates(Material.getMaterial(args[0])).getStates().get(0).model();
+
+            Material material = Material.getMaterial(args[0]);
+
+            BlockStates states = Textures.me.getStates(material);
+
+            for(BlockStates.BlockState state : states.getStates()) {
+                sender.sendMessage("Model: " + state.model().texturesString());
+            }
 
             byte[][] camera = new byte[128][128];
 
@@ -190,19 +225,45 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
             return true;
         }
 
+        if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("load")) {
+                File file = new File("photo" + args[1]);
+
+                Camera.loadFile(file, (Player) sender);
+                return true;
+            }
+        }
+
+        if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("data")) {
+                Player player = (Player) sender;
+
+                long time = player.getWorld().getTime();
+                double tod = skytest.timeOfDay(time);
+                double brightness = skytest.getSkyBrightness((float) tod);
+                skytest.vec3 slc = skytest.mix(new skytest.vec3(brightness, brightness, 1.0), new skytest.vec3(1.0,1.0,1.0), .35);
+
+                sender.sendMessage("Time: " + time);
+                sender.sendMessage("Sky angle: " + tod);
+                sender.sendMessage("Sky brightness: " + brightness);
+                sender.sendMessage("Color: " + slc);
+                return true;
+            }
+        }
+
         HornListener.playAt(new Location(((Player) sender).getWorld(), 0, 64, 0), Sound.ITEM_GOAT_HORN_SOUND_0);
 
         getLogger().info("Beginning picture capture");
         Bukkit.getScheduler().runTaskLater(this, () -> {
-            byte[][] camera = Camera.run(((Player) sender).getEyeLocation());
+            Camera.run(((Player) sender).getEyeLocation());
 
-            giveToPlayer(camera, sender);
+            //giveToPlayer(camera, sender);
         }, 1);
 
         return true;
     }
 
-    private void giveToPlayer(byte[][] camera, CommandSender sender) {
+    public void giveToPlayer(byte[][] camera, CommandSender sender) {
         ItemStack stack = new ItemStack(Material.FILLED_MAP);
 
         MapMeta meta = (MapMeta) stack.getItemMeta();

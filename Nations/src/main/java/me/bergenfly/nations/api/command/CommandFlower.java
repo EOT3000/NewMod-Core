@@ -1,14 +1,21 @@
 package me.bergenfly.nations.api.command;
 
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
+import me.bergenfly.nations.api.permission.DefaultNationPermission;
+import me.bergenfly.nations.api.permission.DefaultPlotPermission;
+import me.bergenfly.nations.api.permission.NationPermission;
 import me.bergenfly.nations.api.permission.PlotPermission;
 import me.bergenfly.nations.api.registry.Registry;
 import me.bergenfly.nations.impl.NationsPlugin;
+import org.apache.commons.lang3.function.TriFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,17 +23,17 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CommandFlower {
-
-    protected static final Pattern pattern = Pattern.compile("^((?!([a-z]|[A-Z]|[0-9]|_)).)*$|__");
 
     static {
         // When changing change in check method too
@@ -41,27 +48,34 @@ public class CommandFlower {
     public static final int INVOKER_LEADER;
     public static final int SELF;
 
+    private static final Logger logger = NationsPlugin.getInstance().getLogger();
+
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+    private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
+    private static Registry<Community, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+    private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
 
     private Predicate<NationsCommandInvocation> command;
 
     private final IntArrayList nations = new IntArrayList();
     private final IntArrayList settlements = new IntArrayList();
+    private final IntArrayList communities = new IntArrayList();
+    private final IntArrayList companies = new IntArrayList();
     private final IntArrayList users = new IntArrayList();
     private final IntArrayList permissionHolders = new IntArrayList();
     private final IntArrayList plotPermissions = new IntArrayList();
+    private final IntArrayList nationPermissions = new IntArrayList();
     private final IntArrayList ints = new IntArrayList();
     private final IntArrayList floats = new IntArrayList();
     private final IntArrayList booleans = new IntArrayList();
 
-    private final IntArrayList nationsNotExist = new IntArrayList();
-    private final IntArrayList settlementsNotExist = new IntArrayList();
+    final Int2ObjectArrayMap<ArgumentTabCompleter> tabCompleters = new Int2ObjectArrayMap<>();
 
-    private final IntArrayList cleanName = new IntArrayList();
+    private final List<IntObjectImmutablePair<RequirementCheckers.RequirementChecker>> requirements = new ArrayList<>();
 
     private boolean mustBePlayer = false;
 
-    public Function<NationsCommandInvocation, String> successBroadcast = null;
+    public Consumer<NationsCommandInvocation> successBroadcast = (a) -> {};
     public Function<NationsCommandInvocation, String> successMessage = null;
     public Function<NationsCommandInvocation, String> failureMessage = null;
 
@@ -70,16 +84,65 @@ public class CommandFlower {
     public CommandFlower() {
     }
 
+    public CommandFlower tabCompleteOptions(int i, String first) {
+        List<String> list = Collections.singletonList(first);
+
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String first, String second) {
+        List<String> list = new ArrayList<>();
+
+        list.add(first);
+        list.add(second);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String first, String second, String third) {
+        List<String> list = new ArrayList<>();
+
+        list.add(first);
+        list.add(second);
+        list.add(third);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
+    public CommandFlower tabCompleteOptions(int i, String... options) {
+        List<String> list = Arrays.asList(options);
+
+        tabCompleters.put(i, (a) -> list);
+        return this;
+    }
+
     public CommandFlower addNation(int i) {
         nations.add(i);
+        tabCompleters.put(i, (a) -> NATIONS.list().stream().map(Nation::getName).toList());
         return this;
     }
     public CommandFlower addSettlement(int i) {
         settlements.add(i);
+        tabCompleters.put(i, (a) -> COMMUNITIES.list().stream().filter(Community::isSettlement).map(Community::getName).toList());
+        return this;
+    }
+    public CommandFlower addCommunity(int i) {
+        communities.add(i);
+        tabCompleters.put(i, (a) -> COMMUNITIES.list().stream().map(Community::getName).toList());
+        return this;
+    }
+    public CommandFlower addCompany(int i) {
+        companies.add(i);
+        tabCompleters.put(i, (a) -> COMPANIES.list().stream().map(Company::getName).toList());
         return this;
     }
     public CommandFlower addUser(int i) {
         users.add(i);
+        tabCompleters.put(i, (a) -> USERS.list().stream().map(User::getName).toList());
         return this;
     }
     public CommandFlower addPermissionHolder(int i) {
@@ -88,6 +151,12 @@ public class CommandFlower {
     }
     public CommandFlower addPlotPermission(int i) {
         plotPermissions.add(i);
+        tabCompleters.put(i, (a) -> Arrays.stream(DefaultPlotPermission.values()).map(PlotPermission::getName).toList());
+        return this;
+    }
+    public CommandFlower addNationPermission(int i) {
+        nationPermissions.add(i);
+        tabCompleters.put(i, (a) -> Arrays.stream(DefaultNationPermission.values()).map(NationPermission::getName).toList());
         return this;
     }
     public CommandFlower addInt(int i) {
@@ -100,20 +169,62 @@ public class CommandFlower {
     }
     public CommandFlower addBoolean(int i) {
         booleans.add(i);
+        tabCompleters.put(i, (a) -> Arrays.asList("true", "false"));
         return this;
     }
 
     public CommandFlower nationDoesNotExist(int i) {
-        nationsNotExist.add(i);
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkNationNotExist));
         return this;
     }
-    public CommandFlower settlementDoesNotExist(int i) {
-        settlementsNotExist.add(i);
+    public CommandFlower companyDoesNotExist(int i) {
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCompanyNotExist));
+        return this;
+    }
+    public CommandFlower communityDoesNotExist(int i) {
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCommunityNotExist));
         return this;
     }
 
     public CommandFlower cleanName(int i) {
-        cleanName.add(i);
+        requirements.add(new IntObjectImmutablePair<>(i, RequirementCheckers::checkCleanName));
+        return this;
+    }
+
+    public CommandFlower nameLength(int i, int min, int max) {
+        requirements.add(new IntObjectImmutablePair<>(i, (a,b,c) -> RequirementCheckers.checkNameLength(a,b,c,min,max)));
+        return this;
+    }
+
+    public CommandFlower nationPermission(NationPermission permission) {
+        requirements.add(new IntObjectImmutablePair<>(0, (a,b,c) -> RequirementCheckers.checkNationPermission(c,permission)));
+        return this;
+    }
+
+    public CommandFlower argsLength(int length) {
+        requirements.add(new IntObjectImmutablePair<>(0, (a,b,c) -> a.length >= length));
+        return this;
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker, String failureKey) {
+        return requirement(i, checker, (a) -> TranslatableString.translate(failureKey));
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker, Function<String[], String> failure) {
+        requirements.add(new IntObjectImmutablePair<>(i, (a,b,c) -> {
+            boolean result = checker.test(a,b,c);
+
+            if(!result) {
+                c.sendMessage(failure.apply(a));
+            }
+
+            return result;
+        }));
+        return this;
+    }
+
+    public CommandFlower requirement(int i, RequirementCheckers.RequirementChecker checker) {
+        requirements.add(new IntObjectImmutablePair<>(i, checker));
         return this;
     }
 
@@ -131,9 +242,14 @@ public class CommandFlower {
     }
 
     public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function) {
-        this.successBroadcast = function;
+        return successBroadcast(function, (a) -> NationsPlugin.getInstance());
+    }
+
+    public CommandFlower successBroadcast(Function<NationsCommandInvocation, String> function, Function<NationsCommandInvocation, PlayerGroup> where) {
+        this.successBroadcast = this.successBroadcast.andThen((a) -> where.apply(a).broadcastString(function.apply(a)));
         return this;
     }
+
     public CommandFlower successMessage(Function<NationsCommandInvocation, String> function) {
         this.successMessage = function;
         return this;
@@ -149,32 +265,40 @@ public class CommandFlower {
     }
 
     public CommandFlower make() {
-        maker = new NationsCommandInvocationMaker(nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
+        maker = new NationsCommandInvocationMaker(nations, settlements, communities, companies, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         return this;
     }
 
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
         System.out.println(Arrays.toString(strings));
 
         NationsCommandInvocation made = maker.make(commandSender, strings);
 
         if(!made.valid) {
+            System.out.println("Invalid");
             return false;
         }
 
-        if(this.command.test(made)) {
-            if(successBroadcast != null) {
-                String send = successBroadcast.apply(made);
-
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(send);
+        try {
+            if (this.command.test(made)) {
+                if (successBroadcast != null) {
+                    successBroadcast.accept(made);
                 }
-            }
 
-            if(successMessage != null) commandSender.sendMessage(successMessage.apply(made));
-            return true;
-        } else {
-            if(failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
+                if (successMessage != null) commandSender.sendMessage(successMessage.apply(made));
+                return true;
+            } else {
+                if (failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            logger.log(Level.WARNING, "Error executing command");
+            logger.log(Level.WARNING, "Final arguments: " + Arrays.toString(strings));
+            logger.log(Level.WARNING, "All arguments: " + Arrays.toString(initial));
+            logger.log(Level.WARNING, "---");
+
             return false;
         }
     }
@@ -182,15 +306,19 @@ public class CommandFlower {
     private class NationsCommandInvocationMaker {
         private BiFunction<CommandSender, String[], Nation[]> nations = (a, b) -> null;
         private BiFunction<CommandSender, String[], Settlement[]> settlements = (a, b) -> null;
+        private BiFunction<CommandSender, String[], Community[]> communities = (a, b) -> null;
+        private BiFunction<CommandSender, String[], Company[]> companies = (a, b) -> null;
         private BiFunction<CommandSender, String[], User[]> users = (a, b) -> null;
         private BiFunction<CommandSender, String[], LandPermissionHolder[]> permissionHolders = (a, b) -> null;
         private BiFunction<CommandSender, String[], PlotPermission[]> plotPermissions = (a, b) -> null;
+        private BiFunction<CommandSender, String[], NationPermission[]> nationPermissions = (a, b) -> null;
         private BiFunction<CommandSender, String[], int[]> ints = (a, b) -> null;
         private BiFunction<CommandSender, String[], float[]> floats = (a, b) -> null;
         private BiFunction<CommandSender, String[], boolean[]> booleans = (a, b) -> null;
 
-        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList users_, IntArrayList permissionHolders_,
-                                              IntArrayList plotPermissions_,
+        private NationsCommandInvocationMaker(IntArrayList nations_, IntArrayList settlements_, IntArrayList communities_, IntArrayList companies_,
+                                              IntArrayList users_, IntArrayList permissionHolders_,
+                                              IntArrayList plotPermissions_, IntArrayList nationPermissions_,
                                               IntArrayList ints_, IntArrayList floats_, IntArrayList booleans_) {
             if(!nations_.isEmpty()) {
                 nations = ObjectFetchers.createNationFetcher(nations_);
@@ -198,6 +326,14 @@ public class CommandFlower {
 
             if(!settlements_.isEmpty()) {
                 settlements = ObjectFetchers.createSettlementFetcher(settlements_);
+            }
+
+            if(!communities_.isEmpty()) {
+                communities = ObjectFetchers.createCommunityFetcher(communities_);
+            }
+
+            if(!companies_.isEmpty()) {
+                companies = ObjectFetchers.createCompanyFetcher(companies_);
             }
 
             if(!users_.isEmpty()) {
@@ -210,6 +346,10 @@ public class CommandFlower {
 
             if(!plotPermissions_.isEmpty()) {
                 plotPermissions = ObjectFetchers.createPlotPermissionFetcher(plotPermissions_);
+            }
+
+            if(!nationPermissions_.isEmpty()) {
+                nationPermissions = ObjectFetchers.createNationPermissionFetcher(nationPermissions_);
             }
 
             if(!ints_.isEmpty()) {
@@ -236,9 +376,12 @@ public class CommandFlower {
 
             Nation[] nations = this.nations.apply(player, strings);
             Settlement[] settlements = this.settlements.apply(player, strings);
+            Community[] communities = this.communities.apply(player, strings);
+            Company[] companies = this.companies.apply(player, strings);
             User[] users = this.users.apply(player, strings);
             LandPermissionHolder[] permissionHolders = this.permissionHolders.apply(player, strings);
             PlotPermission[] plotPermissions = this.plotPermissions.apply(player, strings);
+            NationPermission[] nationPermissions = this.nationPermissions.apply(player, strings);
             int[] ints = this.ints.apply(player, strings);
             float[] floats = this.floats.apply(player, strings);
             boolean[] booleans = this.booleans.apply(player, strings);
@@ -248,27 +391,39 @@ public class CommandFlower {
                 valid = false;
             } else if (settlements != null && settlements.length == 0) {
                 valid = false;
+            } else if (communities != null && communities.length == 0) {
+                valid = false;
+            }  else if (companies != null && companies.length == 0) {
+                valid = false;
             } else if (users != null && users.length == 0) {
                 valid = false;
             } else if (permissionHolders != null && permissionHolders.length == 0) {
                 valid = false;
             } else if (plotPermissions != null && plotPermissions.length == 0) {
                 valid = false;
+            } else if (nationPermissions != null && nationPermissions.length == 0) {
+                valid = false;
             } else if (ints != null && ints.length == 0) {
                 valid = false;
-            } else if (floats != null && floats.length != 0) {
+            } else if (floats != null && floats.length == 0) {
                 valid = false;
-            } else if (booleans != null && booleans.length != 0) {
+            } else if (booleans != null && booleans.length == 0) {
                 valid = false;
             }
 
-            // If still valid, then check the NOT requirements
-            valid = valid && RequirementCheckers.checkSettlementsNotExist(settlementsNotExist, sender, strings) && RequirementCheckers.checkNationsNotExist(nationsNotExist, sender, strings);
+            // If still valid, then check the other requirements
+            for(IntObjectImmutablePair<RequirementCheckers.RequirementChecker> checker : requirements) {
+                if(!valid) {
+                    break;
+                }
 
-            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, users, permissionHolders, plotPermissions, ints, floats, booleans);
+                valid = checker.right().test(strings, checker.leftInt(), sender);
+            }
+
+            return new NationsCommandInvocation(sender, mustBePlayer ? USERS.get(player.getUniqueId()) : null, strings, valid, nations, settlements, communities, companies, users, permissionHolders, plotPermissions, nationPermissions, ints, floats, booleans);
         }
     }
 
-    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, int[] ints, float[] floats, boolean[] booleans) {}
+    public static final record NationsCommandInvocation(@NotNull CommandSender invoker, @Nullable User invokerUser, @NotNull String[] args, boolean valid, Nation[] nations, Settlement[] settlements, Community[] communities, Company[] companies, User[] users, LandPermissionHolder[] permissionHolders, PlotPermission[] plotPermissions, NationPermission[] nationPermissions, int[] ints, float[] floats, boolean[] booleans) {}
 
 }

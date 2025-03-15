@@ -58,7 +58,7 @@ public class ShapedRecipeMatcher {
             return check == null && choice == null;
         }
 
-        ModItem type = NewModPlugin.get().itemManager().getType(check);
+        ModItem type = NewModPlugin.get().itemManager().getModType(check);
 
         if(type == null) {
             return choice.test(check);

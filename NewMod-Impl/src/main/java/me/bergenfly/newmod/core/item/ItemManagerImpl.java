@@ -1,14 +1,14 @@
 package me.bergenfly.newmod.core.item;
 
 import me.bergenfly.newmod.core.NewModPlugin;
+import me.bergenfly.newmod.core.api.gear.ArmorSetBuilder;
 import me.bergenfly.newmod.core.api.gear.DurabilityController;
 import me.bergenfly.newmod.core.api.gear.GearManager;
-import me.bergenfly.newmod.core.api.item.ItemManager;
-import me.bergenfly.newmod.core.api.item.ModItem;
-import me.bergenfly.newmod.core.api.item.ModItemStack;
+import me.bergenfly.newmod.core.api.item.*;
 import me.bergenfly.newmod.core.api.item.builder.ModItemBuilder;
 import me.bergenfly.newmod.core.api.item.data.ModItemData;
 import me.bergenfly.newmod.core.api.item.data.ModItemDataSerializer;
+import me.bergenfly.newmod.core.armor.builder.ArmorSetBuilderImpl;
 import me.bergenfly.newmod.core.util.PersistentDataUtil;
 import me.bergenfly.newmod.core.item.builder.ModItemBuilderImpl;
 import org.bukkit.Material;
@@ -42,7 +42,7 @@ public class ItemManagerImpl implements ItemManager, GearManager {
     }
 
     @Override
-    public ModItem getType(ItemStack stack) {
+    public ModItem getModType(ItemStack stack) {
         if(stack == null || !stack.hasItemMeta()) {
             return null;
         }
@@ -50,6 +50,17 @@ public class ItemManagerImpl implements ItemManager, GearManager {
         NamespacedKey id = stack.getItemMeta().getPersistentDataContainer().get(ID, PersistentDataUtil.NAMESPACED_KEY);
 
         return registry.get(id);
+    }
+
+    @Override
+    public Item getType(ItemStack stack) {
+        if(stack == null) {
+            return null;
+        }
+
+        ModItem modItem = getModType(stack);
+
+        return modItem == null ? VanillaItem.fromMaterial(stack.getType()) : modItem;
     }
 
     @Override
@@ -84,7 +95,7 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public ModItemData getData(ItemStack stack) {
-        ModItem type = getType(stack);
+        ModItem type = getModType(stack);
 
         if(type == null) {
             return null;
@@ -101,8 +112,13 @@ public class ItemManagerImpl implements ItemManager, GearManager {
     }
 
     @Override
+    public ArmorSetBuilder createArmorBuilder(JavaPlugin plugin, String id) {
+        return new ArmorSetBuilderImpl(new NamespacedKey(plugin, id));
+    }
+
+    @Override
     public boolean applyData(ItemStack stack, ModItemData data) {
-        ModItem type = getType(stack);
+        ModItem type = getModType(stack);
 
         if(type == null) {
             return false;
@@ -189,5 +205,14 @@ public class ItemManagerImpl implements ItemManager, GearManager {
         double ratio = stack.getType().getMaxDurability() / (double) getMaxDurability(stack);
 
         stack.setDamage((int) Math.ceil(damage * ratio));
+    }
+
+    @Override
+    public void setType(ItemStack stack, NamespacedKey key) {
+        ItemMeta meta = stack.getItemMeta();
+
+        meta.getPersistentDataContainer().set(ItemManagerImpl.ID, PersistentDataUtil.NAMESPACED_KEY, key);
+
+        stack.setItemMeta(meta);
     }
 }

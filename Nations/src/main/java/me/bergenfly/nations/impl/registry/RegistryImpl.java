@@ -15,7 +15,7 @@ public class RegistryImpl<V, K> implements Registry<V, K> {
 
     @Override
     public V get(K key) {
-        return map.get(key);
+        return key == null ? null : map.get(key);
     }
 
     @Override

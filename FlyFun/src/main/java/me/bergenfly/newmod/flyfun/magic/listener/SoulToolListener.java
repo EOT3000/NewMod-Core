@@ -30,7 +30,7 @@ public class SoulToolListener implements Listener {
             Player d = (Player) event.getDamager();
 
             if (e.getHealth() - event.getFinalDamage() <= 0) {
-                if(MagicTypes.FILLED_SOUL_JAR.equals(item.getType(d.getInventory().getItemInOffHand()))) {
+                if(MagicTypes.FILLED_SOUL_JAR.equals(item.getModType(d.getInventory().getItemInOffHand()))) {
                     PlayerInventory inv = d.getInventory();
 
                     ItemStack itemStack = inv.getItemInOffHand();
@@ -58,7 +58,7 @@ public class SoulToolListener implements Listener {
             ItemStack offItem = event.getPlayer().getInventory().getItemInOffHand();
             ItemStack mainItem = event.getPlayer().getInventory().getItemInMainHand();
 
-            if(MagicTypes.FILLED_SOUL_JAR.equals(item.getType(offItem)) && MagicTypes.SOUL_SHOVEL.equals(item.getType(mainItem))) {
+            if(MagicTypes.FILLED_SOUL_JAR.equals(item.getModType(offItem)) && MagicTypes.SOUL_SHOVEL.equals(item.getModType(mainItem))) {
                 Material blockType = event.getClickedBlock().getType();
 
                 if(blockType.equals(Material.SAND)) {

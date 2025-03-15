@@ -2,10 +2,7 @@ package me.bergenfly.newmod.flyfun.camera;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import me.bergenfly.newmod.flyfun.camera.model.BlockModel;
-import me.bergenfly.newmod.flyfun.camera.model.BlockModelDeserializer;
-import me.bergenfly.newmod.flyfun.camera.model.BlockStates;
-import me.bergenfly.newmod.flyfun.camera.model.BlockStatesDeserializer;
+import me.bergenfly.newmod.flyfun.camera.model.*;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureData16x16;
 import me.bergenfly.newmod.flyfun.camera.texture.TextureLoadUtil;
 import org.bukkit.Color;
@@ -95,7 +92,7 @@ public class Textures {
             }
         }
 
-        FAILED_TO_LOAD_TEXTURE = new TextureData16x16(rawColor, storedColor);
+        FAILED_TO_LOAD_TEXTURE = new TextureData16x16(rawColor, storedColor, "error");
 
         FAILED_TO_LOAD_STATES = new BlockStates();
 
@@ -114,6 +111,10 @@ public class Textures {
             try {
                 TextureData16x16 loaded = TextureLoadUtil.load(file);
 
+                if(loaded == null) {
+                    continue;
+                }
+
                 textures.put(file.getName().replace(".png", ""), loaded);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -131,6 +132,7 @@ public class Textures {
     public BlockModel getModel(String name) {
         name = name.replace("minecraft:block/", "");
         name = name.replace("block/", "");
+        name = name.replace(".json", "");
 
         return models.getOrDefault(name, FAILED_TO_LOAD);
     }
@@ -146,11 +148,17 @@ public class Textures {
 
                 BlockModel block = gson.fromJson(reader, BlockModel.class);
 
+                if(block instanceof UnknownModel um) {
+                    //System.out.println("Unable to load " + model.getName() + " (" + um.parent + ")");
+                    //System.out.println("textures: " + um.textures + "\n");
+                }
+
                 this.models.put(model.getName().replace(".json", ""), block);
 
                 //if(block instanceof TOP)
             } catch (Exception e) {
-                e.printStackTrace();
+                //System.out.println(model.getName());
+                //e.printStackTrace();
             }
         }
     }
@@ -160,9 +168,18 @@ public class Textures {
             try {
                 JsonReader reader = new JsonReader(new FileReader(model));
 
-                BlockStates block = gson.fromJson(reader, BlockStates.class);
+                if(model.getName().endsWith("wall.json") || model.getName().endsWith("fence.json")) {
+                    BlockStates wall = new BlockStates();
 
-                this.states.put(Material.valueOf(model.getName().replace(".json", "").toUpperCase()), block);
+                    wall.addState((a) -> true, new BlockStates.BlockState(getModel(model.getName() + "_post"), 0, 0));
+
+                    this.states.put(Material.valueOf(model.getName().replace(".json", "").toUpperCase()), wall);
+                } else {
+
+                    BlockStates block = gson.fromJson(reader, BlockStates.class);
+
+                    this.states.put(Material.valueOf(model.getName().replace(".json", "").toUpperCase()), block);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

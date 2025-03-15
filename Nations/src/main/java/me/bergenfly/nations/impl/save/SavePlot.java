@@ -1,6 +1,7 @@
 package me.bergenfly.nations.impl.save;
 
 import me.bergenfly.nations.api.manager.Plots;
+import me.bergenfly.nations.api.model.organization.LandAdministrator;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
 import me.bergenfly.nations.api.model.plot.PermissiblePlotSection;
 import me.bergenfly.nations.api.model.plot.PlotSection;
@@ -16,29 +17,72 @@ import java.util.stream.Collectors;
 
 public class SavePlot {
     public static Map<String, Object> plotToMap(ClaimedChunk chunk) {
-        if(chunk.getAt(0, 0) == null) {
+        if(chunk.getSections(false).length == 0) {
             return null;
         }
 
-        Map<String, Object> plot = new HashMap<>();
+        Map<Integer, Map<String, Object>> sectionsSerialized = new HashMap<>();
+        Map<PlotSection, Integer> section2Int = new HashMap<>();
 
-        PlotSection section = chunk.getAt(0, 0);
+        Map<String, Object> chunkMap = new HashMap<>();
 
-        if(section instanceof PermissiblePlotSection p) {
-            plot.put("permissions", p.savedPermissionList());
+        chunkMap.put("x", chunk.getChunkX());
+        chunkMap.put("z", chunk.getChunkZ());
+        chunkMap.put("id", Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld()));
+        chunkMap.put("world", chunk.getWorld().getName());
+        chunkMap.put("divisions", chunk.getDivision());
+
+        int count = 0;
+
+        for(PlotSection section : chunk.getSections(true)) {
+            Map<String, Object> plot = new HashMap<>();
+
+            if(section == null) {
+                plot.put("claimed", "false");
+            } else {
+                plot.put("claimed", "true");
+
+                if (section instanceof PermissiblePlotSection p) {
+                    plot.put("permissions", p.savedPermissionList());
+                }
+
+                plot.put("administrator", section.getAdministrator().getId());
+            }
+
+            sectionsSerialized.put(count, plot);
+            section2Int.put(section, count);
+            count++;
         }
 
-        plot.put("x", chunk.getChunkX());
-        plot.put("z", chunk.getChunkZ());
-        plot.put("id", Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld()));
-        plot.put("world", chunk.getWorld().getName());
+        chunkMap.put("sections", sectionsSerialized);
 
-        plot.put("type", chunk.getDivision());
-        plot.put("administrator", chunk.getAt(0, 0).getAdministrator().getId());
+        Map<Object, String> sectionsGeometry = new HashMap<>();
 
+        int num = (int) Math.pow(2, chunk.getDivision());
+        int each = 16/num;
 
+        for(int z = 0; z < num; z++) {
+            String string = "";
 
-        return plot;
+            for (int x = 0; x < num; x++) {
+                int xn = x * each;
+                int zn = z * each;
+
+                PlotSection section = chunk.getAt(xn, zn);
+
+                Integer id = section2Int.get(section);
+
+                string = string + "," + id;
+            }
+
+            string = string.replaceFirst(",", "");
+
+            sectionsGeometry.put(z, string);
+        }
+
+        chunkMap.put("geometry", sectionsGeometry);
+
+        return chunkMap;
     }
 
     public static YamlConfiguration plotsToMap(List<ClaimedChunk> chunks) {

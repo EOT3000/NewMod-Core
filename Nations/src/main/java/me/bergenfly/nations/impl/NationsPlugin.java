@@ -4,20 +4,24 @@ import me.bergenfly.nations.api.NationsAPI;
 import me.bergenfly.nations.api.manager.NationsLandManager;
 import me.bergenfly.nations.api.manager.NationsPermissionManager;
 import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.LandAdministrator;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
+import me.bergenfly.nations.api.model.plot.PlotSection;
 import me.bergenfly.nations.api.registry.Registry;
+import me.bergenfly.nations.impl.command.community.SettlementCommand;
+import me.bergenfly.nations.impl.command.company.CompanyCommand;
 import me.bergenfly.nations.impl.command.nation.NationCommand;
-import me.bergenfly.nations.impl.command.settlement.SettlementCommand;
+import me.bergenfly.nations.impl.command.plot.PlotCommand;
+import me.bergenfly.nations.impl.command.community.CommunityCommand;
+import me.bergenfly.nations.impl.command.community.TribeCommand;
+import me.bergenfly.nations.impl.listener.PlotListener;
 import me.bergenfly.nations.impl.model.UserImpl;
 import me.bergenfly.nations.impl.registry.RegistryImpl;
 import me.bergenfly.nations.impl.registry.StringRegistryImpl;
 import me.bergenfly.nations.impl.save.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -25,11 +29,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
+public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener, PlayerGroup {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
@@ -37,10 +44,12 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     private boolean enabled = false;
 
     private Registry<Nation, String> NATIONS;
-    private Registry<Settlement, String> SETTLEMENTS;
+    private Registry<Community, String> COMMUNITIES;
     private Registry<User, UUID> USERS;
-    private Registry<Map<Class<?>, LandPermissionHolder>, String> PERMISSION_HOLDERS_NAME;
+    private Registry<Company, String> COMPANIES;
     private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
+
+    private NationsPermissionManager permissionManager;
 
     private NationsLandManager landManager;
 
@@ -67,15 +76,16 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
 
         this.NATIONS = new StringRegistryImpl<>(Nation.class);
-        this.SETTLEMENTS = new StringRegistryImpl<>(Settlement.class);
+        this.COMMUNITIES = new StringRegistryImpl<>(Community.class);
         this.USERS = new RegistryImpl<>(User.class);
-        this.PERMISSION_HOLDERS_NAME = new RegistryImpl<>(null); //idk what to do with this null
+        this.COMPANIES = new RegistryImpl<>(Company.class);
         this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
+        this.permissionManager = new NationsPermissionManager();
 
         try {
             LoadUser.loadUsers();
-            LoadSettlement.loadSettlements();
+            LoadCommunity.loadCommunities();
             LoadNation.loadNations();
             LoadPlot.loadPlots();
         } catch (Exception e) {
@@ -85,17 +95,23 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
             return;
         }
 
+        Bukkit.getPluginCommand("community").setExecutor(new CommunityCommand("community"));
         Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
+        Bukkit.getPluginCommand("tribe").setExecutor(new TribeCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
+        Bukkit.getPluginCommand("plot").setExecutor(new PlotCommand());
+        Bukkit.getPluginCommand("company").setExecutor(new CompanyCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(new PlotListener(), this);
     }
 
     @Override
     public void onDisable() {
         SavePlot.savePlots();
         SaveNation.saveNations();
-        SaveSettlement.saveSettlements();
+        SaveCommunity.saveCommunities();
+        SaveUser.saveUsers();
     }
 
     @Override
@@ -104,8 +120,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
-    public Registry<Settlement, String> settlementsRegistry() {
-        return SETTLEMENTS;
+    public Registry<Community, String> communitiesRegistry() {
+        return COMMUNITIES;
     }
 
     @Override
@@ -114,8 +130,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     }
 
     @Override
-    public Registry<Map<Class<?>, LandPermissionHolder>, String> permissionHoldersByNameRegistry() {
-        return PERMISSION_HOLDERS_NAME;
+    public Registry<Company, String> companiesRegistry() {
+        return COMPANIES;
     }
 
     @Override
@@ -126,6 +142,26 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
     @Override
     public NationsLandManager landManager() {
         return landManager;
+    }
+
+    @Override
+    public NationsPermissionManager permissionManager() {
+        return permissionManager;
+    }
+
+    @Override
+    public void sendInfo(CommandSender user) {
+
+    }
+
+    @Override
+    public Set<User> getMembers() {
+        return new HashSet<>(USERS.list());
+    }
+
+    @Override
+    public Set<User> getOnlineMembers() {
+        return USERS.list().stream().filter(User::isOnline).collect(Collectors.toSet());
     }
 
     //Don't use this. Only internal code can use this
@@ -150,8 +186,8 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        ClaimedChunk from = landManager.getClaimedChunkAtLocation(event.getFrom());
-        ClaimedChunk to = landManager.getClaimedChunkAtLocation(event.getTo());
+        PlotSection from = landManager.getPlotSectionAtLocation(event.getFrom());
+        PlotSection to = landManager.getPlotSectionAtLocation(event.getTo());
 
         if (to == from) {
             return;
@@ -160,7 +196,15 @@ public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener {
         if (to == null) {
             event.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
         } else {
-            LandAdministrator admin = to.getAt(0,0).getAdministrator();
+            LandAdministrator admin = to.getAdministrator();
+
+            if(from != null) {
+                LandAdministrator adminOld = from.getAdministrator();
+
+                if(adminOld == admin) {
+                    return;
+                }
+            }
 
             event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }

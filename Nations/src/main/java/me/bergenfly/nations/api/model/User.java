@@ -1,9 +1,6 @@
 package me.bergenfly.nations.api.model;
 
-import me.bergenfly.nations.api.model.organization.LandAdministrator;
-import me.bergenfly.nations.api.model.organization.LandPermissionHolder;
-import me.bergenfly.nations.api.model.organization.Nation;
-import me.bergenfly.nations.api.model.organization.Settlement;
+import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.PlotSection;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -24,14 +21,14 @@ public interface User extends LandPermissionHolder {
 
     @Nullable Nation getNation();
 
-    @Nullable Settlement getSettlement();
+    @Nullable Community getCommunity();
 
     /**
-     * Sets the user's settlement. Also removes itself from the old settlement's member list, and adds itself to the new settlement's member list
+     * Sets the user's community. Also removes itself from the old community's member list, and adds itself to the new community's member list
      *
-     * @param settlement the settlement that the user will be joining
+     * @param community the community that the user will be joining
      */
-    void setSettlement(Settlement settlement);
+    void setCommunity(Community community);
 
     Collection<Nation> getInvites();
     void addInvite(Nation faction);

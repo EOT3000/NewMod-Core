@@ -1,0 +1,7 @@
+Departments/Ranks:
+- Formable
+- Assign Members
+- Assign Permissions
+- Purchase/Hold Land
+
+Nomad Tribes aligned with a Nation

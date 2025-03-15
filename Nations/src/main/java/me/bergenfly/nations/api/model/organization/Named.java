@@ -19,7 +19,11 @@ public interface Named {
      */
     @NotNull String getName();
 
-    default void setName(String name) {
-        throw new UnsupportedOperationException();
+    default String getFullName() {
+        return getName();
+    }
+
+    default boolean setName(String name) {
+        return false;
     }
 }

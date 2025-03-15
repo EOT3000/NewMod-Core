@@ -35,4 +35,9 @@ public interface LandPermissionHolder extends Named {
     }
 
     boolean isPartOf(User user);
+    //TODO fix this vs playergroup
+
+    default boolean isOwnedLandManager(User user) {
+        return isPartOf(user);
+    }
 }
