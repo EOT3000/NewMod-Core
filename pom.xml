@@ -28,6 +28,10 @@
             <url>https://repo.purpurmc.org/snapshots</url>
         </repository>
         <repository>
+            <id>paper</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
             <id>jeff-media-gbr</id>
             <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
         </repository>
@@ -44,6 +48,11 @@
             <groupId>com.github.tommyettinger</groupId>
             <artifactId>colorful</artifactId>
             <version>0.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+            <version>6.0.58</version>
         </dependency>
     </dependencies>
 

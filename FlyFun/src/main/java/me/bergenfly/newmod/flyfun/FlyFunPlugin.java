@@ -21,6 +21,7 @@ import me.bergenfly.newmod.flyfun.food.AnimalsTypes;
 import me.bergenfly.newmod.flyfun.food.FoodsTypes;
 import me.bergenfly.newmod.flyfun.food.listener.FoodListener;
 import me.bergenfly.newmod.flyfun.food.nutrient.VanillaFoods;
+import me.bergenfly.newmod.flyfun.food.vanilla.VanillaPlantListener;
 import me.bergenfly.newmod.flyfun.history.HistoryListener;
 import me.bergenfly.newmod.flyfun.horn.HornListener;
 import me.bergenfly.newmod.flyfun.magic.MagicTypes;
@@ -106,6 +107,7 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         Bukkit.getPluginManager().registerEvents(new HistoryListener(), this);
         //Bukkit.getPluginManager().registerEvents(new FortuneListener(), this);
         Bukkit.getPluginManager().registerEvents(new TreeBarkListener(), this);
+        Bukkit.getPluginManager().registerEvents(new VanillaPlantListener(), this);
 
         VanillaFoods.init();
 
