@@ -1,13 +1,17 @@
 package me.bergenfly.newmod.core.explosives.math;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class ParticleBox {
-    vec3[] particles;
+    List<vec3> particles = new ArrayList<>();
+
+    List<vec3> next = new ArrayList<>();
 
     static Random random = new Random();
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         vec3[] doubles = new vec3[500000];
 
         for(int i = 0; i < 500000; i++) {
@@ -21,7 +25,7 @@ public class ParticleBox {
         box.particles = doubles;
 
         box.shuffleEmUp();
-    }
+    }*/
 
     public void shuffleEmUp() {
         // This takes all the particles and shuffles them, as in, simulates a number of perfectly elastic collisions
@@ -40,9 +44,9 @@ public class ParticleBox {
             vt_z+=particle.c;
         }*/
 
-        for(int i = 0; i < particles.length; i++) {
-            if(random.nextDouble() < probability(particles.length)) {
-                int other = random.nextInt(particles.length);
+        for(int i = 0; i < particles.size(); i++) {
+            if(random.nextDouble() < probability(particles.size())) {
+                int other = random.nextInt(particles.size());
 
                 if(i == other) {
                     continue;
@@ -51,8 +55,8 @@ public class ParticleBox {
 
                 //courtesy of https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/index.html
 
-                vec3 v1 = particles[i];
-                vec3 v2 = particles[other];
+                vec3 v1 = particles.get(i);
+                vec3 v2 = particles.get(other);
 
                 vec3 p1 = v1.multiply(-1);
                 vec3 p2 = v2.multiply(-1);
@@ -66,8 +70,8 @@ public class ParticleBox {
                 vec3 v1Prime = v1.subtract(normV);
                 vec3 v2Prime = v2.add(normV);
 
-                particles[i] = v1Prime;
-                particles[other] = v2Prime;
+                particles.set(i, v1Prime);
+                particles.set(other, v2Prime);
             }
         }
 
