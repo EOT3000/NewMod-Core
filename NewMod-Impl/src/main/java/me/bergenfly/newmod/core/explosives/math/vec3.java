@@ -28,6 +28,14 @@ public class vec3 {
         this.c = face.getModZ();
     }
 
+    public vec3 floor() {
+        return new vec3(Math.floor(a), Math.floor(b), Math.floor(c));
+    }
+
+    public double sum() {
+        return a+b+c;
+    }
+
     public double magnitude() {
         return Math.sqrt(a*a+b*b+c*c);
     }
@@ -84,6 +92,10 @@ public class vec3 {
 
     public vec3 round() {
         return new vec3(Math.round(a), Math.round(b), Math.round(c));
+    }
+
+    public vec3 block() {
+        return new vec3(Math.floor(a), Math.floor(b), Math.floor(c));
     }
 
     public vec3 subtractVecFromNum(double sub) {

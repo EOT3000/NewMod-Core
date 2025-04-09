@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 public class ParticleBox {
-    List<vec3> particles = new ArrayList<>();
+    List<Particle> particles = new ArrayList<>();
 
-    List<vec3> next = new ArrayList<>();
+    List<Particle> next = new ArrayList<>();
 
     static Random random = new Random();
 
@@ -55,8 +55,8 @@ public class ParticleBox {
 
                 //courtesy of https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/index.html
 
-                vec3 v1 = particles.get(i);
-                vec3 v2 = particles.get(other);
+                vec3 v1 = particles.get(i).velocity;
+                vec3 v2 = particles.get(other).velocity;
 
                 vec3 p1 = v1.multiply(-1);
                 vec3 p2 = v2.multiply(-1);
@@ -70,8 +70,8 @@ public class ParticleBox {
                 vec3 v1Prime = v1.subtract(normV);
                 vec3 v2Prime = v2.add(normV);
 
-                particles.set(i, v1Prime);
-                particles.set(other, v2Prime);
+                particles.get(i).velocity = v1Prime;
+                particles.get(other).velocity = v2Prime;
             }
         }
 
