@@ -19,6 +19,8 @@ public class NextStateCalculator {
     Object2IntMap<vec3> halfTickValuesForce = new Object2IntOpenHashMap<>();
     Object2IntMap<vec3> energy = new Object2IntOpenHashMap<>();
 
+    int numberErrors = 1001;
+
     public void nextState(ParticleGrid grid, ParticleBox box, int minX, int minY, int minZ) {
         box.shuffleEmUp();
 
@@ -31,9 +33,34 @@ public class NextStateCalculator {
 
             if(blockCache.getInt(block) == -1) {
                 double ke0 = particle.velocity.magnitudeSquared();
-                double kef = ke0/2;
+                double kef = ke0/2; //TODO choose proper elasticities for collisions
 
-                //vec3 hitPos = getHitPos();
+                Pair<vec3, Integer> hitPos = getHitPos(particle.pos, particle.pos.add(particle.velocity));
+
+                //This should not happen
+                if(hitPos.getValue() == 0) {
+                    if(numberErrors++ > 1000) {
+                        numberErrors = 0;
+                        //TODO make this log properly
+
+                        long a = System.currentTimeMillis();
+
+                        System.err.println(a + ": Error: particle is at " + particle.pos + " and was previously at " + particle.previousPos);
+                        System.err.println(a + ": It has a velocity of " + particle.velocity);
+                        System.err.println(a + ": It attempted to move to " + particle.pos.add(particle.velocity));
+                        System.err.println(a + ": In world " + w.getName());
+                    }
+                }
+
+                if(hitPos.getValue() == 1) {
+                    vec3 movement = hitPos.getKey().subtract(particle.pos);
+
+                    double proportionLeft = 1-movement.magnitude()/particle.velocity.magnitude();
+
+                    vec3 newVelocity = particle.velocity.multiply(-1);
+
+                    vec3 newPosition = hitPos.getKey().add(newVelocity);
+                }
             }
 
             ParticleBox next = grid.getAt(pos);
@@ -68,13 +95,17 @@ public class NextStateCalculator {
         }
     }
 
-    private Pair<vec3, Integer> getHitPos(vec3 first, vec3 second) {
-        vec3 axis = new vec3(
-                first.a-intermediateInt(first.a, second.a),
-                first.b-intermediateInt(first.b, second.b),
-                first.c-intermediateInt(first.c, second.c)).floor();
+    private static Pair<vec3, Integer> getHitPos(vec3 first, vec3 second) {
+        //This can probably be done better ):
 
-        vec3 fromFirstToSecond = first.subtract(second);
+        vec3 intermediates = new vec3(
+                intermediateInt(first.a, second.a),
+                intermediateInt(first.b, second.b),
+                intermediateInt(first.c, second.c));
+
+        vec3 axis = intermediates.subtract(first).NaN_to_0_otherwise_1();
+
+        vec3 fromFirstToSecond = second.subtract(first);
 
         if(axis.abs().sum() == 0) {
             return new Pair<>(null, -1);
@@ -84,7 +115,7 @@ public class NextStateCalculator {
             return new Pair<>(null, 1);
         }
 
-        double fromFirstToBlock = intermediateInt(first.multiply(axis).sum(), second.multiply(axis).sum());
+        double fromFirstToBlock = intermediates.subtract(first).multiply(axis).NaN_to_0().sum();
 
         double fromFirstToSecondAxis = fromFirstToSecond.multiply(axis).sum();
 
@@ -93,15 +124,15 @@ public class NextStateCalculator {
         return new Pair<>(first.add(fromFirstToSecond.multiply(proportionMove)), 0);
     }
 
-    private double intermediateInt(double first, double next) {
+    private static double intermediateInt(double first, double next) {
         double inter = Math.round((first+next)/2);
 
         double dist = Math.abs(first-next);
 
         if(Math.abs(inter-first) > dist || Math.abs(inter-next) > dist) {
-            return (first+next)/2;
+            return Double.NaN;
         }
 
-        return dist;
+        return inter;
     }
 }

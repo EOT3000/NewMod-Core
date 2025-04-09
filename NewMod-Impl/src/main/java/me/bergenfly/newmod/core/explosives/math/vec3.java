@@ -1,7 +1,6 @@
 package me.bergenfly.newmod.core.explosives.math;
 
-import me.bergenfly.newmod.core.util.skytest;
-import org.bukkit.block.BlockFace;
+//import org.bukkit.block.BlockFace;
 
 public class vec3 {
     public double a;
@@ -22,10 +21,26 @@ public class vec3 {
         this.c = (double) a;
     }
 
-    public vec3(BlockFace face) {
+    /*public vec3(BlockFace face) {
         this.a = face.getModX();
         this.b = face.getModY();
         this.c = face.getModZ();
+    }*/
+
+    public vec3 NaN_to_0_otherwise_1() {
+        double nA = (Double.isNaN(a) ? 0 : 1);
+        double nB = (Double.isNaN(b) ? 0 : 1);
+        double nC = (Double.isNaN(c) ? 0 : 1);
+
+        return new vec3(nA, nB, nC);
+    }
+
+    public vec3 NaN_to_0() {
+        double nA = (Double.isNaN(a) ? 0 : a);
+        double nB = (Double.isNaN(b) ? 0 : b);
+        double nC = (Double.isNaN(c) ? 0 : c);
+
+        return new vec3(nA, nB, nC);
     }
 
     public vec3 floor() {
