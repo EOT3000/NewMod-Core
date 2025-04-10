@@ -1,5 +1,7 @@
 package me.bergenfly.newmod.core.explosives.math;
 
+import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.bergenfly.newmod.core.util.Pair;
@@ -16,8 +18,8 @@ public class NextStateCalculator {
 
     //blast resistances multiplied by 100
     Object2IntMap<vec3> blockCache = new Object2IntOpenHashMap<>();
-    Object2IntMap<vec3> halfTickValuesForce = new Object2IntOpenHashMap<>();
-    Object2IntMap<vec3> energy = new Object2IntOpenHashMap<>();
+    Object2DoubleMap<vec3> halfTickValuesForce = new Object2DoubleArrayMap<>();
+    Object2DoubleMap<vec3> energy = new Object2DoubleArrayMap<>();
 
     int numberErrors = 1001;
 
@@ -25,17 +27,22 @@ public class NextStateCalculator {
         box.shuffleEmUp();
 
         for(Particle particle : box.particles) {
-            vec3 pos = particle.pos.add(particle.velocity);
+            vec3 posNewNaive = particle.pos.add(particle.velocity);
 
-            vec3 block = pos.block();
+            vec3 block = posNewNaive.block();
+
+            if(particle.pos.block().equals(posNewNaive.block())) {
+                box.next.add(particle);
+                continue;
+            }
 
             loadBlock(block);
 
-            if(blockCache.getInt(block) == -1) {
+            if(blockCache.getInt(block) != 0) {
                 double ke0 = particle.velocity.magnitudeSquared();
-                double kef = ke0/2; //TODO choose proper elasticities for collisions
+                double elasticity = .5; //TODO choose proper elasticities for collisions
 
-                Pair<vec3, Integer> hitPos = getHitPos(particle.pos, particle.pos.add(particle.velocity));
+                Pair<vec3, Integer> hitPos = getHitPos(particle.pos, posNewNaive);
 
                 //This should not happen
                 if(hitPos.getValue() == 0) {
@@ -57,18 +64,22 @@ public class NextStateCalculator {
 
                     double proportionLeft = 1-movement.magnitude()/particle.velocity.magnitude();
 
-                    vec3 newVelocity = particle.velocity.multiply(-1);
+                    vec3 newVelocity = particle.velocity.multiply(-1).multiply(elasticity);
 
-                    vec3 newPosition = hitPos.getKey().add(newVelocity);
+                    vec3 newPosition = hitPos.getKey().add(newVelocity.multiply(proportionLeft));
+
+                    ParticleBox next = grid.getAt(newPosition);
+
+                    halfTickValuesForce.put(block, halfTickValuesForce.getOrDefault(block, 0)+newVelocity.subtract(particle.velocity).magnitude()); //TODO account for things like computations/tick and number of particles
+                    halfTickValuesForce.put(block, energy.getOrDefault(block, 0)+(ke0-newVelocity.magnitudeSquared())); //same comment as above, also temperature decreases over time
+
+                    next.next.add(particle);
+
+                    particle.previousPos = particle.pos;
+                    particle.pos = newPosition;
+                    particle.velocity = newVelocity;
                 }
             }
-
-            ParticleBox next = grid.getAt(pos);
-
-            next.next.add(particle);
-
-            particle.previousPos = particle.pos;
-            particle.pos = pos;
         }
     }
 
