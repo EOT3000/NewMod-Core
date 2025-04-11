@@ -23,10 +23,17 @@ public class NextStateCalculator {
 
     int numberErrors = 1001;
 
+    int calculationsPerTick = 1;
+
     public void nextState(ParticleGrid grid, ParticleBox box, int minX, int minY, int minZ) {
         box.shuffleEmUp();
 
         for(Particle particle : box.particles) {
+            if(System.currentTimeMillis()-particle.lastCollision>1500) {
+                return;
+            }
+
+
             vec3 posNewNaive = particle.pos.add(particle.velocity);
 
             vec3 block = posNewNaive.block();
@@ -44,8 +51,8 @@ public class NextStateCalculator {
 
                 Pair<vec3, Integer> hitPos = getHitPos(particle.pos, posNewNaive);
 
-                //This should not happen
-                if(hitPos.getValue() == 0) {
+                //This should not happen, indicates that particle has not collided with any block
+                if(hitPos.getValue() == -1) {
                     if(numberErrors++ > 1000) {
                         numberErrors = 0;
                         //TODO make this log properly
@@ -59,7 +66,13 @@ public class NextStateCalculator {
                     }
                 }
 
+                //This means that the particle passed through multiple blocks. Just assume that the particle went through a small leak in the block for now
+                //Shouldn't happen too often, not a big deal
                 if(hitPos.getValue() == 1) {
+                    //Do nothing, is on todo list
+                }
+
+                if(hitPos.getValue() == 0) {
                     vec3 movement = hitPos.getKey().subtract(particle.pos);
 
                     double proportionLeft = 1-movement.magnitude()/particle.velocity.magnitude();
@@ -78,10 +91,22 @@ public class NextStateCalculator {
                     particle.previousPos = particle.pos;
                     particle.pos = newPosition;
                     particle.velocity = newVelocity;
+                    particle.collisionsParticle++;
+                    particle.lastCollision=System.currentTimeMillis();
                 }
             }
         }
+
+        for(vec3 block : halfTickValuesForce.keySet()) {
+            if(halfTickValuesForce.getOrDefault(block, 0) > blockCache.getOrDefault(block, 0)) {
+                //Now, we check the structure of the block
+
+
+            }
+        }
     }
+
+    //private double checkStability(int left, )
 
     private void loadBlock(vec3 block) {
         if(!blockCache.containsKey(block)) {
