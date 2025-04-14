@@ -23,9 +23,19 @@ public class ParticleGrid {
 
     private ParticleBox[][][] grid;
 
+
+
     private int sizeX = 100;
     private int sizeY = 100;
     private int sizeZ = 100;
+
+
+
+    private NextStateCalculator calculator = new NextStateCalculator();
+
+    public void tick() {
+
+    }
 
     public ParticleBox getAt(vec3 location) {
         int x = (int) Math.floor(location.a*BOXES_PER_BLOCK_LENGTH)-minBlockX*BOXES_PER_BLOCK_LENGTH;

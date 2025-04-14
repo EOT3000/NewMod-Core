@@ -5,10 +5,12 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.bergenfly.newmod.core.util.Pair;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -96,13 +98,20 @@ public class NextStateCalculator {
                 }
             }
         }
+    }
 
-        for(vec3 block : halfTickValuesForce.keySet()) {
+    public void endTicking() {
+        for(vec3 block : new ArrayList<>(halfTickValuesForce.keySet())) {
             if(halfTickValuesForce.getOrDefault(block, 0) > blockCache.getOrDefault(block, 0)) {
                 //Now, we check the structure of the block
+                //TODO above
 
-
+                Location location = new Location(w, block.a, block.b, block.c);
+                blockCache.put(block, 0);
+                location.getBlock().setType(Material.AIR);
             }
+
+            halfTickValuesForce.put(block, 0);
         }
     }
 

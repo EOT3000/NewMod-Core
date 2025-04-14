@@ -28,6 +28,9 @@ public class ParticleBox {
     }*/
 
     public void shuffleEmUp() {
+        this.particles = this.next;
+        this.next = new ArrayList<>();
+
         // This takes all the particles and shuffles them, as in, simulates a number of perfectly elastic collisions
         // https://www.tec-science.com/thermodynamics/kinetic-theory-of-gases/mean-free-path-collision-frequency/
         // I will change the probability method after reading the above.
