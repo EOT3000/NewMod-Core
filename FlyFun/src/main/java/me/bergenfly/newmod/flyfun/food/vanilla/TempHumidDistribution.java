@@ -1,43 +1,97 @@
 package me.bergenfly.newmod.flyfun.food.vanilla;
 
 public class TempHumidDistribution {
-    public static final float NINETY_TEN_DIFFERENT_CONSTANT_LOG2 = -4.450f;
-    public static final float LOG2_POINT_TEN = -3.322f;
+    /*public static final float NINETY_TEN_DIFFERENT_CONSTANT_LOG2 = -4.450f;
+    public static final float LOG2_POINT_TEN = -3.322f;*/
 
     private float idealHumid;
-    private float baseHumid;
-    private float powerHumid;
+
+    private float humidFullExtent;
+    private float humidSlope;
+    //private float baseHumid;
+    //private float powerHumid;
     private float additionalSensitivityHumid;
 
 
     private float idealTemp;
-    private float baseTemp;
-    private float powerTemp;
+
+    private float tempFullExtent;
+    private float tempSlope;
+    //private float baseTemp;
+    //private float powerTemp;
     private float additionalSensitivityTemp;
 
     public static TempHumidDistribution create(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
                                         float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity) {
         TempHumidDistribution dist = new TempHumidDistribution();
 
+        if(tenPercentTempDif>ninetyPercentTempDif) {
+            throw new IllegalArgumentException();
+        }
+
+        if(tenPercentHumidDif>ninetyPercentHumidDif) {
+            throw new IllegalArgumentException();
+        }
+
+        dist.tempSlope = .8f/(ninetyPercentTempDif-tenPercentTempDif);
+        dist.tempFullExtent = tenPercentTempDif-.1f/dist.tempSlope;
+
+        System.out.println(dist.tempSlope);
+
+
         dist.idealTemp = idealTemp;
-        dist.powerTemp = (float) (NINETY_TEN_DIFFERENT_CONSTANT_LOG2/(Math.log(tenPercentTempDif/ninetyPercentTempDif)/Math.log(2)));
-        dist.baseTemp = (float) (Math.pow(2, -LOG2_POINT_TEN*Math.pow(tenPercentTempDif, dist.powerTemp)));
+        //dist.powerTemp = (float) (NINETY_TEN_DIFFERENT_CONSTANT_LOG2/(Math.log(tenPercentTempDif/ninetyPercentTempDif)/Math.log(2)));
+        //dist.baseTemp = (float) (Math.pow(2, -LOG2_POINT_TEN*Math.pow(tenPercentTempDif, dist.powerTemp)));
         dist.additionalSensitivityTemp = additionalTempSensitivity;
 
+
+        dist.humidSlope = .8f/(ninetyPercentHumidDif-tenPercentHumidDif);
+        dist.humidFullExtent = tenPercentHumidDif-.1f/dist.humidSlope;
+
         dist.idealHumid = idealHumid;
-        dist.powerHumid = (float) (NINETY_TEN_DIFFERENT_CONSTANT_LOG2/(Math.log(tenPercentHumidDif/ninetyPercentHumidDif)/Math.log(2)));
-        dist.baseHumid = (float) (Math.pow(2, -LOG2_POINT_TEN*Math.pow(tenPercentHumidDif, dist.powerHumid)));
+        //dist.powerHumid = (float) (NINETY_TEN_DIFFERENT_CONSTANT_LOG2/(Math.log(tenPercentHumidDif/ninetyPercentHumidDif)/Math.log(2)));
+        //dist.baseHumid = (float) (Math.pow(2, -LOG2_POINT_TEN*Math.pow(tenPercentHumidDif, dist.powerHumid)));
         dist.additionalSensitivityHumid = additionalHumidSensitivity;
+
+        //System.out.println("extent: " + dist.tempFullExtent);
 
         return dist;
     }
 
     public float probabilityFinalFailure(float temp, float humid) {
-        float fromIdealTemp = Math.abs(temp-idealTemp);
-        float fromIdealHumid = Math.abs(humid-idealHumid);
+        float pTemp;
 
-        double pTemp = (1-additionalSensitivityTemp) * Math.pow(baseTemp, -(1.0/(Math.pow(fromIdealTemp, powerTemp)))) + additionalSensitivityTemp;
-        double pHumid = (1-additionalSensitivityHumid) * Math.pow(baseHumid, -(1.0/(Math.pow(fromIdealHumid, powerHumid)))) + additionalSensitivityHumid;
+        if(temp <= idealTemp+tempFullExtent && temp >= idealTemp-tempFullExtent) {
+            pTemp = 0;
+        } else {
+            float fromIdeal = Math.abs(temp-idealTemp);
+
+            /*System.out.println("temp: " + temp);
+            System.out.println("ideal: " + idealTemp);
+            System.out.println("from ideal: " + fromIdeal);
+            System.out.println("extent: " + tempFullExtent);*/
+
+            float fromExtent = Math.abs(fromIdeal-tempFullExtent);
+
+            //System.out.println("from extend: " + fromExtent);
+
+            pTemp = Math.min(fromExtent*tempSlope, 1);
+        }
+
+        float pHumid;
+
+        if(humid <= idealHumid+humidFullExtent && humid >= idealHumid-humidFullExtent) {
+            pHumid = 0;
+        } else {
+            float fromIdeal = Math.abs(humid-idealHumid);
+
+            float fromExtent = Math.abs(fromIdeal-humidFullExtent);
+
+            pHumid = Math.min(fromExtent*humidSlope, 1);
+        }
+
+        pTemp = pTemp*(1-additionalSensitivityTemp)+additionalSensitivityTemp;
+        pHumid = pHumid*(1-additionalSensitivityHumid)+additionalSensitivityHumid;
 
         return (float) (Math.sqrt((pTemp*pTemp+pHumid*pHumid)/2));
     }
@@ -54,6 +108,32 @@ public class TempHumidDistribution {
         float immediateFailP = probabilityImmediateFailure(temp, humid);
 
         return (float) (.5+.5*immediateFailP*immediateFailP-immediateFailP);
+    }
+
+    public static void main(String[] args) {
+        TempHumidDistribution d = create(
+                .7f, .4f, .3f, 0.045f,
+                .8f, .55f, .3f, 0.045f);
+
+        System.out.println("jungle: " + d.probabilityFinalFailure(.95f, .9f));
+        System.out.println("desert: " + d.probabilityFinalFailure(2.0f, .0f));
+        System.out.println("jagged peaks: " + d.probabilityFinalFailure(-.7f, .9f));
+        System.out.println("snowy taiga: " + d.probabilityFinalFailure(-.5f, .4f));
+        System.out.println("plains: " + d.probabilityFinalFailure(.8f, .4f));
+        System.out.println("cherry grove: " + d.probabilityFinalFailure(.5f, .8f));
+        System.out.println("forest: " + d.probabilityFinalFailure(.7f, .8f));
+        System.out.println("meadow: " + d.probabilityFinalFailure(.5f, .8f));
+        System.out.println("swamp: " + d.probabilityFinalFailure(.6f, .9f));
+        System.out.println("mangrove swamp: " + d.probabilityFinalFailure(.8f, .9f));
+        System.out.println("savanna: " + d.probabilityFinalFailure(1.2f, .2f));
+        System.out.println("frozen river: " + d.probabilityFinalFailure(.0f, .5f));
+        System.out.println("dark forest: " + d.probabilityFinalFailure(.7f, .8f));
+        System.out.println("birch forest: " + d.probabilityFinalFailure(.6f, .6f));
+
+        System.out.println("spruce 1: " + d.probabilityFinalFailure(-.5f, .8f));
+        System.out.println("spruce 2: " + d.probabilityFinalFailure(-.5f, .3f));
+        System.out.println("spruce 2: " + d.probabilityFinalFailure(.3f, .8f));
+        System.out.println("spruce 2: " + d.probabilityFinalFailure(.3f, .3f));
     }
 
     /*public static void main(String[] args) {
