@@ -3,6 +3,7 @@ package me.bergenfly.newmod.flyfun.food.vanilla;
 import org.bukkit.TreeType;
 
 import static org.bukkit.TreeType.*;
+import static org.bukkit.Material.*;
 
 public enum VanillaPlant {
 
@@ -24,11 +25,31 @@ public enum VanillaPlant {
     MANGROVE_TREE(.8f, .22f, .12f, 0.04f,
             .9f, .1f, .07f, 0.04f, MANGROVE, TALL_MANGROVE),
     AZALEA_TREE(.65f, .35f, .2f, 0.01f,
-            .6f, .45f, .3f, 0.01f, AZALEA),
+            .6f, .45f, .3f, 0.01f, TreeType.AZALEA),
     CHERRY_TREE(.5f, .4f, .3f, 0.045f,
             .8f, .55f, .3f, 0.045f, CHERRY),
     PALE_OAK_TREE(.7f, .2f, .15f, 0.015f,
             .8f, .15f, .1f, 0.015f, PALE_OAK),
+
+    BEETROOT_CROP(.7f, .85f, .5f, 0.01f,
+            .5f, .4f, .3f, 0.01f),
+    WHEAT_CROP(.85f, .6f, .4f, 0.01f,
+            .5f, .4f, .3f, 0.01f),
+    POTATO_CROP(.75f, .7f, .5f, 0.01f,
+            .5f, .35f, .3f, 0.01f),
+    CARROT_CROP(.75f, .7f, .5f, 0.01f,
+            .5f, .35f, .3f, 0.01f),
+    MELON_CROP(1.35f, 1.15f, .85f, 0.01f,
+            .55f, .75f, .5f, 0.01f),
+    PUMPKIN_CROP(.3f, 1.05f, .8f, 0.01f,
+            .55f, .75f, .5f, 0.01f),
+
+    SWEET_BERRY_BUSH(.3f, 1.05f, .8f, 0.01f,
+            .55f, .75f, .5f, 0.01f),
+
+    BAMBOO(.8f, .6f, .45f, 0.005f,
+            .7f, .7f, .45f, 0.005f),
+
     ;
 
     private final Object[] key;
