@@ -111,9 +111,13 @@ public class TempHumidDistribution {
     }
 
     public static void main(String[] args) {
-        TempHumidDistribution d = create(
+        /*TempHumidDistribution d = create(
                 .0f, .95f, .8f, 0.01f,
-                .55f, .45f, .3f, 0.01f);
+                .55f, .45f, .3f, 0.01f);*/
+
+        TempHumidDistribution d = create(
+                1.3f, 2.5f, 1.5f, 0.01f,
+                .5f, .7f, .6f, 0.00f);
 
         System.out.println("jungle: " + d.probabilityFinalFailure(.95f, .9f));
         System.out.println("desert: " + d.probabilityFinalFailure(2.0f, .0f));

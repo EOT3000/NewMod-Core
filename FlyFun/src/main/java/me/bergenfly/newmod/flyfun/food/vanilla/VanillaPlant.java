@@ -50,6 +50,13 @@ public enum VanillaPlant {
     BAMBOO(.8f, .6f, .45f, 0.005f,
             .7f, .7f, .45f, 0.005f),
 
+    CACTUS(1.7f, .65f, .45f, 0.005f,
+            .1f, .35f, .2f, 0.00f),
+
+    SUGAR_CANE(1.3f, 2.5f, 1.5f, 0.01f,
+            .5f, .7f, .6f, 0.00f),
+
+
     ;
 
     private final Object[] key;
