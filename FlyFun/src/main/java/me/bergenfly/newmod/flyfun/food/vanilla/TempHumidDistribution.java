@@ -36,7 +36,7 @@ public class TempHumidDistribution {
         dist.tempSlope = .8f/(ninetyPercentTempDif-tenPercentTempDif);
         dist.tempFullExtent = tenPercentTempDif-.1f/dist.tempSlope;
 
-        System.out.println(dist.tempSlope);
+        //System.out.println(dist.tempSlope);
 
 
         dist.idealTemp = idealTemp;
