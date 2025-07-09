@@ -9,6 +9,7 @@ import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.category.CategoryManager;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.core.block.BlockManagerImpl;
+import me.bergenfly.newmod.core.blockreplacer.BlockReplacementManager;
 import me.bergenfly.newmod.core.blockstorage.BlockStorageImpl;
 import me.bergenfly.newmod.core.command.CheatCommand;
 import me.bergenfly.newmod.core.item.category.CategoryManagerImpl;
@@ -32,6 +33,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     private BlockManagerImpl blockManager;
     private BlockStorageImpl blockStorage;
     private CategoryManagerImpl categoryManager;
+    private BlockReplacementManager blockReplacementManager;
 
     private CheatCommand cheatCommand;
 
@@ -39,6 +41,9 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
 
     @Override
     public void onEnable() {
+        this.blockReplacementManager = new BlockReplacementManager();
+
+
         this.blockStorage = new BlockStorageImpl();
         this.blockManager = new BlockManagerImpl();
         this.itemManager = new ItemManagerImpl();
