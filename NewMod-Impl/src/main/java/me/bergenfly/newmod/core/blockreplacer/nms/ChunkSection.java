@@ -4,8 +4,10 @@ public class ChunkSection {
     byte[] numNotAir;
     byte bitsPerEntry;
     byte[] paletteLength = {};
-    byte[][] palette = {};
+    int[] palette = {};
     long[] blockData = {};
     byte[] biomeData;
+
+    boolean dirty = false;
 
 }
