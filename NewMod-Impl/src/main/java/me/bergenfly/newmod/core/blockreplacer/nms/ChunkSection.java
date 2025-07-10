@@ -10,6 +10,8 @@ public class ChunkSection {
 
     byte[] fullData;
 
+    boolean flagged;
+
     boolean dirty = false;
 
 }

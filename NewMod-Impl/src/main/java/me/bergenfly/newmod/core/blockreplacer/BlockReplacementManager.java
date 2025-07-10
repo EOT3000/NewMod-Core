@@ -3,8 +3,12 @@ package me.bergenfly.newmod.core.blockreplacer;
 import me.bergenfly.newmod.core.blockreplacer.nms.ChunkDataController;
 
 public class BlockReplacementManager {
+    public ChunkDataController c;
+
     public BlockReplacementManager() {
-        new ChunkDataController().onEnable();
+        c = new ChunkDataController();
+
+        c.onEnable();
     }
 
 }

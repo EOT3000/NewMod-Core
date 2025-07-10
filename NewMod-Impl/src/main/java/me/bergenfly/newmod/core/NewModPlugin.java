@@ -10,6 +10,7 @@ import me.bergenfly.newmod.core.api.item.category.CategoryManager;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.core.block.BlockManagerImpl;
 import me.bergenfly.newmod.core.blockreplacer.BlockReplacementManager;
+import me.bergenfly.newmod.core.blockreplacer.nms.ChunkDataController;
 import me.bergenfly.newmod.core.blockstorage.BlockStorageImpl;
 import me.bergenfly.newmod.core.command.CheatCommand;
 import me.bergenfly.newmod.core.item.category.CategoryManagerImpl;
@@ -18,6 +19,7 @@ import me.bergenfly.newmod.core.item.ItemManagerImpl;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -63,6 +65,32 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(command.getName().equalsIgnoreCase("griefchunk") && sender.isOp()) {
+            int count = 0;
+
+            for(int c = -7; c < 5; c++) {
+                for (int x = 0; x < 16; x++) {
+                    for (int y = 1; y < 13; y += 3) {
+                        for (int z = 0; z < 16; z++) {
+                            try {
+                                Chunk chunk = ((Player) sender).getLocation().getChunk();
+
+                                int yf=c*16+y;
+
+                                chunk.getBlock(x, yf - 1, z).setType(Material.STONE);
+                                chunk.getBlock(x, yf + 1, z).setType(Material.STONE);
+                                chunk.getBlock(x, yf, z).setBlockData(blockReplacementManager.c.get(count++), false);
+
+                                count++;
+                            } catch (Exception e) {}
+                        }
+                    }
+                }
+
+                count=0;
+            }
+        }
+
         if(sender instanceof Player player && player.isOp()) {
             if(args.length < 1 || !args[0].equalsIgnoreCase("cheat")) {
                 return false;

@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 
 import java.io.ByteArrayOutputStream;
@@ -50,11 +51,13 @@ public class ChunkDataController {
                 byte[] data = event.getPacket().getLevelChunkData().read(0).getBuffer();
 
 
+                boolean dirtyChunk = false;
+
+                long timeStart = System.nanoTime();
+
                 try(ByteArrayOutputStream newChunk = new ByteArrayOutputStream()) {
 
                     ChunkSection[] processed = process(data);
-
-                    boolean dirtyChunk = false;
 
                     //System.out.println("processed length: " + processed.length);
 
@@ -72,25 +75,25 @@ public class ChunkDataController {
 
                                 boolean dirty = false;
 
-                                if(id0 > cactusStateIds[0] && id0 <= cactusStateIds[15]) {
+                                if(needsFlag(id0)) {
                                     id0 = cactusStateIds[0];
 
                                     dirty = true;
                                 }
 
-                                if(id1 > cactusStateIds[0] && id1 <= cactusStateIds[15]) {
+                                if(needsFlag(id1)) {
                                     id1 = cactusStateIds[0];
 
                                     dirty = true;
                                 }
 
-                                if(id2 > cactusStateIds[0] && id2 <= cactusStateIds[15]) {
+                                if(needsFlag(id2)) {
                                     id2 = cactusStateIds[0];
 
                                     dirty = true;
                                 }
 
-                                if(id3 > cactusStateIds[0] && id3 <= cactusStateIds[15]) {
+                                if(needsFlag(id3)) {
                                     id3 = cactusStateIds[0];
 
                                     dirty = true;
@@ -102,12 +105,14 @@ public class ChunkDataController {
                                 }
                             }
                         } else {
-                            for(int i = 0; i < section.palette.length; i++) {
-                                int id = section.palette[i];
+                            if(section.flagged) {
+                                for (int i = 0; i < section.palette.length; i++) {
+                                    int id = section.palette[i];
 
-                                if(id > cactusStateIds[0] && id <= cactusStateIds[15]) {
-                                    section.palette[i] = cactusStateIds[0];
-                                    section.dirty = true;
+                                    if (id > cactusStateIds[0] && id <= cactusStateIds[15]) {
+                                        section.palette[i] = cactusStateIds[0];
+                                        section.dirty = true;
+                                    }
                                 }
                             }
                         }
@@ -187,6 +192,10 @@ public class ChunkDataController {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                //if(dirtyChunk) {
+                //    System.out.println("Processed dirty chunk in " + (System.nanoTime()-timeStart));
+                //}
             }
         });
     }
@@ -225,6 +234,10 @@ public class ChunkDataController {
                 for (int i = 0; i < lengthInt; i++) {
                     int blockId = readVarInt(byteBuffer);
 
+                    if(needsFlag(blockId)) {
+                        section.flagged = true;
+                    }
+
                     palette[i] = blockId;
                 }
 
@@ -248,6 +261,8 @@ public class ChunkDataController {
                 // DIRECT BLOCK PALETTE
                 @SuppressWarnings("IntegerDivisionInFloatingPointContext")
                 int numLongs = (int) Math.ceil(4096.0/(64/bitsPerEntryBlock));
+
+                section.flagged = true;
 
                 long[] blockData = new long[numLongs];
 
@@ -275,6 +290,10 @@ public class ChunkDataController {
         }
 
         return list.toArray(new ChunkSection[0]);
+    }
+
+    private boolean needsFlag(int id) {
+        return id > cactusStateIds[0] && id <= cactusStateIds[15];
     }
 
     private void loadBiomes(ByteBuffer byteBuffer, ChunkSection section) {
@@ -409,5 +428,9 @@ public class ChunkDataController {
 
     public static boolean hasContinuationBit(byte b) {
         return (b & 128) == 128;
+    }
+
+    public BlockData get(int id) {
+        return CraftBlockData.createData(registry.byId(id));
     }
 }
