@@ -54,12 +54,14 @@ public class ChunkDataController {
 
                     ChunkSection[] processed = process(data);
 
+                    boolean dirtyChunk = false;
+
+                    //System.out.println("processed length: " + processed.length);
+
                     for (ChunkSection section : processed) {
                         if (section.bitsPerEntry == 0) {
-                            continue;
-                        }
-
-                        if (section.bitsPerEntry == 15) {
+                            //do nothing
+                        } else if (section.bitsPerEntry == 15) {
                             for(int i = 0; i < section.blockData.length; i++) {
                                 long l = section.blockData[i];
 
@@ -99,16 +101,14 @@ public class ChunkDataController {
                                     section.blockData[i] = id0 | (long) id1 << 15 | (long) id2 << 30 | (long) id3 << 45;
                                 }
                             }
+                        } else {
+                            for(int i = 0; i < section.palette.length; i++) {
+                                int id = section.palette[i];
 
-                            continue;
-                        }
-
-                        for(int i = 0; i < section.palette.length; i++) {
-                            int id = section.palette[i];
-
-                            if(id > cactusStateIds[0] && id <= cactusStateIds[15]) {
-                                section.palette[i] = cactusStateIds[0];
-                                section.dirty = true;
+                                if(id > cactusStateIds[0] && id <= cactusStateIds[15]) {
+                                    section.palette[i] = cactusStateIds[0];
+                                    section.dirty = true;
+                                }
                             }
                         }
 
@@ -126,6 +126,8 @@ public class ChunkDataController {
                         }*/
 
                         if(section.dirty) {
+                            dirtyChunk = true;
+
                             newChunk.write(section.numNotAir);
                             newChunk.write(section.bitsPerEntry);
 
@@ -165,9 +167,22 @@ public class ChunkDataController {
 
                                 newChunk.write(section.biomeData);
                             }
+
                         } else {
                             newChunk.write(section.fullData);
+
+                            //if(dirtyChunk) {
+                                //System.out.println("clean chunk section: " + Arrays.toString(section.fullData));
+                            //}
                         }
+                    }
+
+                    if(dirtyChunk) {
+
+                        //System.out.println(Arrays.toString(newChunk.toByteArray()));
+                        //System.out.println(Arrays.toString(event.getPacket().getLevelChunkData().read(0).getBuffer()));
+
+                        event.getPacket().getLevelChunkData().read(0).setBuffer(newChunk.toByteArray());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
