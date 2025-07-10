@@ -27,7 +27,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class NationsPlugin extends JavaPlugin implements NationsAPI, Listener, PlayerGroup {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
+    //private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
 
     private boolean enabled = false;

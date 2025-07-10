@@ -1,4 +1,4 @@
-package me.bergenfly.villagers.brain;
+/*package me.bergenfly.villagers.brain;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
@@ -23,3 +23,4 @@ public class CustomBrain extends Brain<CustomVillager> {
 
     }
 }
+*/

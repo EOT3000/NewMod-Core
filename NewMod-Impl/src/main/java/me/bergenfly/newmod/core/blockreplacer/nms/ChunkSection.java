@@ -8,6 +8,8 @@ public class ChunkSection {
     long[] blockData = {};
     byte[] biomeData;
 
+    byte[] fullData;
+
     boolean dirty = false;
 
 }

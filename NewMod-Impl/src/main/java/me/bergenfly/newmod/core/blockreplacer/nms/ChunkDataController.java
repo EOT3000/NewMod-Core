@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +49,9 @@ public class ChunkDataController {
             public void onPacketSending(PacketEvent event) {
                 byte[] data = event.getPacket().getLevelChunkData().read(0).getBuffer();
 
-                try {
+
+                try(ByteArrayOutputStream newChunk = new ByteArrayOutputStream()) {
+
                     ChunkSection[] processed = process(data);
 
                     for (ChunkSection section : processed) {
@@ -105,6 +108,7 @@ public class ChunkDataController {
 
                             if(id > cactusStateIds[0] && id <= cactusStateIds[15]) {
                                 section.palette[i] = cactusStateIds[0];
+                                section.dirty = true;
                             }
                         }
 
@@ -120,8 +124,52 @@ public class ChunkDataController {
                                 if (((int) cur) )
                             }
                         }*/
+
+                        if(section.dirty) {
+                            newChunk.write(section.numNotAir);
+                            newChunk.write(section.bitsPerEntry);
+
+                            if(section.bitsPerEntry == 0) {
+                                newChunk.write(intToVarIntBytes(section.palette[0]));
+                                newChunk.write(section.biomeData);
+                            } else if(section.bitsPerEntry == 15) {
+                                for(long l : section.blockData) {
+                                    newChunk.write((byte) ((l&0xff_00_00_00_00_00_00_00L) >>> 56));
+                                    newChunk.write((byte) ((l&0x00_ff_00_00_00_00_00_00L) >>> 48));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_00L) >>> 40));
+                                    newChunk.write((byte) ((l&0x00_00_00_ff_00_00_00_00L) >>> 32));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_ff_00_00_00L) >>> 24));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_ff_00_00L) >>> 16));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_ff_00L) >>> 8));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_ffL)));
+                                }
+
+                                newChunk.write(section.biomeData);
+                            } else {
+                                newChunk.write(section.paletteLength);
+
+                                for(int paletteEntry : section.palette) {
+                                    newChunk.write(intToVarIntBytes(paletteEntry));
+                                }
+
+                                for(long l : section.blockData) {
+                                    newChunk.write((byte) ((l&0xff_00_00_00_00_00_00_00L) >>> 56));
+                                    newChunk.write((byte) ((l&0x00_ff_00_00_00_00_00_00L) >>> 48));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_00L) >>> 40));
+                                    newChunk.write((byte) ((l&0x00_00_00_ff_00_00_00_00L) >>> 32));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_ff_00_00_00L) >>> 24));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_ff_00_00L) >>> 16));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_ff_00L) >>> 8));
+                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_ffL)));
+                                }
+
+                                newChunk.write(section.biomeData);
+                            }
+                        } else {
+                            newChunk.write(section.fullData);
+                        }
                     }
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -133,7 +181,9 @@ public class ChunkDataController {
 
         ByteBuffer byteBuffer = ByteBuffer.wrap(data);
 
-        while (true) {
+        while (byteBuffer.hasRemaining()) {
+            int firstByte = byteBuffer.position();
+
             byte[] nonAir = {byteBuffer.get(), byteBuffer.get()};
             byte bitsPerEntryBlock = byteBuffer.get();
 
@@ -197,7 +247,19 @@ public class ChunkDataController {
             } else {
                 throw new RuntimeException();
             }
+
+            int lastPosition = byteBuffer.position();
+
+            byte[] sectionData = new byte[lastPosition-firstByte];
+
+            System.arraycopy(data, firstByte, sectionData, 0, sectionData.length);
+
+            section.fullData = sectionData;
+
+            list.add(section);
         }
+
+        return list.toArray(new ChunkSection[0]);
     }
 
     private void loadBiomes(ByteBuffer byteBuffer, ChunkSection section) {
@@ -238,7 +300,7 @@ public class ChunkDataController {
             throw new RuntimeException();
         }
 
-        section.biomeData = biomeData.toArray((byte[]) null);
+        section.biomeData = biomeData.toArray(new byte[0]);
     }
 
     private int toInt(byte[] varInt) {
@@ -327,7 +389,7 @@ public class ChunkDataController {
         }
 
         list.add((byte) i);
-        return list.toArray((byte[]) null);
+        return list.toArray(new byte[0]);
     }
 
     public static boolean hasContinuationBit(byte b) {

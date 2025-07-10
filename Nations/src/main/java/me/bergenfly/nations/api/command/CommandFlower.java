@@ -1,6 +1,5 @@
 package me.bergenfly.nations.api.command;
 
-import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
