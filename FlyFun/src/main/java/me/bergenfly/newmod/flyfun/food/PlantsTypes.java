@@ -8,6 +8,7 @@ import me.bergenfly.newmod.core.api.item.ItemManager;
 import me.bergenfly.newmod.core.api.item.ModItem;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.flyfun.FlyFunPlugin;
+import me.bergenfly.newmod.flyfun.food.block.DeadCactus;
 import me.bergenfly.newmod.flyfun.food.block.Seedling;
 import me.bergenfly.newmod.flyfun.food.block.TeaPlant;
 import me.bergenfly.newmod.flyfun.food.block.TreeTap;
@@ -40,6 +41,8 @@ public class PlantsTypes {
 
     public static final ModItem TREE_TAP = item.createBuilder(Material.TRIPWIRE_HOOK, plugin, "tree_tap").block(new TreeTap()).displayName("Tree Tap", 0xbfb69d).category(PLANTS).build();
 
+    public static final DeadCactus DEAD_CACTUS_BLOCK = new DeadCactus();
+
     public static final Seedling RED_CHERRY_SEEDLING = new Seedling("red_cherry_seeds", new VanillaSeedlingConsumer(Material.CHERRY_SAPLING));
     public static final Seedling ACACIA_SEEDLING = new Seedling("acacia_seeds", new VanillaSeedlingConsumer(Material.ACACIA_SAPLING));
 
@@ -57,6 +60,7 @@ public class PlantsTypes {
 
     public static final ModItem TEA_SEEDS = item.createBuilder(Material.BEETROOT_SEEDS, plugin, "tea_seeds").block(TEA_SEEDLING).displayName("Tea Seeds", 0xced98f).category(PLANTS).build();
 
+    public static final ModItem DEAD_CACTUS = item.createBuilder(Material.CACTUS, plugin, "dead_cactus").block(DEAD_CACTUS_BLOCK).displayName("Dead Cactus", 0x70FF40).category(PLANTS).build();
 
     private static class VanillaSeedlingConsumer implements Consumer<Block> {
         private final Material set;
