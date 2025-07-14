@@ -3,14 +3,18 @@ package me.bergenfly.newmod.core.blockreplacer.nms;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.ListenerOptions;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.bytes.ByteList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.ObjectLists;
 import me.bergenfly.newmod.core.NewModPlugin;
+import me.bergenfly.newmod.core.blockreplacer.nms.wrapper.FixedWrappedBlockData;
 import net.minecraft.core.IdMapper;
 import net.minecraft.network.VarInt;
 import net.minecraft.world.level.block.Block;
@@ -41,6 +45,32 @@ public class ChunkDataController {
 
         protocolManager = ProtocolLibrary.getProtocolManager();
 
+
+
+        protocolManager.addPacketListener(new PacketAdapter(
+                NewModPlugin.get(),
+                ListenerPriority.HIGH,
+                ObjectLists.singleton(PacketType.Play.Server.BLOCK_CHANGE),
+                ListenerOptions.SYNC
+        ) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                if(event.getPacket() instanceof ExemptPacketContainer) {
+                    return;
+                }
+
+                WrappedBlockData w = event.getPacket().getBlockData().read(0);
+
+                if (w.getType().equals(Material.CACTUS)) {
+                    FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
+
+                    data.setTypeAndData(Material.CACTUS, 7);
+
+                    event.getPacket().getBlockData().write(0, data);
+                }
+            }
+        });
+
         protocolManager.addPacketListener(new PacketAdapter(
                 NewModPlugin.get(),
                 ListenerPriority.HIGH,
@@ -49,7 +79,6 @@ public class ChunkDataController {
             @Override
             public void onPacketSending(PacketEvent event) {
                 byte[] data = event.getPacket().getLevelChunkData().read(0).getBuffer();
-
 
                 boolean dirtyChunk = false;
 
@@ -164,10 +193,10 @@ public class ChunkDataController {
                                     newChunk.write((byte) ((l&0x00_ff_00_00_00_00_00_00L) >>> 48));
                                     newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_00L) >>> 40));
                                     newChunk.write((byte) ((l&0x00_00_00_ff_00_00_00_00L) >>> 32));
-                                    newChunk.write((byte) ((l&0x00_00_ff_00_ff_00_00_00L) >>> 24));
-                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_ff_00_00L) >>> 16));
-                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_ff_00L) >>> 8));
-                                    newChunk.write((byte) ((l&0x00_00_ff_00_00_00_00_ffL)));
+                                    newChunk.write((byte) ((l&0x00_00_00_00_ff_00_00_00L) >>> 24));
+                                    newChunk.write((byte) ((l&0x00_00_00_00_00_ff_00_00L) >>> 16));
+                                    newChunk.write((byte) ((l&0x00_00_00_00_00_00_ff_00L) >>> 8));
+                                    newChunk.write((byte) ((l&0x00_00_00_00_00_00_00_ffL)));
                                 }
 
                                 newChunk.write(section.biomeData);
