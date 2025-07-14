@@ -3,10 +3,8 @@ package me.bergenfly.newmod.core.blockreplacer.nms;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.ListenerOptions;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.events.*;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.bytes.ByteList;
@@ -20,9 +18,11 @@ import net.minecraft.network.VarInt;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -36,6 +36,15 @@ public class ChunkDataController {
 
     int[] cactusStateIds = new int[16];
 
+    public void sendCactus(Location location, Player player) {
+        PacketContainer blockPacket = new ExemptPacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
+
+        blockPacket.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        blockPacket.getBlockData().write(0, new FixedWrappedBlockData(Material.CACTUS, 7));
+
+        protocolManager.sendServerPacket(player, blockPacket);
+    }
+
     public void onEnable() {
         registry = Block.BLOCK_STATE_REGISTRY;
 
@@ -44,8 +53,6 @@ public class ChunkDataController {
         }
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-
-
 
         protocolManager.addPacketListener(new PacketAdapter(
                 NewModPlugin.get(),
@@ -64,7 +71,7 @@ public class ChunkDataController {
                 if (w.getType().equals(Material.CACTUS)) {
                     FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
 
-                    data.setTypeAndData(Material.CACTUS, 7);
+                    data.setTypeAndData(Material.CACTUS, 0);
 
                     event.getPacket().getBlockData().write(0, data);
                 }

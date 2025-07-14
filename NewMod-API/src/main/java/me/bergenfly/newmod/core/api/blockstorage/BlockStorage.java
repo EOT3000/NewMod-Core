@@ -19,10 +19,10 @@ public interface BlockStorage {
     StoredBlock getBlock(Location location);
 
     /**
-     * Gets all the blocks stored in this storage, in the provided chunk.
+     * Gets all the blocks stored in this storage, in the provided chunk. This includes all block data, not necessary a custom block.
      *
      * @param chunk the chunk from which to get all stored locations.
-     * @return a set of all the blocks stored in this storage and chun.
+     * @return a set of all the blocks stored in this storage and chunk.
      */
     Set<Location> getAllStoredLocations(Chunk chunk);
 

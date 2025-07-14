@@ -10,6 +10,7 @@ import me.bergenfly.newmod.core.api.item.category.CategoryManager;
 import me.bergenfly.newmod.core.api.item.category.ModItemCategory;
 import me.bergenfly.newmod.core.block.BlockManagerImpl;
 import me.bergenfly.newmod.core.blockreplacer.BlockReplacementManager;
+import me.bergenfly.newmod.core.blockreplacer.listener.ChunkLoadListener;
 import me.bergenfly.newmod.core.blockreplacer.nms.ChunkDataController;
 import me.bergenfly.newmod.core.blockstorage.BlockStorageImpl;
 import me.bergenfly.newmod.core.command.CheatCommand;
@@ -35,7 +36,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     private BlockManagerImpl blockManager;
     private BlockStorageImpl blockStorage;
     private CategoryManagerImpl categoryManager;
-    private BlockReplacementManager blockReplacementManager;
+    public BlockReplacementManager blockReplacementManager;
 
     private CheatCommand cheatCommand;
 
@@ -59,6 +60,7 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         Bukkit.getPluginManager().registerEvents(new DurabilityListener(), this);
         Bukkit.getPluginManager().registerEvents(new MiningLevelListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ChunkLoadListener(), this);
 
         category = categoryManager.createCategory(new NamespacedKey(instance, "all_items_category"), Material.COMPASS, Component.text("All Items").color(NamedTextColor.GRAY));
     }

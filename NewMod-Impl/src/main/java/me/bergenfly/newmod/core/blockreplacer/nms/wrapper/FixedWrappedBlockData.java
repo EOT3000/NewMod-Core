@@ -13,6 +13,10 @@ public class FixedWrappedBlockData extends WrappedBlockData {
         super(handle);
     }
 
+    public FixedWrappedBlockData(Material material, int data) {
+        super(CraftMagicNumbers.getBlock(material, (byte) data));
+    }
+
     @Override
     public Material getType() {
         return CraftMagicNumbers.getMaterial(((BlockState) getHandle()).getBlock());
