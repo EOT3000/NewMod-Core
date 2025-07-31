@@ -73,11 +73,7 @@ public class ChunkDataController {
                 WrappedBlockData w = event.getPacket().getBlockData().read(0);
 
                 if (w.getType().equals(Material.CACTUS)) {
-                    System.out.println("Receieved cactus packet: " + event.getPacket());
-
                     FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
-
-                    System.out.println("Receieved cactus packet: " + data.getData());
 
                     data.setTypeAndData(Material.CACTUS, 1);
 
