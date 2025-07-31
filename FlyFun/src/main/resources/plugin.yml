@@ -1,7 +1,7 @@
 name: FlyFun
-main: me.bergenfly.newmod.flyfun.food.vanilla.VanillaPlantListener
+main: me.bergenfly.newmod.flyfun.FlyFunPlugin
 version: Pre-Alpha_1.2
-api-version: 1.20
+api-version: 1.21.7
 #depend:
   #- NewMod-Core
 commands:

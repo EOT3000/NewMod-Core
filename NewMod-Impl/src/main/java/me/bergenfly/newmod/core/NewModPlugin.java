@@ -65,6 +65,8 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
         category = categoryManager.createCategory(new NamespacedKey(instance, "all_items_category"), Material.COMPASS, Component.text("All Items").color(NamedTextColor.GRAY));
     }
 
+    //TODO: if addon disables, disable addon features
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(command.getName().equalsIgnoreCase("griefchunk") && sender.isOp()) {

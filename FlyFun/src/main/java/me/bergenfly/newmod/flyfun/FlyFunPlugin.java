@@ -55,6 +55,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
 import java.io.File;
+import java.util.logging.Level;
 
 public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
     public NewModAPI api;
@@ -114,14 +115,18 @@ public class FlyFunPlugin extends JavaPlugin implements NewModAddon {
         System.out.println(new File("").getAbsolutePath());
         //System.out.println(textureDir.getAbsolutePath());
 
-        getLogger().info("Loading textures");
-        Textures.me.loadTextures(textureDir);
+        try {
+            getLogger().info("Loading textures");
+            Textures.me.loadTextures(textureDir);
 
-        getLogger().info("Loading models");
-        Textures.me.loadModels(modelDir);
+            getLogger().info("Loading models");
+            Textures.me.loadModels(modelDir);
 
-        getLogger().info("Loading block states");
-        Textures.me.loadBlockStates(blockStatesDir);
+            getLogger().info("Loading block states");
+            Textures.me.loadBlockStates(blockStatesDir);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Error Loading block states/models/textures");
+        }
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             Player player = Bukkit.getOnlinePlayers().iterator().next();

@@ -39,10 +39,12 @@ public class ChunkDataController {
     public void sendCactus(Location location, Player player) {
         PacketContainer blockPacket = new ExemptPacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
 
-        blockPacket.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
-        blockPacket.getBlockData().write(0, new FixedWrappedBlockData(Material.CACTUS, 7));
+        System.out.println("Sent dead cactus: " + location.toString());
 
-        protocolManager.sendServerPacket(player, blockPacket);
+        blockPacket.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        blockPacket.getBlockData().write(0, new FixedWrappedBlockData(Material.CACTUS, 5));
+
+        protocolManager.sendServerPacket(player, blockPacket, false);
     }
 
     public void onEnable() {
@@ -66,12 +68,18 @@ public class ChunkDataController {
                     return;
                 }
 
+                new Exception().printStackTrace();
+
                 WrappedBlockData w = event.getPacket().getBlockData().read(0);
 
                 if (w.getType().equals(Material.CACTUS)) {
+                    System.out.println("Receieved cactus packet: " + event.getPacket());
+
                     FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
 
-                    data.setTypeAndData(Material.CACTUS, 0);
+                    System.out.println("Receieved cactus packet: " + data.getData());
+
+                    data.setTypeAndData(Material.CACTUS, 1);
 
                     event.getPacket().getBlockData().write(0, data);
                 }

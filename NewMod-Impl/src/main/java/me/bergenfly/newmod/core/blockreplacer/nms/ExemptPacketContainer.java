@@ -16,4 +16,9 @@ public class ExemptPacketContainer extends PacketContainer {
     public ExemptPacketContainer(PacketType type, Object handle, StructureModifier<Object> structure) {
         super(type, handle, structure);
     }
+
+    @Override
+    public String toString() {
+        return "EXEMPT: " + super.toString();
+    }
 }

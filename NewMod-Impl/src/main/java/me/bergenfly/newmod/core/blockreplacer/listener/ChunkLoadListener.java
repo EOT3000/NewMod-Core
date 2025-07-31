@@ -5,6 +5,7 @@ import me.bergenfly.newmod.core.NewModPlugin;
 import me.bergenfly.newmod.core.api.blockstorage.BlockStorage;
 import me.bergenfly.newmod.core.api.blockstorage.StoredBlock;
 import me.bergenfly.newmod.core.blockreplacer.nms.ChunkDataController;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
@@ -21,8 +22,9 @@ public class ChunkLoadListener implements Listener {
             StoredBlock block = NewModPlugin.get().blockStorage().getBlock(location);
 
             if(block.hasData(DEAD_CACTUS, BlockStorage.StorageType.BLOCK_DATA)) {
-                // event is supposedly not async so this works
-                NewModPlugin.get().blockReplacementManager.c.sendCactus(location, event.getPlayer());
+                Bukkit.getScheduler().runTaskLater(NewModPlugin.get(), () -> {
+                    NewModPlugin.get().blockReplacementManager.c.sendCactus(location, event.getPlayer());
+                }, 1);
             }
         }
     }

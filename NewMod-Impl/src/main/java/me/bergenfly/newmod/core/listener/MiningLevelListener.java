@@ -37,6 +37,7 @@ public class MiningLevelListener implements Listener {
     }
 
     //TODO: generalize to all items, not jsut golden pickaxes.
+    ///TODO: this should be completely rewritten
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreakMonitor(BlockBreakEvent event) {

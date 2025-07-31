@@ -9,12 +9,7 @@ import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class VanillaPlantListener extends JavaPlugin implements Listener {
-
-    @Override
-    public void onEnable() {
-        Bukkit.getPluginManager().registerEvents(this, this);
-    }
+public class VanillaPlantListener implements Listener {
 
     @EventHandler
     public void onStructureGrow(StructureGrowEvent event) {

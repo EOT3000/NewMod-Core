@@ -152,7 +152,7 @@ public class ItemManagerImpl implements ItemManager, GearManager {
 
     @Override
     public int getMiningLevel(ModItem item) {
-        return miningLevel.get(item);
+        return miningLevel.getOrDefault(item, 0);
     }
 
     @Override
