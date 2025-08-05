@@ -17,22 +17,24 @@ public class StagesProbabilityMath {
             };*/
 
 
-    public float probabilityImmediateFailure(double finalFailure) {
-        double finalP = finalFailure;
+    public float probabilityImmediateFailure(double finalFailureLikelihood) {
+        double finalP = finalFailureLikelihood;
 
         if(finalP == 0) return 0;
 
         return (float) ((Math.sqrt(1-2*finalP+2*finalP*finalP) + finalP - 1)/finalP);
     }
 
-    public float probabilityReroll(double immediateFailure) {
-        double immediateFailP = immediateFailure;
+    public float probabilityReroll(double immediateFailureLikelihood) {
+        double immediateFailP = immediateFailureLikelihood;
 
         return (float) (.5+.5*immediateFailP*immediateFailP-immediateFailP);
     }
 
     /**
      * Determines the likelihood of a stage failing, to achieve a desired final failure probability.
+     * <p>
+     * For example, if a final probability of failure of .8 (80%) over 5 stages (prior to the final) is desired, then each stage should have a probability of stageLikelihoodFailure(.8, 5)
      *
      * @param endLikelihoodFailure the likelihood the plant fails to reach its final stage.
      * @param numberStages number of stages <i>before</i> the final stage. Sapling is 1 for example, because there is one sapling stage, and 1 final, tree stage (ignoring the sapling's substages).

@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>22</java.version>
     </properties>
 
     <repositories>
