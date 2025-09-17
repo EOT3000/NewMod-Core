@@ -10,6 +10,7 @@ import me.bergenfly.newmod.flyfun.food.PlantsTypes;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFertilizeEvent;
@@ -17,6 +18,8 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class VanillaPlantListener implements Listener {
@@ -26,6 +29,8 @@ public class VanillaPlantListener implements Listener {
     private static final BlockManager blockManager = api.blockManager();
     private static final ItemManager item = api.itemManager();
 
+    //private static final List<Material> REGULAR_SAPLINGS = List.of(OAK);
+
     Random random = new Random();
 
     @EventHandler
@@ -34,13 +39,28 @@ public class VanillaPlantListener implements Listener {
 
         VanillaPlantType vanillaPlantType = VanillaPlantType.getVanillaPlantTypeFromTreeType(eventTreeSpecies);
 
-        Fate shouldThePlantLive = chooseItsFate(event.getLocation().getBlock(), vanillaPlantType);
+        Block bukkitBlock = event.getLocation().getBlock();
+
+        Fate shouldThePlantLive = chooseItsFate(bukkitBlock, vanillaPlantType);
 
         switch (shouldThePlantLive) {
             case DIE: {
+                switch (bukkitBlock.getType()) {
+                    case OAK_SAPLING:
+                    case BIRCH_SAPLING:
+                    case JUNGLE_SAPLING:
+                    case DARK_OAK_SAPLING:
+                    case SPRUCE_SAPLING:
+                    case ACACIA_SAPLING:
+                    case PALE_OAK_SAPLING:
+                    case CHERRY_SAPLING: DeadPlants.killSapling(bukkitBlock);
+
+                    case MANGROVE_PROPAGULE: DeadPlants.killPropagule(bukkitBlock);
+                }
+
                 VanillaPlantListener.block.getBlock(event.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
-                event.getLocation().getBlock().setType(Material.DEAD_BUSH);
+                bukkitBlock.setType(Material.DEAD_BUSH);
 
                 System.out.println("dead >:D");
             }
@@ -69,8 +89,24 @@ public class VanillaPlantListener implements Listener {
             case DIE: {
                 VanillaPlantListener.block.getBlock(event.getBlock().getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
 
+                //if(Block)
+
                 switch (event.getBlock().getType()) {
-                    //case
+                    case MELON_STEM:
+                    case PUMPKIN_STEM: DeadPlants.killGourdStalk(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+
+                    case WHEAT_SEEDS: DeadPlants.killWheat(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+
+                    case CARROT:
+                    case POTATOES: DeadPlants.killCarrotsPotatoes(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+
+                    case BEETROOT_SEEDS: DeadPlants.killBeetroots(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+
+                    case SWEET_BERRY_BUSH: DeadPlants.killSweetBerryBush(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+
+                    case CACTUS: DeadPlants.killCactus(bukkitBlock);
+
+                    case SUGAR_CANE: DeadPlants.killSugarCane(bukkitBlock);
                 }
             }
             case REROLL: {

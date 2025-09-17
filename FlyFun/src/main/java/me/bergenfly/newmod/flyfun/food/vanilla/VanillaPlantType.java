@@ -28,8 +28,8 @@ public enum VanillaPlantType {
             .85f, .25f, .15f, 0.03f, 1, JUNGLE, JUNGLE_BUSH, SMALL_JUNGLE),
     MANGROVE_TREE(.8f, .22f, .12f, 0.04f,
             .9f, .1f, .07f, 0.04f, 1, MANGROVE, TALL_MANGROVE),
-    AZALEA_TREE(.65f, .35f, .2f, 0.01f,
-            .6f, .45f, .3f, 0.01f, 1, TreeType.AZALEA),
+    /*AZALEA_TREE(.65f, .35f, .2f, 0.01f,
+            .6f, .45f, .3f, 0.01f, 1, TreeType.AZALEA),*/
     CHERRY_TREE(.5f, .4f, .3f, 0.045f,
             .8f, .55f, .3f, 0.045f, 1, CHERRY),
     PALE_OAK_TREE(.7f, .2f, .15f, 0.015f,
@@ -51,8 +51,8 @@ public enum VanillaPlantType {
     SWEET_BERRY_BUSH(.3f, 1.05f, .8f, 0.001f,
             .55f, .75f, .5f, 0.00f, 3, Material.SWEET_BERRY_BUSH),
 
-    BAMBOO(.8f, .6f, .45f, 0.005f,
-            .7f, .7f, .45f, 0.005f, 12, Material.BAMBOO, BAMBOO_SAPLING),
+    /*BAMBOO(.8f, .6f, .45f, 0.005f,
+            .7f, .7f, .45f, 0.005f, 12, Material.BAMBOO, BAMBOO_SAPLING),*/
 
     CACTUS(1.7f, .65f, .45f, 0.005f,
             .1f, .35f, .2f, 0.00f, 2, Material.CACTUS),
