@@ -68,7 +68,7 @@ public class ChunkDataController {
                     return;
                 }
 
-                new Exception().printStackTrace();
+                //new Exception().printStackTrace();
 
                 WrappedBlockData w = event.getPacket().getBlockData().read(0);
 

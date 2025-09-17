@@ -2,7 +2,7 @@ package me.bergenfly.newmod.core.api.item.builder.modifiers;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemAttributeModifiers;
-import io.papermc.paper.datacomponent.item.PaperUnbreakable;
+//import io.papermc.paper.datacomponent.item.PaperUnbreakable;
 import me.bergenfly.newmod.core.api.item.builder.meta.MetaModifier;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -17,7 +17,7 @@ public record ArmorModifier(String plugin, String id, int armor, int toughness, 
         if(durability > 0) {
             stack.setData(DataComponentTypes.MAX_DAMAGE, durability);
         } else {
-            stack.setData(DataComponentTypes.UNBREAKABLE);
+            //stack.setData(DataComponentTypes.UNBREAKABLE);
         }
 
         ItemAttributeModifiers modifiers = ItemAttributeModifiers.itemAttributes()

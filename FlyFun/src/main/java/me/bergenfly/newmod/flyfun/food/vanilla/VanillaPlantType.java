@@ -3,10 +3,13 @@ package me.bergenfly.newmod.flyfun.food.vanilla;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.bukkit.TreeType.*;
 import static org.bukkit.Material.*;
 
-public enum VanillaPlant {
+public enum VanillaPlantType {
 
     //TODO: savanna should have humidity .2, not 0, and temp 1.2, not 2
     //Swamp should have temp .6, not .8
@@ -60,34 +63,65 @@ public enum VanillaPlant {
 
     ;
 
-    private final Object[] key;
+    private static final Map<TreeType, VanillaPlantType> treeType2VanillaPlantTypeMap = new HashMap<>();
+    private static final Map<Material, VanillaPlantType> material2VanillaPlantTypeMap = new HashMap<>();
+
+    static {
+        for(VanillaPlantType type : values()) {
+            for (Object key : type.keys) {
+                if (type.keys[0] instanceof TreeType) {
+                    treeType2VanillaPlantTypeMap.put((TreeType) key, type);
+                }
+
+                if (type.keys[0] instanceof Material) {
+                    material2VanillaPlantTypeMap.put((Material) key, type);
+                }
+            }
+        }
+    }
+
+    public static VanillaPlantType getVanillaPlantTypeFromTreeType(TreeType type) {
+        return treeType2VanillaPlantTypeMap.get(type);
+    }
+
+    public static VanillaPlantType getVanillaPlantTypeFromMaterial(Material type) {
+        return material2VanillaPlantTypeMap.get(type);
+    }
+
+    private final Object[] keys;
     private final TempHumidDistribution data;
+    private final int stages;
 
-
-    VanillaPlant(TempHumidDistribution data, int stages, TreeType... keys) {
-        this.key = keys;
+    VanillaPlantType(TempHumidDistribution data, int stages, TreeType... keys) {
+        this.keys = keys;
         this.data = data;
+        this.stages = stages;
     }
 
-    VanillaPlant(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
-                 float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages, TreeType... keys) {
+    VanillaPlantType(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
+                     float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages, TreeType... keys) {
         this(TempHumidDistribution.create(idealTemp, ninetyPercentTempDif, tenPercentTempDif, additionalTempSensitivity,
                 idealHumid, ninetyPercentHumidDif, tenPercentHumidDif, additionalHumidSensitivity), stages, keys);
     }
 
-    VanillaPlant(TempHumidDistribution data, int stages, Material... keys) {
-        this.key = keys;
+    VanillaPlantType(TempHumidDistribution data, int stages, Material... keys) {
+        this.keys = keys;
         this.data = data;
+        this.stages = stages;
     }
 
-    VanillaPlant(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
-                 float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages, Material... keys) {
+    VanillaPlantType(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
+                     float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages, Material... keys) {
         this(TempHumidDistribution.create(idealTemp, ninetyPercentTempDif, tenPercentTempDif, additionalTempSensitivity,
                 idealHumid, ninetyPercentHumidDif, tenPercentHumidDif, additionalHumidSensitivity), stages, keys);
     }
 
-    public Object[] getKey() {
-        return key;
+    public int getStages() {
+        return stages;
+    }
+
+    public Object[] getKeys() {
+        return keys;
     }
 
     public TempHumidDistribution getData() {

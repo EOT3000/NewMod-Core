@@ -17,7 +17,7 @@ public class StagesProbabilityMath {
             };*/
 
 
-    public float probabilityImmediateFailure(double finalFailureLikelihood) {
+    public static float probabilityImmediateFailure(double finalFailureLikelihood) {
         double finalP = finalFailureLikelihood;
 
         if(finalP == 0) return 0;
@@ -25,7 +25,7 @@ public class StagesProbabilityMath {
         return (float) ((Math.sqrt(1-2*finalP+2*finalP*finalP) + finalP - 1)/finalP);
     }
 
-    public float probabilityReroll(double immediateFailureLikelihood) {
+    public static float probabilityReroll(double immediateFailureLikelihood) {
         double immediateFailP = immediateFailureLikelihood;
 
         return (float) (.5+.5*immediateFailP*immediateFailP-immediateFailP);
