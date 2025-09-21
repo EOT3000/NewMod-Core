@@ -38,11 +38,11 @@ public enum VanillaPlantType {
     BEETROOT_CROP(.7f, .85f, .5f, 0.01f,
             .5f, .4f, .3f, 0.01f, 3, BEETROOT_SEEDS),
     WHEAT_CROP(.85f, .6f, .4f, 0.01f,
-            .5f, .4f, .3f, 0.01f, 7, WHEAT_SEEDS),
+            .5f, .4f, .3f, 0.01f, 7, WHEAT),
     POTATO_CROP(.75f, .7f, .5f, 0.01f,
-            .5f, .35f, .3f, 0.01f, 7, POTATO),
+            .5f, .35f, .3f, 0.01f, 7, POTATOES),
     CARROT_CROP(.75f, .7f, .5f, 0.01f,
-            .5f, .35f, .3f, 0.01f, 7, CARROT),
+            .5f, .35f, .3f, 0.01f, 7, CARROTS),
     MELON_CROP(1.35f, 1.15f, .85f, 0.01f,
             .55f, .75f, .5f, 0.01f, 8, MELON_STEM),
     PUMPKIN_CROP(.3f, 1.05f, .8f, 0.01f,
@@ -69,11 +69,11 @@ public enum VanillaPlantType {
     static {
         for(VanillaPlantType type : values()) {
             for (Object key : type.keys) {
-                if (type.keys[0] instanceof TreeType) {
+                if (key instanceof TreeType) {
                     treeType2VanillaPlantTypeMap.put((TreeType) key, type);
                 }
 
-                if (type.keys[0] instanceof Material) {
+                if (key instanceof Material) {
                     material2VanillaPlantTypeMap.put((Material) key, type);
                 }
             }

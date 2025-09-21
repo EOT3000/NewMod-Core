@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import me.bergenfly.newmod.core.NewModPlugin;
+import me.bergenfly.newmod.core.api.ChunkController;
 import me.bergenfly.newmod.core.blockreplacer.nms.wrapper.FixedWrappedBlockData;
 import net.minecraft.core.IdMapper;
 import net.minecraft.network.VarInt;
@@ -21,7 +22,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.craftbukkit.block.CraftBlockState;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
+import org.bukkit.craftbukkit.util.CraftLegacy;
+import org.bukkit.craftbukkit.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
 
 import java.io.ByteArrayOutputStream;
@@ -30,19 +34,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChunkDataController {
+public class ChunkDataController implements ChunkController {
     ProtocolManager protocolManager;
     IdMapper<BlockState> registry;
 
     int[] cactusStateIds = new int[16];
+    int[] caneStateIds = new int[16];
+    //int[] wrongSaplingStateIds = new int[16];
+    //int[] potatoesStateIds = new int[16];
+    int[] carrotsStateIds = new int[8];
 
-    public void sendCactus(Location location, Player player) {
+    private void loadObject(Material type, String data) {
+        int id = registry.getId(((CraftBlockData) Bukkit.createBlockData(Material.CACTUS, data)).getState());
+    }
+
+    @Override
+    public void sendPhantomBlock(Location location, Player player, Material material, String data) {
         PacketContainer blockPacket = new ExemptPacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
 
-        System.out.println("Sent dead cactus: " + location.toString());
+        FixedWrappedBlockData wrappedBlockData = new FixedWrappedBlockData(Material.CACTUS, 5);
+
+        wrappedBlockData.setHandle(((CraftBlockData) Bukkit.createBlockData(material, data)).getState());
 
         blockPacket.getBlockPositionModifier().write(0, new BlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
-        blockPacket.getBlockData().write(0, new FixedWrappedBlockData(Material.CACTUS, 5));
+        blockPacket.getBlockData().write(0, wrappedBlockData);
 
         protocolManager.sendServerPacket(player, blockPacket, false);
     }
@@ -52,6 +67,11 @@ public class ChunkDataController {
 
         for(int i = 0; i < 16; i++) {
             cactusStateIds[i] = registry.getId(((CraftBlockData) Bukkit.createBlockData(Material.CACTUS, "[age=" + i + "]")).getState());
+            caneStateIds[i] = registry.getId(((CraftBlockData) Bukkit.createBlockData(Material.SUGAR_CANE, "[age=" + i + "]")).getState());
+        }
+
+        for(int i = 0; i < 8; i++) {
+            carrotsStateIds[i] = registry.getId(((CraftBlockData) Bukkit.createBlockData(Material.CARROTS, "[age=" + i + "]")).getState());
         }
 
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -75,7 +95,33 @@ public class ChunkDataController {
                 if (w.getType().equals(Material.CACTUS)) {
                     FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
 
-                    data.setTypeAndData(Material.CACTUS, 1);
+                    data.setTypeAndData(Material.CACTUS, 0);
+
+                    event.getPacket().getBlockData().write(0, data);
+                }
+
+                if (w.getType().equals(Material.SUGAR_CANE)) {
+                    FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
+
+                    data.setTypeAndData(Material.SUGAR_CANE, 0);
+
+                    event.getPacket().getBlockData().write(0, data);
+                }
+
+                if (w.getType().equals(Material.CARROTS)) {
+                    FixedWrappedBlockData data = new FixedWrappedBlockData(w.getHandle());
+
+                    if(w.getData() == 1) {
+                        data.setTypeAndData(Material.CARROTS, 0);
+                    }
+
+                    if(w.getData() == 3) {
+                        data.setTypeAndData(Material.CARROTS, 2);
+                    }
+
+                    if(w.getData() > 4 && w.getData() < 7) {
+                        data.setTypeAndData(Material.CARROTS, 4);
+                    }
 
                     event.getPacket().getBlockData().write(0, data);
                 }
@@ -115,28 +161,82 @@ public class ChunkDataController {
 
                                 boolean dirty = false;
 
-                                if(needsFlag(id0)) {
-                                    id0 = cactusStateIds[0];
+                                {
+                                    if (wrongCactus(id0)) {
+                                        id0 = cactusStateIds[0];
 
-                                    dirty = true;
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCactus(id1)) {
+                                        id1 = cactusStateIds[0];
+
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCactus(id2)) {
+                                        id2 = cactusStateIds[0];
+
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCactus(id3)) {
+                                        id3 = cactusStateIds[0];
+
+                                        dirty = true;
+                                    }
                                 }
 
-                                if(needsFlag(id1)) {
-                                    id1 = cactusStateIds[0];
+                                {
+                                    if (wrongCane(id0)) {
+                                        id0 = caneStateIds[0];
 
-                                    dirty = true;
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCane(id1)) {
+                                        id1 = caneStateIds[0];
+
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCane(id2)) {
+                                        id2 = caneStateIds[0];
+
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCane(id3)) {
+                                        id3 = caneStateIds[0];
+
+                                        dirty = true;
+                                    }
                                 }
 
-                                if(needsFlag(id2)) {
-                                    id2 = cactusStateIds[0];
+                                {
+                                    if (wrongCarrots(id0)) {
+                                        id0 = cactusStateIds[lowestNextEven(id0)];
 
-                                    dirty = true;
-                                }
+                                        dirty = true;
+                                    }
 
-                                if(needsFlag(id3)) {
-                                    id3 = cactusStateIds[0];
+                                    if (wrongCarrots(id1)) {
+                                        id1 = cactusStateIds[lowestNextEven(id1)];
 
-                                    dirty = true;
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCarrots(id2)) {
+                                        id2 = cactusStateIds[lowestNextEven(id2)];
+
+                                        dirty = true;
+                                    }
+
+                                    if (wrongCarrots(id3)) {
+                                        id3 = cactusStateIds[lowestNextEven(id3)];
+
+                                        dirty = true;
+                                    }
                                 }
 
                                 if(dirty) {
@@ -149,8 +249,16 @@ public class ChunkDataController {
                                 for (int i = 0; i < section.palette.length; i++) {
                                     int id = section.palette[i];
 
-                                    if (id > cactusStateIds[0] && id <= cactusStateIds[15]) {
+                                    if (wrongCactus(id)) {
                                         section.palette[i] = cactusStateIds[0];
+                                        section.dirty = true;
+                                    }
+                                    if (wrongCane(id)) {
+                                        section.palette[i] = caneStateIds[0];
+                                        section.dirty = true;
+                                    }
+                                    if (wrongCarrots(id)) {
+                                        section.palette[i] = carrotsStateIds[lowestNextEven(id)];
                                         section.dirty = true;
                                     }
                                 }
@@ -238,6 +346,17 @@ public class ChunkDataController {
                 //}
             }
         });
+
+        protocolManager.addPacketListener(new PacketAdapter(
+                NewModPlugin.get(),
+                ListenerPriority.HIGH,
+                PacketType.Play.Server.MULTI_BLOCK_CHANGE
+        ) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+//TODO
+            }
+        });
     }
 
     private ChunkSection[] process(byte[] data) {
@@ -274,7 +393,7 @@ public class ChunkDataController {
                 for (int i = 0; i < lengthInt; i++) {
                     int blockId = readVarInt(byteBuffer);
 
-                    if(needsFlag(blockId)) {
+                    if(wrongCactus(blockId)) {
                         section.flagged = true;
                     }
 
@@ -332,8 +451,27 @@ public class ChunkDataController {
         return list.toArray(new ChunkSection[0]);
     }
 
-    private boolean needsFlag(int id) {
+    private boolean wrongCactus(int id) {
         return id > cactusStateIds[0] && id <= cactusStateIds[15];
+    }
+
+    private boolean wrongCane(int id) {
+        return id > caneStateIds[0] && id <= caneStateIds[15];
+    }
+
+    private boolean wrongCarrots(int id) {
+        return id == carrotsStateIds[1]
+                || id == carrotsStateIds[3]
+                || id == carrotsStateIds[5]
+                || id == carrotsStateIds[6];
+    }
+
+    /*private boolean wrongPotatoes(int id) {
+        return id > cactusStateIds[0] && id <= cactusStateIds[15];
+    }*/
+
+    private int lowestNextEven(int id) {
+        return id % 2 == 0 ? id-2 : id-1;
     }
 
     private void loadBiomes(ByteBuffer byteBuffer, ChunkSection section) {

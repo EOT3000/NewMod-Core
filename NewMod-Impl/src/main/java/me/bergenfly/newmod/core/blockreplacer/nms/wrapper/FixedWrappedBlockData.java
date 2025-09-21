@@ -49,7 +49,7 @@ public class FixedWrappedBlockData extends WrappedBlockData {
     }
 
     @Override
-    protected void setHandle(Object handle) {
+    public void setHandle(Object handle) {
         super.setHandle(handle);
     }
 

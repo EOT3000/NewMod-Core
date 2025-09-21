@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.core;
 
+import me.bergenfly.newmod.core.api.ChunkController;
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.addon.NewModAddon;
 import me.bergenfly.newmod.core.api.block.BlockManager;
@@ -136,6 +137,11 @@ public class NewModPlugin extends JavaPlugin implements NewModAPI {
     @Override
     public void registerAddon(NewModAddon addon) {
         //nothing yet
+    }
+
+    @Override
+    public ChunkController chunkController() {
+        return blockReplacementManager.c;
     }
 
     public ModItemCategory getCategory() {

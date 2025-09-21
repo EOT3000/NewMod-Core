@@ -8,12 +8,14 @@ import me.bergenfly.newmod.flyfun.FlyFunPlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import static org.bukkit.Material.*;
 
 public class DeadPlants {
 
-    public static final NamespacedKey DEAD_DISPLAY_TYPE = new NamespacedKey("newmod-core", "dead_display_type");
+    public static final NamespacedKey DEAD_DISPLAY_MATERIAL = new NamespacedKey("newmod-core", "dead_display_material");
+    public static final NamespacedKey DEAD_DISPLAY_DATA = new NamespacedKey("newmod-core", "dead_display_age");
     private static final FlyFunPlugin plugin = FlyFunPlugin.get();
     private static final NewModAPI api = plugin.api;
     private static final BlockStorage blockStorage = api.blockStorage();
@@ -21,7 +23,7 @@ public class DeadPlants {
     private static final ItemManager itemManager = api.itemManager();
 
     public static void killPropagule(Block block) {
-        setBlockTo(block, DeadReplacements.DEAD_PROPAGULE);
+        setBlockTo(block, DeadReplacement.DEAD_PROPAGULE);
     }
 
     public static void killSapling(Block block) {
@@ -35,7 +37,7 @@ public class DeadPlants {
             return;
         }
 
-        setBlockTo(block, DeadReplacements.DEAD_SMALL_BUSH);
+        block.setType(SHORT_DRY_GRASS); //Does this align weird? TODO check
     }
 
     //Pumpkins, melons
@@ -44,28 +46,61 @@ public class DeadPlants {
     }
 
     public static void killBeetroots(Block block, int age) {
+        if (in(age, 0, 1)) {
+            setBlockTo(block, DeadReplacement.DEAD_SEEDS);
 
+            return;
+        }
+
+        setBlockTo(block, DeadReplacement.DEAD_ROOTS);
     }
 
     public static void killWheat(Block block, int age) {
+        if (in(age, 0, 2)) {
+            setBlockTo(block, DeadReplacement.DEAD_SEEDS);
 
+            return;
+        }
+
+        if (in(age, 3, 5)) {
+            setBlockTo(block, DeadReplacement.DEAD_WHEAT_STALKS);
+
+            return;
+        }
+
+        setBlockTo(block, DeadReplacement.DEAD_WHEAT);
     }
 
     public static void killCarrotsPotatoes(Block block, int age) {
+        if (in(age, 0, 3)) {
+            setBlockTo(block, DeadReplacement.DEAD_SEEDS);
 
+            return;
+        }
+
+        //if (in(age, 4, 7)) {
+            setBlockTo(block, DeadReplacement.DEAD_ROOTS);
+        //}
     }
 
     public static void killCactus(Block block) {
-
+        setBlockTo(block, DeadReplacement.DEAD_CACTUS);
     }
 
     public static void killSugarCane(Block block) {
-
+        setBlockTo(block, DeadReplacement.DEAD_SUGAR_CANE);
     }
 
-    private static void setBlockTo(Block block, DeadReplacements replacements) {
-        blockStorage.getBlock(block.getLocation()).setData(DEAD_DISPLAY_TYPE, replacements.name(), BlockStorage.StorageType.BLOCK_DATA);
+    private static void setBlockTo(Block block, DeadReplacement replacement) {
+        blockStorage.getBlock(block.getLocation()).setData(DEAD_DISPLAY_MATERIAL, replacement.clientSideType.name(), BlockStorage.StorageType.BLOCK_DATA);
+        blockStorage.getBlock(block.getLocation()).setData(DEAD_DISPLAY_DATA, replacement.clientSideData, BlockStorage.StorageType.BLOCK_DATA);
 
+        block.setType(replacement.serverSideType);
+
+
+        for(Player player : block.getChunk().getPlayersSeeingChunk()) {
+            api.chunkController().sendPhantomBlock(block.getLocation(), player, replacement.clientSideType, replacement.clientSideData);
+        }
     }
 
     //Is compare within min,max, inclusive?
@@ -73,25 +108,25 @@ public class DeadPlants {
         return compare >= min && compare <= max;
     }
 
-    public enum DeadReplacements {
-        DEAD_SEEDS(DEAD_BUSH, CARROT, 1, -1),
-        DEAD_ROOTS(DEAD_BUSH, CARROT, 5, -1),
-        DEAD_WHEAT_STALKS(DEAD_BUSH, CARROT, 3, -1),
-        DEAD_WHEAT(DEAD_BUSH, CARROT, 6, -1),
-        DEAD_PROPAGULE(DEAD_BUSH, MANGROVE_PROPAGULE, 1, 1),
-        DEAD_CACTUS(CACTUS, CACTUS, 1, -1),
-        DEAD_SMALL_BUSH(DEAD_BUSH, CACTUS, 1, -1);
+    public enum DeadReplacement {
+        DEAD_SEEDS(DEAD_BUSH, CARROTS, "[age=1]"),
+        DEAD_ROOTS(DEAD_BUSH, CARROTS, "[age=5]"),
+        DEAD_WHEAT_STALKS(DEAD_BUSH, CARROTS, "[age=3]"),
+        DEAD_WHEAT(DEAD_BUSH, CARROTS, "[age=6]"),
+        DEAD_PROPAGULE(DEAD_BUSH, MANGROVE_PROPAGULE, "[age=1,stage=1,hanging=false,waterlogged=false]"),
+        DEAD_CACTUS(CACTUS, CACTUS, "[age=2]"),
+        DEAD_SUGAR_CANE(SUGAR_CANE, SUGAR_CANE, "[age=2]");
+
+        //DEAD_SMALL_BUSH(DEAD_BUSH, SHORT_DRY_GRASS, -1, -1);
 
         private final Material serverSideType;
         private final Material clientSideType;
-        private final int clientSideAge;
-        private final int clientSideStage;
+        private final String clientSideData;
 
-        DeadReplacements(Material serverSideType, Material clientSideType, int clientSideAge, int clientSideStage) {
+        DeadReplacement(Material serverSideType, Material clientSideType, String clientSideData) {
             this.serverSideType = serverSideType;
             this.clientSideType = clientSideType;
-            this.clientSideAge = clientSideAge;
-            this.clientSideStage = clientSideStage;
+            this.clientSideData = clientSideData;
         }
 
 
@@ -103,12 +138,8 @@ public class DeadPlants {
             return clientSideType;
         }
 
-        public int getClientSideAge() {
-            return clientSideAge;
-        }
-
-        public int getClientSideStage() {
-            return clientSideStage;
+        public String getClientSideData() {
+            return clientSideData;
         }
     }
 }

@@ -32,6 +32,8 @@ public interface NewModAPI {
      */
     BlockStorage blockStorage();
 
+    ChunkController chunkController();
+
     /**
      * @return the API's category manager.
      */

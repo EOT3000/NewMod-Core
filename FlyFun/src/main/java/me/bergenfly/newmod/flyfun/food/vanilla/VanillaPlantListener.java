@@ -45,6 +45,8 @@ public class VanillaPlantListener implements Listener {
 
         switch (shouldThePlantLive) {
             case DIE: {
+                VanillaPlantListener.block.getBlock(event.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+
                 switch (bukkitBlock.getType()) {
                     case OAK_SAPLING:
                     case BIRCH_SAPLING:
@@ -53,16 +55,14 @@ public class VanillaPlantListener implements Listener {
                     case SPRUCE_SAPLING:
                     case ACACIA_SAPLING:
                     case PALE_OAK_SAPLING:
-                    case CHERRY_SAPLING: DeadPlants.killSapling(bukkitBlock);
+                    case CHERRY_SAPLING: DeadPlants.killSapling(bukkitBlock); break;
 
                     case MANGROVE_PROPAGULE: DeadPlants.killPropagule(bukkitBlock);
                 }
 
-                VanillaPlantListener.block.getBlock(event.getLocation()).removeAllData(BlockStorage.StorageType.BLOCK_DATA);
+                //bukkitBlock.setType(Material.DEAD_BUSH);
 
-                bukkitBlock.setType(Material.DEAD_BUSH);
-
-                System.out.println("dead >:D");
+                //System.out.println("dead >:D");
             }
             case REROLL: {
                 event.setCancelled(true);
@@ -74,14 +74,16 @@ public class VanillaPlantListener implements Listener {
 
     @EventHandler
     public void onPlantGrow(BlockGrowEvent event) {
-        ModBlock modBlock = blockManager.getType(event.getBlock().getLocation());
+        //ModBlock modBlock = blockManager.getType(event.getBlock().getLocation());
 
-        if(modBlock == PlantsTypes.DEAD_CACTUS_BLOCK) {
-            return;
+        if(block.getBlock(event.getBlock().getLocation()).hasData(DeadPlants.DEAD_DISPLAY_MATERIAL, BlockStorage.StorageType.BLOCK_DATA)) {
+            event.setCancelled(true);
         }
 
         Block bukkitBlock = event.getBlock();
         VanillaPlantType vanillaPlantType = VanillaPlantType.getVanillaPlantTypeFromMaterial(bukkitBlock.getType());
+
+        if(vanillaPlantType == null) return;
 
         Fate shouldThePlantLive = chooseItsFate(event.getBlock(), vanillaPlantType);
 
@@ -92,21 +94,19 @@ public class VanillaPlantListener implements Listener {
                 //if(Block)
 
                 switch (event.getBlock().getType()) {
-                    case MELON_STEM:
-                    case PUMPKIN_STEM: DeadPlants.killGourdStalk(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case PUMPKIN_STEM, MELON_STEM -> DeadPlants.killGourdStalk(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case WHEAT_SEEDS: DeadPlants.killWheat(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case WHEAT_SEEDS -> DeadPlants.killWheat(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case CARROT:
-                    case POTATOES: DeadPlants.killCarrotsPotatoes(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case CARROTS, POTATOES -> DeadPlants.killCarrotsPotatoes(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case BEETROOT_SEEDS: DeadPlants.killBeetroots(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case BEETROOT_SEEDS -> DeadPlants.killBeetroots(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case SWEET_BERRY_BUSH: DeadPlants.killSweetBerryBush(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case SWEET_BERRY_BUSH -> DeadPlants.killSweetBerryBush(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case CACTUS: DeadPlants.killCactus(bukkitBlock);
+                    case CACTUS -> DeadPlants.killCactus(bukkitBlock);
 
-                    case SUGAR_CANE: DeadPlants.killSugarCane(bukkitBlock);
+                    case SUGAR_CANE -> DeadPlants.killSugarCane(bukkitBlock);
                 }
             }
             case REROLL: {
