@@ -1,4 +1,4 @@
-package bergen;
+/*package bergen;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.biome.Biome;
@@ -45,4 +45,4 @@ public class Humid extends JavaPlugin {
 
         return world.getHandle().getBiome(new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ())).value();
     }
-}
+}*/

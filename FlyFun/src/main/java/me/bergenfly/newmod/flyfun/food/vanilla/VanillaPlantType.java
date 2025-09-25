@@ -14,10 +14,10 @@ public enum VanillaPlantType {
     //TODO: savanna should have humidity .2, not 0, and temp 1.2, not 2
     //Swamp should have temp .6, not .8
 
-    OAK_TREE(.6f, 1.0f, .4f, 0.02f,
-            .6f, .65f, .45f, 0.02f, 1, TREE, BIG_TREE),
-    SPRUCE_TREE(.15f, 1.0f, .65f, 0.025f,
-            .6f, .4f, .35f, 0.025f, 1, REDWOOD, MEGA_REDWOOD, TALL_REDWOOD, MEGA_PINE),
+    OAK_TREE(.75f, .85f, .45f, 0.02f,
+            .6f, .3f, .25f, 0.02f, 1, TREE, BIG_TREE),
+    SPRUCE_TREE(.1f, .7f, .25f, 0.025f,
+            .55f, .3f, .25f, 0.025f, 1, REDWOOD, MEGA_REDWOOD, TALL_REDWOOD, MEGA_PINE),
     ACACIA_TREE(1.2f, .85f, .3f, 0.025f,
                    .2f, .5f, .3f, 0.01f, 1, ACACIA),
     BIRCH_TREE(.55f, .4f, .3f, 0.01f,

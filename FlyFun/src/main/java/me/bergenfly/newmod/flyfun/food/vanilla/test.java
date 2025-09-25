@@ -41,7 +41,7 @@ public class test {
         PUMPKIN_CROP(.3f, 1.05f, .8f, 0.01f,
                 .55f, .75f, .5f, 0.01f, 8),
 
-        SWEET_BERRY_BUSH(.3f, 1.05f, .8f, 0.001f,
+        SWEET_BERRY_BUSH(.0f, .75f, .65f, 0.001f,
                 .55f, .75f, .5f, 0.00f, 3),
 
         BAMBOO(.8f, .6f, .45f, 0.005f,
@@ -81,12 +81,27 @@ public class test {
         //12-15
         //15-18
 
-        for(int x = -56; x <= 160; x+=1) {
-            for(int y = 0; y <= 80; y+=1) {
+        for(int x = -56; x <= 160; x+=10) {
+            for(int y = 0; y <= 80; y+=10) {
                 float totalFertility = 0;
 
-                for(Enum e : Enum.values()) {
-                    totalFertility+=(1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f));
+                int fertility = 1;
+
+                for(Enum e : new Enum[]{Enum.CHERRY_TREE/*, Enum.MELON_CROP, Enum.CACTUS*/}) {
+                    //totalFertility+=(1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f));
+
+                    //double successProb = 1-e.data.probabilityHumid(x/80.0f,y/80.0f);
+                    //double successProb2 = 1-e.data.probabilityTemp(x/80.0f,y/80.0f);
+
+                    //if(successProb > .65  && fertility < 1) fertility = 0;
+
+                    //if(successProb > .75  && fertility < 2) fertility = 1;
+
+                    //if(successProb > .85  && fertility < 3) fertility = 2;
+
+                    //System.out.print(((int) (successProb*10) == 10 ? (int) (successProb*10) : (int) (successProb*10) + " ") + "/" + ((int) (successProb2*10) == 10 ? (int) (successProb2*10) : (int) (successProb2*10) + " ") + " ");
+
+                    //if(successProb > .9) fertility += 1;
                 }
 
                 if(totalFertility < lowestF) {
@@ -99,28 +114,35 @@ public class test {
 
                 image.setRGB(x+56,y,0xFF0000);
 
-                if(totalFertility > 3) {
+                if(fertility == 0) image.setRGB(x+56,y,0xFF8000);
+                if(fertility == 1) image.setRGB(x+56,y,0xFFFF00);
+                if(fertility == 2) image.setRGB(x+56,y,0x80FF00);
+                if(fertility == 3) image.setRGB(x+56,y,0x00FF00);
+
+                /*if(totalFertility > 0) {
                     image.setRGB(x+56,y,0xFF6000);
                 }
 
-                if(totalFertility > 6) {
+                if(totalFertility > .5) {
                     image.setRGB(x+56,y,0xFFAF00);
                 }
 
-                if(totalFertility > 9) {
+                if(totalFertility > 1) {
                     image.setRGB(x+56,y,0xFFFF00);
                 }
 
-                if(totalFertility > 12) {
+                if(totalFertility > 1.5) {
                     image.setRGB(x+56,y,0xA0FF00);
                 }
 
-                if(totalFertility > 15) {
+                if(totalFertility > 2) {
                     image.setRGB(x+56,y,0x00FF00);
-                }
+                }*/
 
                 //System.out.println(Math.round(totalFertility*1000)/1000.0);
             }
+
+            System.out.println();
         }
 
         ImageIO.write(image, "png", new File("colors.png"));
