@@ -3,66 +3,87 @@ package me.bergenfly.newmod.flyfun.food.vanilla;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.bukkit.Material.*;
+import static org.bukkit.Material.PUMPKIN_STEM;
+import static org.bukkit.TreeType.*;
 
 public class test {
 
     public enum Enum {
-        OAK_TREE(.6f, 1.0f, .4f, 0.02f,
-                .6f, .65f, .45f, 0.02f, 1),
-        SPRUCE_TREE(.15f, 1.0f, .65f, 0.025f,
-                .6f, .4f, .35f, 0.025f, 1),
-        ACACIA_TREE(1.2f, .85f, .3f, 0.025f,
-                .2f, .5f, .3f, 0.01f, 1),
-        BIRCH_TREE(.55f, .4f, .3f, 0.01f,
-                .7f, .4f, .25f, 0.01f, 1),
+        OAK_TREE(.75f, .85f, .45f, 0.02f,
+                .6f, .3f, .25f, 0.02f, 1),
+        SPRUCE_TREE(.1f, .7f, .25f, 0.025f,
+                .55f, .3f, .25f, 0.025f, 1),
+        ACACIA_TREE(1.425f, .525f, .275f, 0.025f,
+                .45f, .425f, .75f, 0.01f, 1),
+
+        //TODO: redo these down
+        BIRCH_TREE(.4f, .35f, .3f, 0.01f,
+                .6f, .25f, .15f, 0.01f, 1),
         DARK_OAK_TREE(.7f, .25f, .15f, 0.01f,
                 .8f, .15f, .1f, 0.01f, 1),
-        JUNGLE_TREE(.95f, .2f, .15f, 0.03f,
+        JUNGLE_TREE(.95f, .1f, .35f, 0.03f,
                 .85f, .25f, .15f, 0.03f, 1),
-        MANGROVE_TREE(.8f, .22f, .12f, 0.04f,
-                .9f, .1f, .07f, 0.04f, 1),
-        AZALEA_TREE(.65f, .35f, .2f, 0.01f,
-                .6f, .45f, .3f, 0.01f, 1),
-        CHERRY_TREE(.5f, .4f, .3f, 0.045f,
-                .8f, .55f, .3f, 0.045f, 1),
+        MANGROVE_TREE(.8f, .15f, .2f, 0.04f,
+                .95f, .025f, .075f, 0.04f, 1),
+        /*AZALEA_TREE(.65f, .35f, .2f, 0.01f,
+                .6f, .45f, .3f, 0.01f, 1, TreeType.AZALEA),*/
+        CHERRY_TREE(.5f, .25f, .775f, 0.045f,
+                .6f, .275f, .175f, 0.045f, 1),
         PALE_OAK_TREE(.7f, .2f, .15f, 0.015f,
                 .8f, .15f, .1f, 0.015f, 1),
 
-        BEETROOT_CROP(.7f, .85f, .5f, 0.01f,
-                .5f, .4f, .3f, 0.01f, 3),
+        BEETROOT_CROP(.6f, .95f, .5f, 0.01f,
+                .525f, .3f, .45f, 0.01f, 3),
         WHEAT_CROP(.85f, .6f, .4f, 0.01f,
                 .5f, .4f, .3f, 0.01f, 7),
         POTATO_CROP(.75f, .7f, .5f, 0.01f,
                 .5f, .35f, .3f, 0.01f, 7),
         CARROT_CROP(.75f, .7f, .5f, 0.01f,
                 .5f, .35f, .3f, 0.01f, 7),
-        MELON_CROP(1.35f, 1.15f, .85f, 0.01f,
-                .55f, .75f, .5f, 0.01f, 8),
+        MELON_CROP(1.35f, .5f, .85f, 0.01f,
+                .6f, .575f, .35f, 0.01f, 8),
         PUMPKIN_CROP(.3f, 1.05f, .8f, 0.01f,
-                .55f, .75f, .5f, 0.01f, 8),
+                .55f, .45f, .5f, 0.01f, 8),
 
-        SWEET_BERRY_BUSH(.0f, .75f, .65f, 0.001f,
-                .55f, .75f, .5f, 0.00f, 3),
+        SWEET_BERRY_BUSH(.05f, .7f, .5f, 0.001f,
+                .55f, .35f, .5f, 0.00f, 3),
 
-        BAMBOO(.8f, .6f, .45f, 0.005f,
-                .7f, .7f, .45f, 0.005f, 12),
+    /*BAMBOO(.8f, .6f, .45f, 0.005f,
+            .7f, .7f, .45f, 0.005f, 12, Material.BAMBOO, BAMBOO_SAPLING),*/
 
-        CACTUS(1.7f, .65f, .45f, 0.005f,
-                .1f, .35f, .2f, 0.00f, 2),
+        CACTUS(1.7f, .875f, .2f, 0.005f,
+                .1f, .275f, .2f, 0.00f, 2),
 
-        SUGAR_CANE(1.3f, 2.5f, 1.5f, 0.01f,
-                .5f, .7f, .6f, 0.00f, 2);
+        SUGAR_CANE(.9f, .275f, .8f, 0.01f,
+                .575f, .35f, .6f, 0.00f, 2),
 
-        public final TempHumidDistribution data;
+
+        ;
+
+        private final TempHumidDistribution data;
+        private final int stages;
 
         Enum(TempHumidDistribution data, int stages) {
             this.data = data;
+            this.stages = stages;
         }
 
-        Enum(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
-                     float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages) {
-            this(TempHumidDistribution.create(idealTemp, ninetyPercentTempDif, tenPercentTempDif, additionalTempSensitivity,
-                    idealHumid, ninetyPercentHumidDif, tenPercentHumidDif, additionalHumidSensitivity), stages);
+        Enum(float idealTemp, float fullHealthRadiusTemp, float decayRadiusTemp, float additionalTempSensitivity,
+                         float idealHumid, float fullHealthRadiusHumid, float decayRadiusHumid, float additionalHumidSensitivity, int stages) {
+            this(TempHumidDistribution.create(idealTemp, fullHealthRadiusTemp, decayRadiusTemp, additionalTempSensitivity,
+                    idealHumid, fullHealthRadiusHumid, decayRadiusHumid, additionalHumidSensitivity), stages);
+        }
+
+        public int getStages() {
+            return stages;
+        }
+
+        public TempHumidDistribution getData() {
+            return data;
         }
     }
 
@@ -81,23 +102,23 @@ public class test {
         //12-15
         //15-18
 
-        for(int x = -56; x <= 160; x+=10) {
-            for(int y = 0; y <= 80; y+=10) {
+        for(int x = -56; x <= 160; x+=1) {
+            for(int y = 0; y <= 80; y+=1) {
                 float totalFertility = 0;
 
-                int fertility = 1;
+                int fertility = -1;
 
-                for(Enum e : new Enum[]{Enum.CHERRY_TREE/*, Enum.MELON_CROP, Enum.CACTUS*/}) {
+                for(Enum e : new Enum[]{Enum.SWEET_BERRY_BUSH, Enum.MELON_CROP, Enum.CACTUS, Enum.CHERRY_TREE}) {
                     //totalFertility+=(1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f));
 
-                    //double successProb = 1-e.data.probabilityHumid(x/80.0f,y/80.0f);
+                    double successProb = 1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f);
                     //double successProb2 = 1-e.data.probabilityTemp(x/80.0f,y/80.0f);
 
-                    //if(successProb > .65  && fertility < 1) fertility = 0;
+                    if(successProb > .55 && fertility < 1) fertility = 0;
 
-                    //if(successProb > .75  && fertility < 2) fertility = 1;
+                    if(successProb > .75 && fertility < 2) fertility = 1;
 
-                    //if(successProb > .85  && fertility < 3) fertility = 2;
+                    if(successProb > .95 && fertility < 3) fertility = 2;
 
                     //System.out.print(((int) (successProb*10) == 10 ? (int) (successProb*10) : (int) (successProb*10) + " ") + "/" + ((int) (successProb2*10) == 10 ? (int) (successProb2*10) : (int) (successProb2*10) + " ") + " ");
 

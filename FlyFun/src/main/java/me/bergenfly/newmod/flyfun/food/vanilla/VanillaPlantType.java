@@ -100,10 +100,10 @@ public enum VanillaPlantType {
         this.stages = stages;
     }
 
-    VanillaPlantType(float idealTemp, float ninetyPercentTempDif, float tenPercentTempDif, float additionalTempSensitivity,
-                     float idealHumid, float ninetyPercentHumidDif, float tenPercentHumidDif, float additionalHumidSensitivity, int stages, TreeType... keys) {
-        this(TempHumidDistribution.create(idealTemp, ninetyPercentTempDif, tenPercentTempDif, additionalTempSensitivity,
-                idealHumid, ninetyPercentHumidDif, tenPercentHumidDif, additionalHumidSensitivity), stages, keys);
+    VanillaPlantType(float idealTemp, float fullHealthRadiusTemp, float decayRadiusTemp, float additionalTempSensitivity,
+                     float idealHumid, float fullHealthRadiusHumid, float decayRadiusHumid, float additionalHumidSensitivity, int stages, TreeType... keys) {
+        this(TempHumidDistribution.create(idealTemp, fullHealthRadiusTemp, decayRadiusTemp, additionalTempSensitivity,
+                idealHumid, fullHealthRadiusHumid, decayRadiusHumid, additionalHumidSensitivity), stages, keys);
     }
 
     VanillaPlantType(TempHumidDistribution data, int stages, Material... keys) {
