@@ -130,8 +130,8 @@ public class TempHumidDistribution {
                 .55f, .45f, .3f, 0.01f);*/
 
         TempHumidDistribution d = create(
-                1.4f, .5f, .25f, 0.025f,
-                .45f, .425f, .75f, 0.025f);
+                .9f, .275f, .8f, 0.01f,
+                .575f, .35f, .6f, 0.00f);
 
         System.out.println("jungle: " + d.probabilityFinalFailure(.95f, .9f));
         System.out.println("desert: " + d.probabilityFinalFailure(2.0f, .0f));
@@ -143,7 +143,7 @@ public class TempHumidDistribution {
         System.out.println("forest: " + d.probabilityFinalFailure(.7f, .8f));
         System.out.println("meadow: " + d.probabilityFinalFailure(.5f, .8f));
         System.out.println("swamp: " + d.probabilityFinalFailure(.6f, .9f));
-        System.out.println("mangrove swamp: " + d.probabilityFinalFailure(.8f, .9f));
+        System.out.println("mangrove swamp: " + d.probabilityFinalFailure(.8f, .95f));
         System.out.println("savanna: " + d.probabilityFinalFailure(1.2f, .2f));
         System.out.println("frozen river: " + d.probabilityFinalFailure(.0f, .5f));
         System.out.println("dark forest: " + d.probabilityFinalFailure(.7f, .8f));
