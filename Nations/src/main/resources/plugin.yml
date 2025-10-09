@@ -1,5 +1,5 @@
 name: Nations
-main: me.bergenfly.nations.impl.NationsPlugin
+main: me.bergenfly.nations.NationsPlugin
 version: 1.0.0
 api-version: 1.21
 commands:

@@ -1,5 +1,6 @@
 package me.bergenfly.newmod.flyfun.food.vanilla;
 
+import com.destroystokyo.paper.event.block.BlockDestroyEvent;
 import me.bergenfly.newmod.core.api.NewModAPI;
 import me.bergenfly.newmod.core.api.block.BlockManager;
 import me.bergenfly.newmod.core.api.block.ModBlock;
@@ -12,7 +13,9 @@ import org.bukkit.TreeType;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
@@ -32,6 +35,20 @@ public class VanillaPlantListener implements Listener {
     //private static final List<Material> REGULAR_SAPLINGS = List.of(OAK);
 
     Random random = new Random();
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockDestroy(BlockDestroyEvent event) {
+        if(block.getBlock(event.getBlock().getLocation()).hasData(DeadPlants.DEAD_DISPLAY_MATERIAL, BlockStorage.StorageType.BLOCK_DATA)) {
+            event.setWillDrop(false);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if(block.getBlock(event.getBlock().getLocation()).hasData(DeadPlants.DEAD_DISPLAY_MATERIAL, BlockStorage.StorageType.BLOCK_DATA)) {
+            event.setDropItems(false);
+        }
+    }
 
     @EventHandler
     public void onStructureGrow(StructureGrowEvent event) {
@@ -96,7 +113,7 @@ public class VanillaPlantListener implements Listener {
                 switch (event.getBlock().getType()) {
                     case PUMPKIN_STEM, MELON_STEM -> DeadPlants.killGourdStalk(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
-                    case WHEAT_SEEDS -> DeadPlants.killWheat(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
+                    case WHEAT -> DeadPlants.killWheat(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 
                     case CARROTS, POTATOES -> DeadPlants.killCarrotsPotatoes(bukkitBlock, ((Ageable) bukkitBlock.getBlockData()).getAge());
 

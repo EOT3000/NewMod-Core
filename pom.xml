@@ -16,6 +16,7 @@
         <module>Villagers</module>
         <module>Obfuscator</module>
         <module>Nations</module>
+        <module>Nations-Old</module>
     </modules>
 
     <properties>

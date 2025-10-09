@@ -108,13 +108,17 @@ public class test {
 
                 int fertility = -1;
 
-                for(Enum e : new Enum[]{Enum.SWEET_BERRY_BUSH, Enum.MELON_CROP, Enum.CACTUS, Enum.CHERRY_TREE}) {
+                Enum[] reds = new Enum[]{Enum.SWEET_BERRY_BUSH, Enum.MELON_CROP, Enum.CACTUS, Enum.CHERRY_TREE};
+                Enum[] bitters = new Enum[]{ Enum.PALE_OAK_TREE};
+                //Enum[] greens = new Enum[]{Enum., Enum.CARROT_CROP, Enum.ACACIA_TREE, Enum.PUMPKIN_CROP};
+
+                for(Enum e : bitters) {
                     //totalFertility+=(1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f));
 
                     double successProb = 1-e.data.probabilityFinalFailure(x/80.0f,y/80.0f);
                     //double successProb2 = 1-e.data.probabilityTemp(x/80.0f,y/80.0f);
 
-                    if(successProb > .55 && fertility < 1) fertility = 0;
+                    if(successProb > .5 && fertility < 1) fertility = 0;
 
                     if(successProb > .75 && fertility < 2) fertility = 1;
 

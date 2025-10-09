@@ -354,7 +354,23 @@ public class ChunkDataController implements ChunkController {
         ) {
             @Override
             public void onPacketSending(PacketEvent event) {
-//TODO
+                WrappedBlockData[] data = event.getPacket().getBlockDataArrays().read(0);
+
+                for(int i = 0; i < data.length; i++) {
+                    WrappedBlockData block = data[i];
+
+                    if(Material.CACTUS.equals(block.getType()) || Material.SUGAR_CANE.equals(block.getType())) {
+                        block.setData(0);
+                    }
+
+                    if(Material.CARROTS.equals(block.getType())) {
+                        if(block.getData() == 1 || block.getData() == 3 || block.getData() == 5 || block.getData() == 6) {
+                            block.setData(lowestNextEven(block.getData()));
+                        }
+                    }
+                }
+
+                event.getPacket().getBlockDataArrays().write(0, data);
             }
         });
     }
