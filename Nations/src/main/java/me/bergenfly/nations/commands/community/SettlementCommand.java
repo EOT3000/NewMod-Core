@@ -1,16 +1,20 @@
 package me.bergenfly.nations.commands.community;
 
 import me.bergenfly.nations.command.CommandFlower;
+import me.bergenfly.nations.command.CommandRoot;
 import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.model.Settlement;
 import me.bergenfly.nations.permission.DefaultNationPermission;
 import me.bergenfly.nations.model.SettlementImpl;
 import me.bergenfly.nations.util.ClaimUtil;
 
-public class SettlementCommand extends CommunityCommand {
+public class SettlementCommand extends CommandRoot {
     @Override
     public void loadSubcommands() {
-        super.loadSubcommands();
+        addBranch("info", new CommandFlower()
+                .addCommunity(0)
+                .commandAlwaysSuccess((a) -> a.communities()[0].sendInfo(a.invoker()))
+                .make());
 
         addBranch("create", new CommandFlower()
                 .communityDoesNotExist(CommandFlower.INVOKER_MEMBER)
