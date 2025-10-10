@@ -1,8 +1,6 @@
 package me.bergenfly.nations.registry;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface Registry<V, K> {
     V get(K key);
@@ -10,6 +8,10 @@ public interface Registry<V, K> {
     void set(K key, V value);
 
     List<V> list();
+
+    default List<K> keys() {
+        return new ArrayList<>(map().keySet());
+    }
 
     Map<K, V> map();
 

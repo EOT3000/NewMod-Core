@@ -63,7 +63,7 @@ public class TranslatableString {
 
         translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
         translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to do that"));
-        translations.put("nations.command.error.nation.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a nation"));
+        translations.put("nations.command.error.nation.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a nation"));
 
         translations.put("nations.command.error.nation.is_member", new TranslatableString("&cYou must leave your nation to do that"));
         translations.put("nations.command.error.nation.is_in_territory", new TranslatableString("&cYou cannot be within a nation's territory to do that"));
@@ -71,7 +71,7 @@ public class TranslatableString {
 
         translations.put("nations.command.error.settlement.not_member", new TranslatableString("You must be a resident of a settlement to do that"));
         translations.put("nations.command.error.settlement.not_in_territory", new TranslatableString("You must be within a territory of a settlement to do that"));
-        translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a settlement"));
+        translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a settlement"));
 
         translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must leave your settlement to do that"));
         translations.put("nations.command.error.settlement.is_in_territory", new TranslatableString("You cannot be within a settlement's territory to do that"));
@@ -94,7 +94,8 @@ public class TranslatableString {
 
         translations.put("nations.command.error.boolean.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be either &7true &cor &7false"));
 
-        //If a float is passed to an int parameter, float will be rounded to an int, only one number type needed
+
+        translations.put("nations.command.error.integer.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be an integer"));
         translations.put("nations.command.error.number.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
 
         translations.put("nations.command.error.string.non_alphanumeric", new TranslatableString("&cThe string &4{1}&c can only contain numbers, letters, and an underscore (_)"));

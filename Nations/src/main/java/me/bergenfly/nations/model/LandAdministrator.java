@@ -4,6 +4,7 @@ import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 //import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.model.plot.PlotSection;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -19,9 +20,5 @@ public interface LandAdministrator {
      */
     Set<PlotSection> getLand();
 
-    void addLand(PlotSection section);
-
-    void removeLand(PlotSection section);
-
-    PlotSection createEmptyPlotSection(@Nullable ClaimedChunk in);
+    PlotSection createEmptyPlotSection(@NotNull ClaimedChunk in);
 }

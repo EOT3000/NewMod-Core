@@ -6,6 +6,8 @@ import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.registry.Registry;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -16,7 +18,8 @@ public class Settlement implements LandAdministrator {
     private static Registry<Settlement, String> COMMUNITIES;
     private static NationsLandManager LAND;
 
-    private Set<User> residents = new HashSet<>();
+    private final Set<User> residents = new HashSet<>();
+    private final Set<PlotSection> land = new HashSet<>();
 
     private User leader;
     private String name;
@@ -41,8 +44,14 @@ public class Settlement implements LandAdministrator {
         return leader;
     }
 
-    public void setLeader(User leader) {
-        this.leader = leader;
+    public boolean setLeader(User newLeader, boolean silent) {
+        if(isResident(newLeader)) {
+            this.leader = newLeader;
+
+            return true;
+        }
+
+        return false;
     }
 
     public ClaimedChunk getHomePlot() {
@@ -110,21 +119,11 @@ public class Settlement implements LandAdministrator {
     }
 
     @Override
-    public void removeLand(PlotSection section) {
-
-    }
-
-    @Override
-    public PlotSection createEmptyPlotSection(@Nullable ClaimedChunk in) {
+    public PlotSection createEmptyPlotSection(@NotNull ClaimedChunk in) {
         return null;
     }
 
-    @Override
-    public void addLand(PlotSection section) {
-
-    }
-
-    public static Settlement tryCreate(String name, User leader, boolean silent) {
+    public static Settlement tryCreate(String name, User leader, Player player, boolean silent) {
         if(COMMUNITIES == null) {
             COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
         }
@@ -143,7 +142,7 @@ public class Settlement implements LandAdministrator {
 
         Settlement s = new Settlement(name, leader);
 
-        ClaimedChunk homeBlock = LAND.tryClaimFullChunkOtherwiseFail(leader.getPlayer().getChunk(), s);
+        ClaimedChunk homePlot = LAND.tryClaimFullChunkOtherwiseFail(player.getChunk(), s);
 
         COMMUNITIES.set(name, s);
 
