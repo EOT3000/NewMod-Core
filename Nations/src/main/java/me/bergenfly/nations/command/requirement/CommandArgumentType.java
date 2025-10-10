@@ -31,6 +31,7 @@ public interface CommandArgumentType<T> {
     CommandArgumentType<Integer> INTEGER = BasicCommandArgumentType.createExceptionCheckType(Integer.TYPE, Integer::parseInt, "nations.command.error.integer.not_argument");
     CommandArgumentType<Float> NUMBER = BasicCommandArgumentType.createExceptionCheckType(Float.TYPE, Float::parseFloat, "nations.command.error.number.not_argument");
     CommandArgumentType<Settlement> SETTLEMENT = BasicCommandArgumentType.createNullCheckType(Settlement.class, NationsPlugin.getInstance().communitiesRegistry()::get, "nations.command.error.settlement.not_argument", NationsPlugin.getInstance().communitiesRegistry()::keys);
+    CommandArgumentType<String> STRING = BasicCommandArgumentType.createExceptionCheckType(String.class, (a) -> a, "");
 
 
     class BasicCommandArgumentType<T> implements CommandArgumentType<T> {

@@ -47,6 +47,8 @@ public class TranslatableString {
     public static final int TOO_MANY_PARAMETERS;
         */
 
+        translations.put("nations.command.error.not_player", new TranslatableString("&4You must be a player to run that command"));
+
         translations.put("nations.command.error.holder.invalid_type", new TranslatableString("&4{1} &cis not a valid type (run '/nation help types' for more information)"));
         translations.put("nations.command.error.holder.invalid_nation", new TranslatableString("&4{1} &cis not a valid nation (run '/nation help types' for more information)"));
         translations.put("nations.command.error.holder.none_match_specific", new TranslatableString("&cThere are no matches found for &4{1}&c. Check that all parameters are correct (run '/nation help types' for more information)"));

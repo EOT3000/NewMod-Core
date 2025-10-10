@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import me.bergenfly.nations.command.requirement.CommandArgumentType;
+import me.bergenfly.nations.command.requirement.CommandRequirement;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.*;
@@ -59,6 +60,7 @@ public class CommandFlower {
     final Int2ObjectArrayMap<ArgumentTabCompleter> tabCompleters = new Int2ObjectArrayMap<>();
 
     private final Int2ObjectMap<CommandArgumentType<?>> arguments = new Int2ObjectArrayMap<>();
+    private final List<CommandRequirement> requirements = new LinkedList<>();
 
     public CommandFlower() {
     }
@@ -69,6 +71,11 @@ public class CommandFlower {
         return this;
     }
 
+    public CommandFlower requirement(CommandRequirement requirement) {
+        requirements.add(requirement);
+
+        return this;
+    }
 
     public CommandFlower command(Object2IntFunction<NationsCommandInvocation> command) {
         this.command = command;
@@ -88,26 +95,17 @@ public class CommandFlower {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
         System.out.println(Arrays.toString(strings));
 
+        for(CommandRequirement requirement : requirements) {
+            if(!requirement.passes(commandSender)) {
+
+            }
+        }
+
         try {
             NationsCommandInvocation made = new NationsCommandInvocation(arguments, strings, commandSender);
 
-            if (!made.valid) {
-                System.out.println("Invalid");
-                return false;
-            }
-
             try {
-                if (this.command.test(made)) {
-                    if (successBroadcast != null) {
-                        successBroadcast.accept(made);
-                    }
-
-                    if (successMessage != null) commandSender.sendMessage(successMessage.apply(made));
-                    return true;
-                } else {
-                    if (failureMessage != null) commandSender.sendMessage(failureMessage.apply(made));
-                    return false;
-                }
+                return this.command.getInt(made) >= 0;
             } catch (Exception e) {
                 e.printStackTrace();
 

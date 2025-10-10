@@ -168,5 +168,9 @@ public class NationsPlugin extends JavaPlugin implements Listener {
     public NationsPermissionManager permissionManager() {
         return permissionManager;
     }
+
+    public Registry<User, UUID> usersRegistry() {
+        return USERS;
+    }
 }
 

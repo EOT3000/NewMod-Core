@@ -6,6 +6,7 @@ import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.registry.Registry;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +65,10 @@ public class Settlement implements LandAdministrator {
 
     public boolean isResident(User user) {
         return residents.contains(user);
+    }
+
+    public void sendInfo(CommandSender sender) {
+
     }
 
     public boolean addResident(User resident, boolean silent) {

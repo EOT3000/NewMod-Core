@@ -16,8 +16,7 @@ public class SettlementCommand extends CommandRoot {
     public void loadSubcommands() {
         addBranch("info", new CommandFlower()
                 .arg(0, SETTLEMENT)
-                .commandWithCode((a) -> a.communities()[0].sendInfo(a.invoker()), 0)
-                .make());
+                .commandWithCode((a) -> a.getArgument(SETTLEMENT, 0).sendInfo(a.getInvoker()), 0));
 
         addBranch("create", new CommandFlower()
                 .communityDoesNotExist(CommandFlower.INVOKER_MEMBER)
