@@ -100,9 +100,9 @@ public class TranslatableString {
         translations.put("nations.command.error.integer.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be an integer"));
         translations.put("nations.command.error.number.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a number"));
 
-        translations.put("nations.command.error.string.non_alphanumeric", new TranslatableString("&cThe string &4{1}&c can only contain numbers, letters, and an underscore (_)"));
-        translations.put("nations.command.error.string.long", new TranslatableString("&cThe string &4{1}&c is too long (must be between &e{2}&c and &e{3}&c characters long)"));
-        translations.put("nations.command.error.string.short", new TranslatableString("&cThe string &4{1}&c is too short (must be between &e{2}&c and &e{3}&c characters long)"));
+        translations.put("nations.command.error.string.non_alphanumeric", new TranslatableString("&4{1}&c contains invalid characters."));
+        translations.put("nations.command.error.string.long", new TranslatableString("&4{1}&c is too long (maximum length &e{2}&c)"));
+        translations.put("nations.command.error.string.short", new TranslatableString("&4{1}&c is too short (minimum length &e{2}&c)"));
 
         translations.put("nations.command.error.plot.unsupported", new TranslatableString("&cThis plot does not support this"));
         translations.put("nations.command.error.plot.nfs", new TranslatableString("&cThis plot is not for sale"));

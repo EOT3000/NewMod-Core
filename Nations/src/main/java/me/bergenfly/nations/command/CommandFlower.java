@@ -55,12 +55,14 @@ public class CommandFlower {
     private static Registry<Settlement, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     //private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
 
-    private Object2IntFunction<NationsCommandInvocation> command;
+    private CommandCompleterWithCodeFunctional command;
 
     final Int2ObjectArrayMap<ArgumentTabCompleter> tabCompleters = new Int2ObjectArrayMap<>();
 
     private final Int2ObjectMap<CommandArgumentType<?>> arguments = new Int2ObjectArrayMap<>();
     private final List<CommandRequirement> requirements = new LinkedList<>();
+
+    private Function<NationsCommandInvocation, String> messages = (_) -> null;
 
     public CommandFlower() {
     }
@@ -77,7 +79,7 @@ public class CommandFlower {
         return this;
     }
 
-    public CommandFlower command(Object2IntFunction<NationsCommandInvocation> command) {
+    public CommandFlower command(CommandCompleterWithCodeFunctional command) {
         this.command = command;
         return this;
     }
@@ -90,6 +92,23 @@ public class CommandFlower {
         };
         return this;
     }
+
+    public CommandFlower addMessage(int code, Function<NationsCommandInvocation, String> function) {
+        if(function != null) {
+            Function<NationsCommandInvocation, String> oldMessages = messages;
+
+            messages = (a) -> {
+                if(a.getCode() == code) {
+                    return function.apply(a);
+                }
+
+                return oldMessages.apply(a);
+            };
+        }
+
+        return this;
+    }
+
 
 
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
@@ -105,7 +124,9 @@ public class CommandFlower {
             NationsCommandInvocation made = new NationsCommandInvocation(arguments, strings, commandSender);
 
             try {
-                return this.command.getInt(made) >= 0;
+                int code = this.command.complete(made);
+
+                return code >= 0;
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -126,6 +147,8 @@ public class CommandFlower {
 
         private final String[] args;
         private final CommandSender executor;
+
+        private int code;
 
         public NationsCommandInvocation(Int2ObjectMap<CommandArgumentType<?>> argumentTypes, String[] rawArguments, CommandSender executor) {
             this.args = rawArguments;
@@ -156,6 +179,18 @@ public class CommandFlower {
 
         public CommandSender getInvoker() {
             return executor;
+        }
+
+        public Player getInvokerPlayer() throws ClassCastException {
+            return (Player) getInvoker();
+        }
+
+        public User getInvokerUser() throws ClassCastException {
+            return USERS.get(getInvokerPlayer().getUniqueId());
+        }
+
+        public int getCode() {
+            return code;
         }
     }
 

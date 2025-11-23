@@ -3,6 +3,9 @@ package me.bergenfly.nations.commands.community;
 import me.bergenfly.nations.command.CommandFlower;
 import me.bergenfly.nations.command.CommandRoot;
 import me.bergenfly.nations.command.TranslatableString;
+import me.bergenfly.nations.command.requirement.CommandArgumentType;
+import me.bergenfly.nations.command.requirement.CommandRequirement;
+import me.bergenfly.nations.command.requirement.StringCommandArgument;
 import me.bergenfly.nations.model.Settlement;
 import me.bergenfly.nations.permission.DefaultNationPermission;
 import me.bergenfly.nations.model.SettlementImpl;
@@ -19,13 +22,11 @@ public class SettlementCommand extends CommandRoot {
                 .commandWithCode((a) -> a.getArgument(SETTLEMENT, 0).sendInfo(a.getInvoker()), 0));
 
         addBranch("create", new CommandFlower()
-                .communityDoesNotExist(CommandFlower.INVOKER_MEMBER)
-                .communityDoesNotExist(0)
-                .communityDoesNotExist(CommandFlower.CURRENT_LOCATION)
-                .nationDoesNotExist(CommandFlower.CURRENT_LOCATION)
-                .cleanName(0)
-                .player()
-                .command((a) -> Settlement.tryCreate(a.args()[0], a.invokerUser(), (Player) a.invoker(), false) != null)
+                .requirement(CommandRequirement.INVOKER_PLAYER)
+                .requirement(CommandRequirement.INVOKER_NOT_IN_COMMUNITY)
+                .arg(0, new StringCommandArgument(2, 24, true))
+                .command((a) -> Settlement.tryCreate(a.getArgument(STRING, 0), a.getInvokerUser(), a.getInvokerPlayer(), false).rightInt())
+
                 .successBroadcast((a) -> TranslatableString.translate("nations.broadcast.created.community", a.invoker().getName(), a.args()[0], "settlement"))
                 .failureMessage((a) -> TranslatableString.translate("nations.general.failure"))
                 .make());

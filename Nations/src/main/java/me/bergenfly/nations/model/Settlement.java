@@ -1,5 +1,8 @@
 package me.bergenfly.nations.model;
 
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ObjectIntImmutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectIntPair;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.check.Check;
@@ -128,21 +131,21 @@ public class Settlement implements LandAdministrator {
         return null;
     }
 
-    public static Settlement tryCreate(String name, User leader, Player player, boolean silent) {
+    public static ObjectIntPair<Settlement> tryCreate(String name, User leader, Player player, boolean silent) {
         if(COMMUNITIES == null) {
             COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
         }
 
         if(COMMUNITIES.get(name) != null) {
-            return null;
+            return new ObjectIntImmutablePair<>(null, -1);
         }
 
         if(leader.getCommunity() != null) {
-            return null;
+            return new ObjectIntImmutablePair<>(null, -2);
         }
 
         if(LAND.getClaimedChunkAtLocation(leader.getPlayer().getLocation()) != null) {
-            return null;
+            return new ObjectIntImmutablePair<>(null, -3);
         }
 
         Settlement s = new Settlement(name, leader);
@@ -152,8 +155,8 @@ public class Settlement implements LandAdministrator {
         COMMUNITIES.set(name, s);
 
         leader.setCommunity(s, silent);
-        NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
+        //NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
 
-        return s;
+        return new ObjectIntImmutablePair<>(s, 1);
     }
 }
