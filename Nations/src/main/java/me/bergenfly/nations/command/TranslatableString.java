@@ -75,9 +75,14 @@ public class TranslatableString {
         translations.put("nations.command.error.settlement.not_in_territory", new TranslatableString("You must be within a territory of a settlement to do that"));
         translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a settlement"));
 
+        translations.put("nations.command.error.community.is_member", new TranslatableString("You must leave your current community, town or settlement to do that"));
+
         translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must leave your settlement to do that"));
         translations.put("nations.command.error.settlement.is_in_territory", new TranslatableString("You cannot be within a settlement's territory to do that"));
         translations.put("nations.command.error.settlement.is_argument", new TranslatableString("&cThe settlement &4{1}&c already exists")); //TODO same as above
+
+
+        translations.put("nations.command.error.generic.is_argument", new TranslatableString("&4{1}&c already exists")); //TODO same as above
 
         translations.put("nations.command.error.settlement.already_invited", new TranslatableString("&cThe settlement &4{1}&c has already been invited to the nation"));
         translations.put("nations.command.error.settlement.already_member", new TranslatableString("&cThe settlement &4{1}&c is already a member of the nation"));
@@ -137,8 +142,21 @@ public class TranslatableString {
         translations.put("nations.claim", new TranslatableString("&eClaimed")); // TODO add .success to the end of the key
         translations.put("nations.unclaim", new TranslatableString("&eUnclaimed")); // TODO add .success to the end of the key
 
+        translations.put("nations.claim.error.not_in_wild.found_settlement", new TranslatableString("&cYou must be standing in wilderness to found a settlement"));
         translations.put("nations.claim.error.already_claimed", new TranslatableString("&cThis {1} has already been claimed"));
         translations.put("nations.claim.error.not_claimed", new TranslatableString("&cThis {1} is not claimed"));
+
+
+        translations.put("nations.claim.error.not_enough_adjacent_diagonal", new TranslatableString("&cThere must be at least &4{1}&c chunks adjacent or diagonal to this chunk to claim it")); //todo plurals :cry:
+        translations.put("nations.claim.error.not_enough_directly_adjacent", new TranslatableString("&cThere must be at least &4{1}&c chunk directly adjacent to this chunk to claim it"));
+
+        translations.put("nations.claim.error.not_enough_chunks.settlement", new TranslatableString("&cYour settlement does not have enough available chunks to claim more."));
+
+        translations.put("nations.selection.error.wrong_world", new TranslatableString("&cA previous selection is in a different world. Try &e/plot tract selection clear"));
+
+        translations.put("nations.selection.pos1.success", new TranslatableString("&dSuccessfully set pos1! &e(x: {1},z: {2})"));
+        translations.put("nations.selection.pos2.success", new TranslatableString("&dSuccessfully set pos2! &e(x: {1},z: {2})"));
+
     }
 
     private static final Map<String, TranslatableString> translations;

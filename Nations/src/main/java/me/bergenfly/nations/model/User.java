@@ -26,6 +26,10 @@ public class User {
         return community;
     }
 
+    public boolean isCommunityLeader() {
+        return hasCommunity() && this.equals(getCommunity().getLeader());
+    }
+
     public boolean setCommunity(Settlement newCommunity, boolean silent) {
         if(Check.checkResidentCanJoinTown(this, newCommunity)) {
             if(hasCommunity()) {

@@ -73,6 +73,28 @@ public class CommandFlower {
         return this;
     }
 
+    public <T> CommandFlower arg(int index, String... stringOptions) {
+        arguments.put(index, new CommandArgumentType<String>() {
+            @Override
+            public List<String> getTabCompletions() {
+                return CommandArgumentType.super.getTabCompletions();
+            }
+
+            @Override
+            public boolean isValidArgument(String string) {
+                return false;
+            }
+
+            @Override
+            public String getErrorMessage(CommandSender invoker, String argument, int position) {
+                return "";
+            }
+        });
+
+        return this;
+    }
+
+
     public CommandFlower requirement(CommandRequirement requirement) {
         requirements.add(requirement);
 
@@ -108,8 +130,6 @@ public class CommandFlower {
 
         return this;
     }
-
-
 
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
         System.out.println(Arrays.toString(strings));

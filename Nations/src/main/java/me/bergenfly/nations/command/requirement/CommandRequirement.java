@@ -2,6 +2,7 @@ package me.bergenfly.nations.command.requirement;
 
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.command.TranslatableString;
+import me.bergenfly.nations.model.Settlement;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -14,7 +15,9 @@ public interface CommandRequirement {
 
 
     CommandRequirement INVOKER_PLAYER = new BasicCommandRequirement((a) -> a instanceof Player, "nations.command.error.not_player");
-    CommandRequirement INVOKER_NOT_IN_COMMUNITY = new BasicCommandRequirement((a) -> NationsPlugin.getInstance().usersRegistry().get(((Player) a).getUniqueId()).hasCommunity(), "nations.command.error.settlement.is_member", CommandRequirement.INVOKER_PLAYER);
+    CommandRequirement INVOKER_NOT_IN_COMMUNITY = new BasicCommandRequirement((a) -> !NationsPlugin.getInstance().usersRegistry().get(((Player) a).getUniqueId()).hasCommunity(), "nations.command.error.settlement.is_member", CommandRequirement.INVOKER_PLAYER);
+    CommandRequirement INVOKER_IN_SETTLEMENT = new BasicCommandRequirement((a) -> NationsPlugin.getInstance().usersRegistry().get(((Player) a).getUniqueId()).getCommunity().isSettlement(), "nations.command.error.settlement.not_member", CommandRequirement.INVOKER_PLAYER);
+    CommandRequirement INVOKER_LEADER_SETTLEMENT = new BasicCommandRequirement((a) -> NationsPlugin.getInstance().usersRegistry().get(((Player) a).getUniqueId()).isCommunityLeader(), "nations.general.no_permission", CommandRequirement.INVOKER_IN_SETTLEMENT);
 
 
     class BasicCommandRequirement implements CommandRequirement {

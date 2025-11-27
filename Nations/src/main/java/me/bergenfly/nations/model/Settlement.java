@@ -24,6 +24,7 @@ public class Settlement implements LandAdministrator {
 
     private final Set<User> residents = new HashSet<>();
     private final Set<PlotSection> land = new HashSet<>();
+    private final Set<Lot> lots = new HashSet<>();
 
     private User leader;
     private String name;
@@ -123,12 +124,20 @@ public class Settlement implements LandAdministrator {
 
     @Override
     public Set<PlotSection> getLand() {
-        return Set.of();
+        return new HashSet<>(land);
     }
 
     @Override
     public PlotSection createEmptyPlotSection(@NotNull ClaimedChunk in) {
         return null;
+    }
+
+    public int getMaxChunks() {
+        return residents.size()*20;
+    }
+
+    public boolean isSettlement() {
+        return true;
     }
 
     public static ObjectIntPair<Settlement> tryCreate(String name, User leader, Player player, boolean silent) {

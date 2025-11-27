@@ -172,5 +172,9 @@ public class NationsPlugin extends JavaPlugin implements Listener {
     public Registry<User, UUID> usersRegistry() {
         return USERS;
     }
+
+    public NationsLandManager landManager() {
+        return landManager;
+    }
 }
 
