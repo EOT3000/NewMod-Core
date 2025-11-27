@@ -152,10 +152,19 @@ public class TranslatableString {
 
         translations.put("nations.claim.error.not_enough_chunks.settlement", new TranslatableString("&cYour settlement does not have enough available chunks to claim more."));
 
-        translations.put("nations.selection.error.wrong_world", new TranslatableString("&cA previous selection is in a different world. Try &e/plot tract selection clear"));
 
-        translations.put("nations.selection.pos1.success", new TranslatableString("&dSuccessfully set pos1! &e(x: {1},z: {2})"));
-        translations.put("nations.selection.pos2.success", new TranslatableString("&dSuccessfully set pos2! &e(x: {1},z: {2})"));
+
+        translations.put("nations.selection.list.title", new TranslatableString("&6Current Selections:"));
+        translations.put("nations.selection.list.element", new TranslatableString("&e- Selection (&6{1}&ex&6{2}&6 blocks)"));
+
+        translations.put("nations.selection.error.wrong_world", new TranslatableString("&cA previous selection is in a different world. Try &e/plot tract selection clear"));
+        translations.put("nations.selection.error.no_selection", new TranslatableString("&cThere is no selection"));
+        translations.put("nations.selection.error.overlap", new TranslatableString("&cThis selection overlaps with another selection"));
+        translations.put("nations.selection.error.separated", new TranslatableString("&cThis selection does not touch another selection"));
+
+        translations.put("nations.selection.pos1.success", new TranslatableString("&dSuccessfully set pos1!"));
+        translations.put("nations.selection.pos2.success", new TranslatableString("&dSuccessfully set pos2!"));
+
 
     }
 

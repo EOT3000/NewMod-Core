@@ -16,10 +16,10 @@ public class Lot {
     private Set<Rectangle> rectangles = new HashSet<>();
 
     public static class Rectangle {
-        private int xMin;
-        private int zMin;
-        private int xMax;
-        private int zMax;
+        public final int xMin;
+        public final int zMin;
+        public final int xMax;
+        public final int zMax;
 
         public Rectangle(int x1, int x2, int z1, int z2) {
             if(x1 < x2) {
