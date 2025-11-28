@@ -2,15 +2,24 @@ package me.bergenfly.nations.commands.community;
 
 import me.bergenfly.nations.command.CommandFlower;
 import me.bergenfly.nations.command.CommandRoot;
+import me.bergenfly.nations.command.CommandStem;
 import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.command.requirement.CommandRequirement;
 import me.bergenfly.nations.command.requirement.StringCommandArgument;
 import me.bergenfly.nations.model.Settlement;
+import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.util.ClaimUtil2;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static me.bergenfly.nations.command.requirement.CommandArgumentType.*;
 
 public class SettlementCommand extends CommandRoot {
+
+    private final Map<Settlement, List<User>> invites = new HashMap<>();
+
     @Override
     public void loadSubcommands() {
         addBranch("info", new CommandFlower()
@@ -35,6 +44,15 @@ public class SettlementCommand extends CommandRoot {
                 .addMessage(-3, (a) -> TranslatableString.translate("nations.claim.error.already_claimed")) //already claimed
                 .addMessage(-4, (a) -> TranslatableString.translate("nations.claim.error.not_enough_chunks.settlement")) //not enough chunks
                 .addMessage(1, (a) -> TranslatableString.translate("nations.general.success")));
+
+        {
+            CommandStem invite = addBranch("invite");
+
+            invite.addBranch("add", new CommandFlower()
+                    .command((a) -> {
+                        //invites.put(a.)
+                    }));
+        }
 
         /*addBranch("unclaim", new CommandFlower()
                 .addSettlement(CommandFlower.INVOKER_LEADER)

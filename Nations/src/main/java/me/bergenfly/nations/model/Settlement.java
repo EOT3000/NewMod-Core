@@ -26,6 +26,7 @@ public class Settlement implements LandAdministrator {
     private final Set<PlotSection> land = new HashSet<>();
     private final Set<Lot> lots = new HashSet<>();
 
+
     private User leader;
     private String name;
 
