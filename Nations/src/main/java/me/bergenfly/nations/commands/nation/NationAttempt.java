@@ -1,17 +1,23 @@
 package me.bergenfly.nations.commands.nation;
 
+import me.bergenfly.nations.model.Nation;
+import me.bergenfly.nations.model.Town;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class NationAttempt {
-    private final Settlement capital;
-    private final List<Settlement> agreers = new ArrayList();
+    private final Town capital;
+    private final List<Town> agreers = new ArrayList<>();
     private final String name;
 
 
-    public NationAttempt(Settlement capital, String name) {
+    public NationAttempt(Town capital, String name) {
         this.name = name;
         this.capital = capital;
     }
 
-    public void addAgreer(Settlement settlement) {
+    public void addAgreer(Town settlement) {
         agreers.add(settlement);
 
         if(agreers.size() > 2) {
@@ -19,7 +25,7 @@ public class NationAttempt {
         }
     }
 
-    public List<Settlement> getAgreers() {
+    public List<Town> getAgreers() {
         return new ArrayList(agreers);
     }
 }

@@ -161,6 +161,10 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         return COMMUNITIES;
     }
 
+    public StringRegistry<Nation> nationsRegistry() {
+        return NATIONS;
+    }
+
     public NationsPermissionManager permissionManager() {
         return permissionManager;
     }

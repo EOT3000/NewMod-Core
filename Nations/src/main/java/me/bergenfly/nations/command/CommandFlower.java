@@ -62,6 +62,37 @@ public class CommandFlower {
         return this;
     }
 
+    public <T> CommandFlower arg(int index, CommandArgumentType<T> type, String additionalError) {
+        arguments.put(index, new CommandArgumentType<T>() {
+            @Override
+            public boolean isValidArgument(String string) {
+                return type.isValidArgument(string);
+            }
+
+            @Override
+            public List<String> getTabCompletions() {
+                return type.getTabCompletions();
+            }
+
+            @Override
+            public String getErrorMessage(CommandSender invoker, String argument, int position) {
+                return type.getErrorMessage(invoker, argument, position) + "\n" + TranslatableString.translate(additionalError);
+            }
+
+            @Override
+            public CommandArgumentType<T> getParent() {
+                return type.getParent();
+            }
+
+            @Override
+            public T convert(String input) {
+                return type.convert(input);
+            }
+        });
+
+        return this;
+    }
+
     public <T> CommandFlower arg(int index, String... stringOptions) {
         arguments.put(index, new CommandArgumentType<String>() {
             @Override

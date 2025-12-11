@@ -115,8 +115,9 @@ public class TranslatableString {
         translations.put("nations.command.error.plot.split", new TranslatableString("&cThis plot is already split"));
         translations.put("nations.command.error.plot.not_split", new TranslatableString("&cThis plot is not split"));
 
+        translations.put("nations.command.info.nation_creation", new TranslatableString("&cThis plot is not split"));
 
-        translations.put("nations.command.info.nation_creation_towns", new TranslatableString("&eTo create a nation two other towns within range must agree to join. Those towns must be listed in the command, with the format &d/n create <name> <town> <town>"));
+        translations.put("nations.command.info.nation_creation_sent", new TranslatableString("&aProposed nation creation to &e{0} &aand &e{1}"));
 
         //translations.put("nations.message.invitation.user", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
 
