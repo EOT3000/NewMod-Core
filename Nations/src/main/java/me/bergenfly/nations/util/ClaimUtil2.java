@@ -3,7 +3,7 @@ package me.bergenfly.nations.util;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.LandAdministrator;
-import me.bergenfly.nations.model.Settlement;
+import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 import org.bukkit.Chunk;
@@ -22,13 +22,13 @@ public class ClaimUtil2 {
         return tryClaimSettlementWithClaimChecks(user.getCommunity(), chunk.getWorld(), chunk.getX(), chunk.getZ());
     }
 
-    public static int tryClaimSettlementWithClaimChecks(Settlement settlement, World w, int chunkX, int chunkZ) {
-        if(settlement.getLand().size() < 5) {
-            if(getDirectlyAdjacent(settlement, false, w, chunkX, chunkZ) == 0) {
+    public static int tryClaimSettlementWithClaimChecks(Town town, World w, int chunkX, int chunkZ) {
+        if(town.getLand().size() < 5) {
+            if(getDirectlyAdjacent(town, false, w, chunkX, chunkZ) == 0) {
                 return -1;
             }
         } else {
-            if(getAdjacent(settlement, false, w, chunkX, chunkZ) < 3) {
+            if(getAdjacent(town, false, w, chunkX, chunkZ) < 3) {
                 return -2;
             }
         }
@@ -37,11 +37,11 @@ public class ClaimUtil2 {
             return -3;
         }
 
-        if(settlement.getMaxChunks() >= settlement.getLand().size()) {
+        if(town.getMaxChunks() >= town.getLand().size()) {
             return -4;
         }
 
-        manager.tryClaimFullChunkOtherwiseFail(w, chunkX, chunkZ, settlement);
+        manager.tryClaimFullChunkOtherwiseFail(w, chunkX, chunkZ, town);
 
         return 1;
     }

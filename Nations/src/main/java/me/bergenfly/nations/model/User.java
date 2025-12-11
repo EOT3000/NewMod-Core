@@ -16,13 +16,13 @@ public class User {
         this.uuid = uuid;
     }
 
-    private Settlement community;
+    private Town community;
 
     public boolean hasCommunity() {
         return community != null;
     }
 
-    public Settlement getCommunity() {
+    public Town getCommunity() {
         return community;
     }
 
@@ -30,11 +30,11 @@ public class User {
         return hasCommunity() && this.equals(getCommunity().getLeader());
     }
 
-    public boolean setCommunity(Settlement newCommunity, boolean silent) {
+    public boolean setCommunity(Town newCommunity, boolean silent) {
         if(Check.checkResidentCanJoinTown(this, newCommunity)) {
             if(hasCommunity()) {
                 if (getCommunity() != newCommunity) {
-                    Settlement oldCommunity = getCommunity();
+                    Town oldCommunity = getCommunity();
 
                     this.community = null;
 

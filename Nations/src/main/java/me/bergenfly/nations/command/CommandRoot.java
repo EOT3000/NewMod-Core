@@ -33,7 +33,7 @@ public abstract class CommandRoot implements TabExecutor {
         return root.addBranch(s, flower);
     }
 
-    public final Pair<CommandFlower, String[]> getFinal(String[] strings) {
+    public final Pair<CommandStem, String[]> getFinalStem(String[] strings) {
         CommandStem stem = root;
 
         int count = 0;
@@ -46,7 +46,7 @@ public abstract class CommandRoot implements TabExecutor {
 
                 System.arraycopy(strings, count, stringsCopy, 0, strings.length-count);
 
-                return new ImmutablePair<>(stem.flower, stringsCopy);
+                return new ImmutablePair<>(stem, stringsCopy);
             }
 
             stem = next;
@@ -58,50 +58,52 @@ public abstract class CommandRoot implements TabExecutor {
 
         System.arraycopy(strings, count, stringsCopy, 0, strings.length-count);
 
-        return new ImmutablePair<>(stem.flower, stringsCopy);
+        return new ImmutablePair<>(stem, stringsCopy);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Pair<CommandFlower, String[]> result = getFinal(strings);
+        Pair<CommandStem, String[]> result = getFinalStem(strings);
 
-        return result.getLeft().onCommand(commandSender, command, s, result.getRight(), strings);
+        return result.getLeft().flower.onCommand(commandSender, command, s, result.getRight(), strings);
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Pair<CommandFlower, String[]> result = getFinal(strings);
+        Pair<CommandStem, String[]> finalCommandStage = getFinalStem(strings);
 
-        CommandFlower left = result.getLeft();
+        CommandStem finalCommandStageStem = finalCommandStage.getLeft();
 
-        String last = strings[strings.length-1];
+        CommandFlower finalCommandStageFlower = finalCommandStage.getLeft().flower;
 
-        if(result.getRight().length == 0) {
+        String last = strings[strings.length - 1];
+
+        if (finalCommandStage.getRight().length == 0) {
             return new ArrayList<>();
         }
 
-        if(left instanceof HelpCommandFlower h) {
-            List<String> ret = new ArrayList<>();
+        List<String> ret = new ArrayList<>();
 
-            for(String option : h.stem.branches.keySet()) {
-                if(option.startsWith(last)) {
+        ArgumentTabCompleter completer = finalCommandStageFlower.tabCompleters.get(finalCommandStage.getRight().length - 1);
+
+        if(completer != null) {
+            for (String option : completer.complete(commandSender)) {
+                if (option.toLowerCase().startsWith(last.toLowerCase())) {
                     ret.add(option);
                 }
             }
+        }
 
-            if(!ret.isEmpty()) {
-                return ret;
+        for (String option : finalCommandStageStem.branches.keySet()) {
+            if (option.toLowerCase().startsWith(last.toLowerCase())) {
+                ret.add(option);
             }
-
-            return new ArrayList<>(h.stem.branches.keySet());
         }
 
-        ArgumentTabCompleter completer = left.tabCompleters.get(result.getRight().length-1);
-
-        if(completer == null) {
-            return new ArrayList<>();
-        } else {
-            return completer.complete(commandSender);
+        if (!ret.isEmpty()) {
+            return ret;
         }
+
+        return new ArrayList<>(finalCommandStageStem.branches.keySet());
     }
 }

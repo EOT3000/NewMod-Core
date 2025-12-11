@@ -1,6 +1,7 @@
 package me.bergenfly.nations.model.plot;
 
 import me.bergenfly.nations.model.LandAdministrator;
+import me.bergenfly.nations.model.LandOwner;
 import org.bukkit.World;
 
 import java.util.HashSet;
@@ -11,9 +12,29 @@ public class Lot {
 
     private LandAdministrator administrator;
 
+    private LandOwner owner;
+
     private int depth;
 
     private Set<Rectangle> rectangles = new HashSet<>();
+
+    private Set<User> trusted = new HashSet<>();
+
+    public LandAdministrator getAdministrator() {
+        return administrator;
+    }
+
+    public LandOwner getOwner() {
+        return owner;
+    }
+
+    public boolean isTrusted(User user) {
+        return trusted.contains(user);
+    }
+
+    public boolean isAllowed(Level level, PlotPermission permission) {
+
+    }
 
     public static class Rectangle {
         public final int xMin;

@@ -1,11 +1,8 @@
 package me.bergenfly.nations.command;
 
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.*;
-import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import me.bergenfly.nations.command.requirement.CommandArgumentType;
 import me.bergenfly.nations.command.requirement.CommandRequirement;
-import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.*;
 import me.bergenfly.nations.DefaultNationPermission;
@@ -14,24 +11,16 @@ import me.bergenfly.nations.permission.NationPermission;
 import me.bergenfly.nations.permission.PlotPermission;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.NationsPlugin;
-import org.apache.commons.lang3.function.TriFunction;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CommandFlower {
 
@@ -52,7 +41,7 @@ public class CommandFlower {
 
     private static Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
     private static Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
-    private static Registry<Settlement, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+    private static Registry<Town, String> COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
     //private static Registry<Company, String> COMPANIES = NationsPlugin.getInstance().companiesRegistry();
 
     private CommandCompleterWithCodeFunctional command;
@@ -88,6 +77,11 @@ public class CommandFlower {
             @Override
             public String getErrorMessage(CommandSender invoker, String argument, int position) {
                 return "";
+            }
+
+            @Override
+            public String convert(String input) {
+                return ;
             }
         });
 

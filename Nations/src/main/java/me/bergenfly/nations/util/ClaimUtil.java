@@ -2,22 +2,19 @@ package me.bergenfly.nations.util;
 
 import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.manager.NationsLandManager;
-import me.bergenfly.nations.manager.Plots;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.Community;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.Nation;
-import me.bergenfly.nations.model.Settlement;
+import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.model.plot.PlotSection;
-import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.model.plot._2x2_Chunk;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class ClaimUtil {
@@ -201,7 +198,7 @@ public class ClaimUtil {
 
             return -2; //Not touching capital
         } else {
-            if(administrator instanceof Settlement && administrator.getLand().isEmpty()) return 1;
+            if(administrator instanceof Town && administrator.getLand().isEmpty()) return 1;
 
             if (isChunkTouchingSpecific(chunkX, chunkZ, world, administrator)) {
                 return 1; //Good
@@ -219,7 +216,7 @@ public class ClaimUtil {
 
             return -2; //Not touching capital
         } else {
-            if(administrator instanceof Settlement && administrator.getLand().isEmpty()) return 1;
+            if(administrator instanceof Town && administrator.getLand().isEmpty()) return 1;
 
             if(isAreaTouchingSpecific(cl.minCoordQuarterX(), cl.minCoordQuarterZ(), cl.maxCoordQuarterX(), cl.maxCoordQuarterZ(), world, administrator)) {
                 return 1; //Good

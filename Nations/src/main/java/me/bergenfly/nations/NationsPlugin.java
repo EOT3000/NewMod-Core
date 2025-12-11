@@ -15,7 +15,7 @@ import me.bergenfly.nations.listener.PlotListener;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.manager.NationsPermissionManager;
 import me.bergenfly.nations.model.Nation;
-import me.bergenfly.nations.model.Settlement;
+import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.registry.RegistryImpl;
@@ -23,18 +23,14 @@ import me.bergenfly.nations.registry.StringRegistry;
 import me.bergenfly.nations.save.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class NationsPlugin extends JavaPlugin implements Listener {
 
@@ -44,7 +40,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
     private boolean enabled = false;
 
     private StringRegistry<Nation> NATIONS;
-    private StringRegistry<Settlement> COMMUNITIES;
+    private StringRegistry<Town> COMMUNITIES;
     private Registry<User, UUID> USERS;
     //private Registry<Company, String> COMPANIES;
     private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
@@ -161,7 +157,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
     }
 
 
-    public StringRegistry<Settlement> communitiesRegistry() {
+    public StringRegistry<Town> communitiesRegistry() {
         return COMMUNITIES;
     }
 

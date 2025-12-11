@@ -57,10 +57,10 @@ public class TranslatableString {
         translations.put("nations.command.error.holder.too_many_parameters", new TranslatableString("&cThe parameters provided are malformed (run '/nation help types' for more information)"));
 
 
-        translations.put("nations.command.error.settlement.is_capital", new TranslatableString("&cThe capital may not leave its nation"));
+        translations.put("nations.command.error.town.is_capital", new TranslatableString("&cThe capital may not leave its nation"));
         translations.put("nations.command.error.user.is_leader", new TranslatableString("&cThe leader may not leave their {1}"));
 
-        translations.put("nations.command.error.not_in_territory", new TranslatableString("&cYou must be within a nation or settlement's territory to do that"));
+        translations.put("nations.command.error.not_in_territory", new TranslatableString("&cYou must be within a nation or town's territory to do that"));
 
 
         translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
@@ -71,27 +71,27 @@ public class TranslatableString {
         translations.put("nations.command.error.nation.is_in_territory", new TranslatableString("&cYou cannot be within a nation's territory to do that"));
         translations.put("nations.command.error.nation.is_argument", new TranslatableString("&cThe nation &4{1}&c already exists")); //TODO: alternative message for when a nation exists (not "already"). Current message only really works for the create command
 
-        translations.put("nations.command.error.settlement.not_member", new TranslatableString("You must be a resident of a settlement to do that"));
-        translations.put("nations.command.error.settlement.not_in_territory", new TranslatableString("You must be within a territory of a settlement to do that"));
-        translations.put("nations.command.error.settlement.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a settlement"));
+        translations.put("nations.command.error.town.not_member", new TranslatableString("You must be a resident of a town to do that"));
+        translations.put("nations.command.error.town.not_in_territory", new TranslatableString("You must be within a territory of a town to do that"));
+        translations.put("nations.command.error.town.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a town"));
 
-        translations.put("nations.command.error.community.is_member", new TranslatableString("You must leave your current community, town or settlement to do that"));
+        translations.put("nations.command.error.community.is_member", new TranslatableString("You must leave your current community, town or town to do that"));
 
-        translations.put("nations.command.error.settlement.is_member", new TranslatableString("You must leave your settlement to do that"));
-        translations.put("nations.command.error.settlement.is_in_territory", new TranslatableString("You cannot be within a settlement's territory to do that"));
-        translations.put("nations.command.error.settlement.is_argument", new TranslatableString("&cThe settlement &4{1}&c already exists")); //TODO same as above
+        translations.put("nations.command.error.town.is_member", new TranslatableString("You must leave your town to do that"));
+        translations.put("nations.command.error.town.is_in_territory", new TranslatableString("You cannot be within a town's territory to do that"));
+        translations.put("nations.command.error.town.is_argument", new TranslatableString("&cThe town &4{1}&c already exists")); //TODO same as above
 
 
         translations.put("nations.command.error.generic.is_argument", new TranslatableString("&4{1}&c already exists")); //TODO same as above
 
-        translations.put("nations.command.error.settlement.already_invited", new TranslatableString("&cThe settlement &4{1}&c has already been invited to the nation"));
-        translations.put("nations.command.error.settlement.already_member", new TranslatableString("&cThe settlement &4{1}&c is already a member of the nation"));
+        translations.put("nations.command.error.town.already_invited", new TranslatableString("&cThe town &4{1}&c has already been invited to the nation"));
+        translations.put("nations.command.error.town.already_member", new TranslatableString("&cThe town &4{1}&c is already a member of the nation"));
 
         translations.put("nations.command.error.rank.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a rank"));
         translations.put("nations.command.error.rank.is_argument", new TranslatableString("&cThe rank &4{1}&c already exists"));
 
-        translations.put("nations.command.error.settlement.not_invited", new TranslatableString("&cYour settlement has not been invited to join this nation"));
-        translations.put("nations.command.error.user.not_invited", new TranslatableString("&cYou have not been invited to join this settlement"));
+        translations.put("nations.command.error.town.not_invited", new TranslatableString("&cYour town has not been invited to join this nation"));
+        translations.put("nations.command.error.user.not_invited", new TranslatableString("&cYou have not been invited to join this town"));
 
         translations.put("nations.command.error.user.already_invited", new TranslatableString("&cThe user &4{1}&c has already been invited to the {2}"));
         translations.put("nations.command.error.user.already_member", new TranslatableString("&cThe user &4{1}&c is already a member of the {2}"));
@@ -115,20 +115,25 @@ public class TranslatableString {
         translations.put("nations.command.error.plot.split", new TranslatableString("&cThis plot is already split"));
         translations.put("nations.command.error.plot.not_split", new TranslatableString("&cThis plot is not split"));
 
+
+        translations.put("nations.command.info.nation_creation_towns", new TranslatableString("&eTo create a nation two other towns within range must agree to join. Those towns must be listed in the command, with the format &d/n create <name> <town> <town>"));
+
+        //translations.put("nations.message.invitation.user", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
+
         translations.put("nations.broadcast.created.community", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
         translations.put("nations.broadcast.created.nation", new TranslatableString("&e{1} &ahas created the nation of &e{2}"));
 
-        translations.put("nations.broadcast.invite.settlement", new TranslatableString("&e{1} &ahas invited the settlement of &e{2} to the nation"));
-        translations.put("nations.broadcast.invited.settlement", new TranslatableString("&e{1} &ahas invited your settlement to the nation of &e{2}"));
+        translations.put("nations.broadcast.invite.town", new TranslatableString("&e{1} &ahas invited the town of &e{2} to the nation"));
+        translations.put("nations.broadcast.invited.town", new TranslatableString("&e{1} &ahas invited your town to the nation of &e{2}"));
 
-        translations.put("nations.broadcast.invite.user", new TranslatableString("&e{1} &ahas invited &e{2} to the {3}"));
-        translations.put("nations.broadcast.invited.user", new TranslatableString("&e{1} &ahas invited you to the {3} of &e{2}"));
+        translations.put("nations.broadcast.invite.user.town", new TranslatableString("&e{1} &ahas invited &e{2} to the town"));
+        translations.put("nations.broadcast.invited.user.town", new TranslatableString("&e{1} &ahas invited you to the town of &e{2}&a. Try &e/t join {2} &eto join them."));
 
         translations.put("nations.broadcast.kick.user", new TranslatableString("&e{1} &ahas kicked &e{2} from the {3}"));
         translations.put("nations.broadcast.kicked.user", new TranslatableString("&e{1} &ahas kicked you from the {3} of &e{2}"));
 
-        translations.put("nations.broadcast.left.nation", new TranslatableString("&aThe settlement of &e{1} &ahas left your nation"));
-        translations.put("nations.broadcast.joined.nation", new TranslatableString("&aThe settlement of &e{1} &ahas joined your nation"));
+        translations.put("nations.broadcast.left.nation", new TranslatableString("&aThe town of &e{1} &ahas left your nation"));
+        translations.put("nations.broadcast.joined.nation", new TranslatableString("&aThe town of &e{1} &ahas joined your nation"));
 
         translations.put("nations.broadcast.left.community", new TranslatableString("&e{1} &ahas left your {2}"));
         translations.put("nations.broadcast.joined.community", new TranslatableString("&e{1} &ahas joined your {2}"));
@@ -142,7 +147,7 @@ public class TranslatableString {
         translations.put("nations.claim", new TranslatableString("&eClaimed")); // TODO add .success to the end of the key
         translations.put("nations.unclaim", new TranslatableString("&eUnclaimed")); // TODO add .success to the end of the key
 
-        translations.put("nations.claim.error.not_in_wild.found_settlement", new TranslatableString("&cYou must be standing in wilderness to found a settlement"));
+        translations.put("nations.claim.error.not_in_wild.found_town", new TranslatableString("&cYou must be standing in wilderness to found a town"));
         translations.put("nations.claim.error.already_claimed", new TranslatableString("&cThis {1} has already been claimed"));
         translations.put("nations.claim.error.not_claimed", new TranslatableString("&cThis {1} is not claimed"));
 
@@ -150,7 +155,7 @@ public class TranslatableString {
         translations.put("nations.claim.error.not_enough_adjacent_diagonal", new TranslatableString("&cThere must be at least &4{1}&c chunks adjacent or diagonal to this chunk to claim it")); //todo plurals :cry:
         translations.put("nations.claim.error.not_enough_directly_adjacent", new TranslatableString("&cThere must be at least &4{1}&c chunk directly adjacent to this chunk to claim it"));
 
-        translations.put("nations.claim.error.not_enough_chunks.settlement", new TranslatableString("&cYour settlement does not have enough available chunks to claim more."));
+        translations.put("nations.claim.error.not_enough_chunks.town", new TranslatableString("&cYour town does not have enough available chunks to claim more."));
 
 
 

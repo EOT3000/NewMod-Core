@@ -6,51 +6,70 @@ import me.bergenfly.nations.command.CommandStem;
 import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.command.requirement.CommandRequirement;
 import me.bergenfly.nations.command.requirement.StringCommandArgument;
-import me.bergenfly.nations.model.Settlement;
+import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.util.ClaimUtil2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static me.bergenfly.nations.command.requirement.CommandArgumentType.*;
 
-public class SettlementCommand extends CommandRoot {
+public class TownCommand extends CommandRoot {
 
-    private final Map<Settlement, List<User>> invites = new HashMap<>();
+    private final Map<Town, List<User>> invites = new HashMap<>();
 
     @Override
     public void loadSubcommands() {
         addBranch("info", new CommandFlower()
-                .arg(0, SETTLEMENT)
-                .commandWithCode((a) -> a.getArgument(SETTLEMENT, 0).sendInfo(a.getInvoker()), 0));
+                .arg(0, TOWN)
+                .commandWithCode((a) -> a.getArgument(TOWN, 0).sendInfo(a.getInvoker()), 0));
 
         addBranch("create", new CommandFlower()
                 .requirement(CommandRequirement.INVOKER_NOT_IN_COMMUNITY)
                 .arg(0, new StringCommandArgument(2, 24, true))
-                .command((a) -> Settlement.tryCreate(a.getArgument(STRING, 0), a.getInvokerUser(), a.getInvokerPlayer(), false).rightInt())
+                .command((a) -> Town.tryCreate(a.getArgument(STRING, 0), a.getInvokerUser(), a.getInvokerPlayer(), false).rightInt())
                 .addMessage(-1, (a) -> TranslatableString.translate("nations.command.error.generic.is_argument", a.getArgument(STRING, 0))) //name taken
                 .addMessage(-2, (a) -> TranslatableString.translate("nations.command.error.community.is_member")) //leader in community
-                .addMessage(-3, (a) -> TranslatableString.translate("nations.claim.error.not_in_wild.found_settlement")) //homeblock not available
+                .addMessage(-3, (a) -> TranslatableString.translate("nations.claim.error.not_in_wild.found_town")) //homeblock not available
                 .addMessage(1, (a) -> TranslatableString.translate("nations.general.success")));
 
         addBranch("claim", new CommandFlower()
-                .requirement(CommandRequirement.INVOKER_LEADER_SETTLEMENT)
+                .requirement(CommandRequirement.INVOKER_LEADER_TOWN)
                 //.arg(0, "one")
                 .command((a) -> ClaimUtil2.tryClaimSettlementWithClaimChecks(a.getInvokerUser(), a.getInvokerPlayer()))
                 .addMessage(-1, (a) -> TranslatableString.translate("nations.claim.error.not_enough_directly_adjacent", "1")) //<5; 1 directly adjacent
                 .addMessage(-2, (a) -> TranslatableString.translate("nations.claim.error.not_enough_adjacent_diagonal", "3")) //>=5; 3 adjacent or diagonal
                 .addMessage(-3, (a) -> TranslatableString.translate("nations.claim.error.already_claimed")) //already claimed
-                .addMessage(-4, (a) -> TranslatableString.translate("nations.claim.error.not_enough_chunks.settlement")) //not enough chunks
+                .addMessage(-4, (a) -> TranslatableString.translate("nations.claim.error.not_enough_chunks.town")) //not enough chunks
                 .addMessage(1, (a) -> TranslatableString.translate("nations.general.success")));
 
         {
             CommandStem invite = addBranch("invite");
 
             invite.addBranch("add", new CommandFlower()
+                    .arg(0, USER)
                     .command((a) -> {
-                        //invites.put(a.)
+                        User toInvite = a.getArgument(USER, 0);
+                        Town inviterTown = a.getInvokerUser().getCommunity();
+
+                        if(toInvite.hasCommunity()) {
+                            return -1;
+                        }
+
+                        if(invites.containsKey(inviterTown) && invites.get(inviterTown).contains(toInvite)) {
+                            return -2;
+                        }
+
+                        invites.putIfAbsent(a.getInvokerUser().getCommunity(), new ArrayList<>());
+                        invites.get(a.getInvokerUser().getCommunity()).add(toInvite);
+
+                        toInvite.getPlayer().sendMessage(TranslatableString.translate("nations.broadcast.invited.user.town", a.getInvokerPlayer().getName(), inviterTown.getName()));
+                        inviterTown.broadcast(TranslatableString.translate("nations.broadcast.invited.user.town", a.getInvokerPlayer().getName(), inviterTown.getName()));
+
+                        return 1;
                     }));
         }
 
@@ -63,7 +82,7 @@ public class SettlementCommand extends CommandRoot {
                 .make());*/
     }
 
-    public SettlementCommand() {
-        super("settlement");
+    public TownCommand() {
+        super("town");
     }
 }
