@@ -28,4 +28,8 @@ public class NationAttempt {
     public List<Town> getAgreers() {
         return new ArrayList(agreers);
     }
+
+    public boolean isActive() {
+        return true;
+    }
 }

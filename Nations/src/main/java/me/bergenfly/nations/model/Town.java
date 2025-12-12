@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class Town implements LandAdministrator {
     private static Registry<Town, String> COMMUNITIES;
@@ -25,6 +26,8 @@ public class Town implements LandAdministrator {
     private final Set<Lot> lots = new HashSet<>();
 
     private final Set<TownOperation> openProposals = new HashSet<>();
+
+    private final Set<BoardMessage> boardMessages = new HashSet<>();
 
     private final Set<User> outlaws = new HashSet<>();
 
@@ -154,6 +157,33 @@ public class Town implements LandAdministrator {
     public boolean isSettlement() {
         return true;
     }
+
+
+
+    // Messages
+
+    public void broadcast(String string) {
+        for(User user : residents) {
+            if(user.getOfflinePlayer().isOnline()) {
+                user.getPlayer().sendMessage(string);
+            }
+        }
+    }
+
+    public void broadcast(Function<Player, String> stringGenerator) {
+        for(User user : residents) {
+            if(user.getOfflinePlayer().isOnline()) {
+                user.getPlayer().sendMessage(stringGenerator.apply(user.getPlayer()));
+            }
+        }
+    }
+
+    //TODO make this work. Can't use a functional interface as those reset after server restarts
+    public void addToBoard(String string) {
+
+    }
+
+
 
     public static ObjectIntPair<Town> tryCreate(String name, User leader, Player player, boolean silent) {
         if(COMMUNITIES == null) {

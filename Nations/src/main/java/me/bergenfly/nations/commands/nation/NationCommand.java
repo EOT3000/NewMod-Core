@@ -10,6 +10,7 @@ import me.bergenfly.nations.command.requirement.StringCommandArgument;
 import me.bergenfly.nations.model.Nation;
 import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.registry.Registry;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,20 +33,45 @@ public class NationCommand extends CommandRoot {
                 .arg(1, TOWN, "nations.command.info.nation_creation_help")
                 .arg(2, TOWN, "nations.command.info.nation_creation_help")
                 .command((a) -> {
-                    if(NATIONS.get(a.getArgument(STRING,0)) != null) {
+                    String nationName = a.getArgument(STRING,0);
+
+                    if(NATIONS.get(nationName) != null) {
                         return -1;
                     }
 
-                    if(a.getArgument(TOWN, 0) == a.getArgument(TOWN, 1)) {
+                    Town invitedOne = a.getArgument(TOWN, 0);
+                    Town invitedTwo = a.getArgument(TOWN, 1);
+
+                    if(invitedOne == invitedTwo) {
                         return -2;
                     }
 
                     Town capitalTown = a.getInvokerUser().getCommunity();
 
-                    NationAttempt attempt = new NationAttempt(capitalTown, a.getArgument(STRING, 0));
+                    NationAttempt attempt = new NationAttempt(capitalTown, nationName);
+
+                    invitedOne.broadcast((_) -> TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
+                    invitedTwo.broadcast((_) -> TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedOne.getName()));
+
+                    Bukkit.getScheduler().runTaskLater(NationsPlugin.getInstance(), () -> {
+                        if(invitedOne.getLeader().getOfflinePlayer().isOnline() && attempt.isActive()) {
+                            invitedOne.getLeader().getPlayer().sendMessage(TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
+                        } else {
+
+                        }
+
+                        if(invitedOne.getLeader().getOfflinePlayer().isOnline()) {
+                            invitedOne.getLeader().getPlayer().sendMessage(TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
+                        } else {
+
+                        }
+                    }, 1);
+
 
                     attemptsByName.put(a.getArgument(STRING, 0).toLowerCase(), attempt);
                     attemptsBySettlement.put(capitalTown, attempt);
+
+                    a.getArgument(TOWN, 0).getLeader().getOfflinePlayer();
 
                     return 1;
                 })
