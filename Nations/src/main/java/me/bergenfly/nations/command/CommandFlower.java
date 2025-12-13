@@ -11,12 +11,14 @@ import me.bergenfly.nations.permission.NationPermission;
 import me.bergenfly.nations.permission.PlotPermission;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.NationsPlugin;
+import org.apache.commons.lang3.function.TriFunction;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -56,14 +58,24 @@ public class CommandFlower {
     public CommandFlower() {
     }
 
+    public CommandFlower tabCompleter(int index, ArgumentTabCompleter tabCompleter) {
+        tabCompleters.put(index, tabCompleter);
+
+        return this;
+    }
+
     public <T> CommandFlower arg(int index, CommandArgumentType<T> type) {
         arguments.put(index, type);
+
+        if(!tabCompleters.containsKey(index)) {
+            tabCompleters.put(index, (a) -> type.getTabCompletions());
+        }
 
         return this;
     }
 
     public <T> CommandFlower arg(int index, CommandArgumentType<T> type, String additionalError) {
-        arguments.put(index, new CommandArgumentType<T>() {
+        return arg(index, new CommandArgumentType<T>() {
             @Override
             public boolean isValidArgument(String string) {
                 return type.isValidArgument(string);
@@ -89,12 +101,10 @@ public class CommandFlower {
                 return type.convert(input);
             }
         });
-
-        return this;
     }
 
     public <T> CommandFlower arg(int index, String... stringOptions) {
-        arguments.put(index, new CommandArgumentType<String>() {
+        return arg(index, new CommandArgumentType<String>() {
             @Override
             public List<String> getTabCompletions() {
                 return CommandArgumentType.super.getTabCompletions();
@@ -115,8 +125,6 @@ public class CommandFlower {
                 return ;
             }
         });
-
-        return this;
     }
 
 

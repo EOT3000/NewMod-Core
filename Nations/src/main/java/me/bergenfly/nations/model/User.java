@@ -22,7 +22,7 @@ public class User {
         return community != null;
     }
 
-    public Town getCommunity() {
+    public @Nullable Town getCommunity() {
         return community;
     }
 

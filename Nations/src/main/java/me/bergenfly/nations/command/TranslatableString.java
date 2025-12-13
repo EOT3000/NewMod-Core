@@ -175,6 +175,10 @@ public class TranslatableString {
         translations.put("nations.selection.pos2.success", new TranslatableString("&dSuccessfully set pos2!"));
 
 
+
+        translations.put("nations.admin_help", new TranslatableString("&4Fatal error. Please contact server staff with the following information: &c{1}"));
+
+
     }
 
     private static final Map<String, TranslatableString> translations;

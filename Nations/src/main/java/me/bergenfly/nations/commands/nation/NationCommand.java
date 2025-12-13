@@ -12,8 +12,7 @@ import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.registry.Registry;
 import org.bukkit.Bukkit;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static me.bergenfly.nations.command.requirement.CommandArgumentType.STRING;
 import static me.bergenfly.nations.command.requirement.CommandArgumentType.TOWN;
@@ -35,7 +34,7 @@ public class NationCommand extends CommandRoot {
                 .command((a) -> {
                     String nationName = a.getArgument(STRING,0);
 
-                    if(NATIONS.get(nationName) != null) {
+                    if(NATIONS.get(nationName) != null || attemptsByName.containsKey(nationName.toLowerCase())) {
                         return -1;
                     }
 
@@ -48,30 +47,19 @@ public class NationCommand extends CommandRoot {
 
                     Town capitalTown = a.getInvokerUser().getCommunity();
 
-                    NationAttempt attempt = new NationAttempt(capitalTown, nationName);
-
                     invitedOne.broadcast((_) -> TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
                     invitedTwo.broadcast((_) -> TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedOne.getName()));
 
-                    Bukkit.getScheduler().runTaskLater(NationsPlugin.getInstance(), () -> {
-                        if(invitedOne.getLeader().getOfflinePlayer().isOnline() && attempt.isActive()) {
-                            invitedOne.getLeader().getPlayer().sendMessage(TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
-                        } else {
+                    String invitedOneMessage = TranslatableString.translate("nations.command.info.nation_creation.mayor", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName());
+                    String invitedTwoMessage = TranslatableString.translate("nations.command.info.nation_creation.mayor", a.getInvokerPlayer().getName(), nationName, invitedOne.getName());
 
-                        }
+                    NationsPlugin.getInstance().addReminder(invitedOne.getLeader().getOfflinePlayer().getUniqueId(), invitedOneMessage);
+                    NationsPlugin.getInstance().addReminder(invitedTwo.getLeader().getOfflinePlayer().getUniqueId(), invitedTwoMessage);
 
-                        if(invitedOne.getLeader().getOfflinePlayer().isOnline()) {
-                            invitedOne.getLeader().getPlayer().sendMessage(TranslatableString.translate("nations.command.info.nation_creation", a.getInvokerPlayer().getName(), nationName, invitedTwo.getName()));
-                        } else {
+                    NationAttempt nationCreationAttempt = new NationAttempt(capitalTown, nationName, invitedOne, invitedTwo);
 
-                        }
-                    }, 1);
-
-
-                    attemptsByName.put(a.getArgument(STRING, 0).toLowerCase(), attempt);
-                    attemptsBySettlement.put(capitalTown, attempt);
-
-                    a.getArgument(TOWN, 0).getLeader().getOfflinePlayer();
+                    attemptsByName.put(a.getArgument(STRING, 0).toLowerCase(), nationCreationAttempt);
+                    attemptsBySettlement.put(capitalTown, nationCreationAttempt);
 
                     return 1;
                 })
@@ -84,18 +72,39 @@ public class NationCommand extends CommandRoot {
 
         addBranch("join", new CommandFlower()
                 .arg(0, STRING)
+                .tabCompleter(0, (_) -> concat(NATIONS.keys(), attemptsByName.keySet()))
                 .requirement(CommandRequirement.INVOKER_LEADER_TOWN)
                 //TODO optional args
                 .command((a) -> {
                     String name = a.getArgument(STRING, 0);
 
-                    if(!attemptsByName.containsKey(a.getArgument(STRING, 0).toLowerCase())) {
-                        return -1;
+                    Town townThatWantsToJoin = a.getInvokerUser().getCommunity();
+
+                    if(attemptsByName.containsKey(a.getArgument(STRING, 0).toLowerCase())) {
+                        NationAttempt attempt = attemptsByName.get(name.toLowerCase());
+
+                        if(!attempt.canJoin(townThatWantsToJoin)) {
+                            return -1;
+                        }
+
+                        attempt.addAgreer(a.getInvokerUser().getCommunity());
+
+                    } else if(NATIONS.get(name) != null) {
+                        Nation nation = NATIONS.get(name);
+
+
+                    } else {
+                        return -2;
                     }
-
-                    NationAttempt attempt = attemptsByName.get(name);
-
-                    attempt.addAgreer(a.getInvokerUser().getCommunity());
                 }));
+    }
+
+    private static List<String> concat(Collection<String> one, Collection<String> two) {
+        List<String> ret = new ArrayList<>();
+
+        ret.addAll(one);
+        ret.addAll(two);
+
+        return ret;
     }
 }

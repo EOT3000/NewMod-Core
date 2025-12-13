@@ -12,6 +12,7 @@ import me.bergenfly.nations.registry.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +34,8 @@ public class Town implements LandAdministrator {
 
     private User leader;
     private String name;
+
+    private Nation nation;
 
     private ClaimedChunk homePlot;
 
@@ -74,6 +77,10 @@ public class Town implements LandAdministrator {
 
     public boolean isResident(User user) {
         return residents.contains(user);
+    }
+
+    public Set<User> getResidents() {
+        return new HashSet<>(residents);
     }
 
     public void sendInfo(CommandSender sender) {
@@ -139,6 +146,27 @@ public class Town implements LandAdministrator {
         return false;
     }
 
+    public boolean removeFromNation() {
+        if(!Check.checkTownCanLeaveNation(this)) {
+            return false;
+        }
+    }
+
+    public boolean setNation(@NotNull Nation nation) {
+        if(nation == null) {
+            return false;
+        }
+
+        this.nation = nation;
+
+        if(nation.town)
+
+        return true;
+    }
+
+    public @Nullable Nation getNation() {
+        return nation;
+    }
 
     @Override
     public Set<PlotSection> getLand() {

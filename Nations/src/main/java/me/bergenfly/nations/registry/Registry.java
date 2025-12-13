@@ -1,5 +1,8 @@
 package me.bergenfly.nations.registry;
 
+import com.google.common.collect.ImmutableList;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 public interface Registry<V, K> {

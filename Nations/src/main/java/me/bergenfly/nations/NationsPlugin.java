@@ -1,6 +1,7 @@
 package me.bergenfly.nations;
 
 
+import it.unimi.dsi.fastutil.Pair;
 import me.bergenfly.nations.api.NationsAPI;
 import me.bergenfly.nations.api.model.organization.*;
 import me.bergenfly.nations.api.model.plot.ClaimedChunk;
@@ -21,18 +22,25 @@ import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.registry.RegistryImpl;
 import me.bergenfly.nations.registry.StringRegistry;
 import me.bergenfly.nations.save.*;
+import org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
 
 public class NationsPlugin extends JavaPlugin implements Listener {
+
+    private List<Triple<UUID, String, BooleanSupplier>> reminders = new ArrayList<>();
 
     //private static final org.slf4j.Logger log = LoggerFactory.getLogger(NationsPlugin.class);
     private static NationsPlugin instance = null;
@@ -128,6 +136,23 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         } else {
             user.updateName();
         }
+
+        for(Triple<UUID, String, BooleanSupplier> reminder : new ArrayList<>(reminders)) {
+            if(reminder.getLeft().equals(uuid)) {
+                if(!reminder.getRight().getAsBoolean()) {
+                    reminders.remove(reminder);
+                    continue;
+                }
+
+                event.getPlayer().sendMessage(reminder.getMiddle());
+
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    if(Bukkit.getOfflinePlayer(uuid).isOnline()) {
+                        reminders.remove(reminder);
+                    }
+                }, 30*20);
+            }
+        }
     }
 
     @EventHandler
@@ -156,6 +181,25 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    public void addReminder(UUID uuid, String string) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+        if(player.isOnline()) {
+            player.getPlayer().sendMessage(string);
+        } else {
+            reminders.add(Triple.of(uuid, string, () -> true));
+        }
+    }
+
+    public void addReminder(UUID uuid, String string, BooleanSupplier predicate) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+        if(player.isOnline()) {
+            player.getPlayer().sendMessage(string);
+        } else {
+            reminders.add(Triple.of(uuid, string, predicate));
+        }
+    }
 
     public StringRegistry<Town> communitiesRegistry() {
         return COMMUNITIES;
