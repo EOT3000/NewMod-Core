@@ -164,6 +164,12 @@ public class CommandFlower {
         return this;
     }
 
+    public CommandFlower addMessage(int code, String key) {
+        addMessage(code, (a) -> TranslatableString.translate(key));
+
+        return this;
+    }
+
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
         System.out.println(Arrays.toString(strings));
 

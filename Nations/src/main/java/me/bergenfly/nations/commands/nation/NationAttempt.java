@@ -27,6 +27,10 @@ public class NationAttempt {
     }
 
     public void addAgreer(Town settlement) {
+        if(!active) {
+            return;
+        }
+
         if(!others.contains(settlement)) {
             return;
         }
@@ -36,6 +40,8 @@ public class NationAttempt {
         if(agreers.size() > 2) {
             Pair<Nation, String> nationResult = Nation.tryCreate(capital, name, others);
 
+            this.active = false;
+
             if(nationResult.first() == null) {
                 NationsPlugin.getInstance().addReminder(capital.getLeader().getOfflinePlayer().getUniqueId(), TranslatableString.translate("nations.admin_help", nationResult.second()));
             }
@@ -43,7 +49,11 @@ public class NationAttempt {
     }
 
     public List<Town> getAgreers() {
-        return new ArrayList(agreers);
+        return new ArrayList<>(agreers);
+    }
+
+    public List<Town> getPotentialMembers() {
+        return new ArrayList<>(others);
     }
 
     public boolean canJoin(Town town) {
@@ -52,5 +62,17 @@ public class NationAttempt {
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void kill() {
+        this.active = false;
+    }
+
+    public Town getCapital() {
+        return capital;
     }
 }

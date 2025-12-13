@@ -47,6 +47,8 @@ public class TranslatableString {
     public static final int TOO_MANY_PARAMETERS;
         */
 
+        //TODO add other languages; add accessibility option for different message colors for people with colorblindness
+
         translations.put("nations.command.error.not_player", new TranslatableString("&4You must be a player to run that command"));
 
         translations.put("nations.command.error.holder.invalid_type", new TranslatableString("&4{1} &cis not a valid type (run '/nation help types' for more information)"));
@@ -65,7 +67,7 @@ public class TranslatableString {
 
         translations.put("nations.command.error.nation.not_member", new TranslatableString("&cYou must be a resident of a nation to do that"));
         translations.put("nations.command.error.nation.not_in_territory", new TranslatableString("&cYou must be within a nation's territory to do that"));
-        translations.put("nations.command.error.nation.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be the name of a nation"));
+        translations.put("nations.command.error.nation.not_argument", new TranslatableString("&4{1}&c is not a nation"));
 
         translations.put("nations.command.error.nation.is_member", new TranslatableString("&cYou must leave your nation to do that"));
         translations.put("nations.command.error.nation.is_in_territory", new TranslatableString("&cYou cannot be within a nation's territory to do that"));
@@ -84,8 +86,16 @@ public class TranslatableString {
 
         translations.put("nations.command.error.generic.is_argument", new TranslatableString("&4{1}&c already exists")); //TODO same as above
 
+        translations.put("nations.command.error.town.already_invited.other", new TranslatableString("&4{1}&c already has an outgoing invitation"));
+
         translations.put("nations.command.error.town.already_invited", new TranslatableString("&cThe town &4{1}&c has already been invited to the nation"));
-        translations.put("nations.command.error.town.already_member", new TranslatableString("&cThe town &4{1}&c is already a member of the nation"));
+        translations.put("nations.command.error.town.already_member.this", new TranslatableString("&cThe town &4{1}&c is already a member of the nation"));
+        translations.put("nations.command.error.town.already_member.your", new TranslatableString("&cYour town must leave its nation to do that"));
+
+        translations.put("nations.command.error.town.already_member.other", new TranslatableString("&4{1}&c is already a member of a nation"));
+
+        translations.put("nations.command.error.town_has_nation_outlaw", new TranslatableString("&cYour town can't join that nation, as one of your residents is outlawed in it"));
+        translations.put("nations.command.error.town_sanctioned", new TranslatableString("&cYour town can't join that nation, as it is sanctioned"));
 
         translations.put("nations.command.error.rank.not_argument", new TranslatableString("&7{1o} &cargument (&4{2}&c) is invalid, must be a rank"));
         translations.put("nations.command.error.rank.is_argument", new TranslatableString("&cThe rank &4{1}&c already exists"));
@@ -121,6 +131,12 @@ public class TranslatableString {
         translations.put("nations.command.info.nation_creation_sent", new TranslatableString("&aProposed nation creation to &e{1} &aand &e{2}"));
 
         translations.put("nations.command.info.nation_creation_help", new TranslatableString("&eTo create a nation two other towns within range must agree to join. Those towns must be listed in the command, with the format &d/n create <name> <town> <town>"));
+
+        //translations.put("nations.command.info.nation_creation.cancelled.founder", new TranslatableString("&eTo create a nation two other towns within range must agree to join. Those towns must be listed in the command, with the format &d/n create <name> <town> <town>"));
+        translations.put("nations.command.info.nation_creation.cancelled", new TranslatableString("&d{1} nation creation cancelled"));
+
+        translations.put("nations.command.error.nation_creation.existing_proposal", new TranslatableString("&cYour town already has an outgoing nation proposal ({1}). Run &4/n create cancel &cto cancel it"));
+        translations.put("nations.command.error.nation_creation.no_proposal", new TranslatableString("&cYour town doesn't have an outgoing nation proposal"));
 
         //translations.put("nations.message.invitation.user", new TranslatableString("&e{1} &ahas created the {3} of &e{2}"));
 

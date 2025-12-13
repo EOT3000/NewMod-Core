@@ -66,6 +66,16 @@ public class Nation implements LandAdministrator {
         return new HashSet<>(towns);
     }
 
+    public Set<User> getResidents() {
+        Set<User> ret = new HashSet<>();
+
+        for(Town town : getTowns()) {
+            ret.addAll(town.getResidents());
+        }
+
+        return ret;
+    }
+
     public boolean addTown(Town town) {
         if(!Check.checkTownCanJoinNation(town, this)) {
             return false;
