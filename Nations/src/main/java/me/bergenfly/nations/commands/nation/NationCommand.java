@@ -26,6 +26,10 @@ public class NationCommand extends CommandRoot {
 
     private Registry<Nation, String> NATIONS = NationsPlugin.getInstance().nationsRegistry();
 
+    public NationCommand() {
+        super("nation");
+    }
+
     @Override
     public void loadSubcommands() {
         CommandStem create = addBranch("create", new CommandFlower()

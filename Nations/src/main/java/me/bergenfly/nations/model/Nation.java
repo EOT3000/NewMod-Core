@@ -28,6 +28,10 @@ public class Nation implements LandAdministrator {
 
     private Town capital;
 
+    private final long creationTime;
+    private final String initialName;
+    private final String founder;
+
     public User getLeader() {
         return leader;
     }

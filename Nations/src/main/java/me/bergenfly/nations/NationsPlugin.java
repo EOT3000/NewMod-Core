@@ -201,7 +201,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public StringRegistry<Town> communitiesRegistry() {
+    public Registry<Town, String> communitiesRegistry() {
         return COMMUNITIES;
     }
 
