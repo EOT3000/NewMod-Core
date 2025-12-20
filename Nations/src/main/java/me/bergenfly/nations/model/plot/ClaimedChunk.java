@@ -1,11 +1,11 @@
 package me.bergenfly.nations.model.plot;
 
+import me.bergenfly.nations.model.LandAdministrator;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
 public class ClaimedChunk {
     private DivisionStorage storage;
-    private PlotSection section;
 
     private final int chunkX;
     private final int chunkZ;
@@ -29,7 +29,7 @@ public class ClaimedChunk {
         return world;
     }
 
-    public void setSectionAt(int x0_15, int z0_15, PlotSection section) {
+    public void setSectionAt(int x0_15, int z0_15, LandAdministrator administrator, LandAdministrator holder) {
         this.section = section;
     }
 

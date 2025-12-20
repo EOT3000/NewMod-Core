@@ -6,7 +6,6 @@ import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
-import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.operator.TownOperation;
 import me.bergenfly.nations.registry.Registry;
 import org.bukkit.command.CommandSender;

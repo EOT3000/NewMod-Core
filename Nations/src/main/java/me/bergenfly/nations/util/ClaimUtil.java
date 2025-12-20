@@ -8,7 +8,6 @@ import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.Nation;
 import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
-import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.model.plot._2x2_Chunk;
 import org.bukkit.Chunk;

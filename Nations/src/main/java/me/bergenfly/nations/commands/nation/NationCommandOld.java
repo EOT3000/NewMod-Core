@@ -9,7 +9,6 @@ import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.Nation;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.organization.*;
-import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.permission.DefaultNationPermission;
 import me.bergenfly.nations.permission.NationPermission;
 import me.bergenfly.nations.registry.Registry;

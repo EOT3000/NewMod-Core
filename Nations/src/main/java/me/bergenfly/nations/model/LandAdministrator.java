@@ -1,11 +1,8 @@
 package me.bergenfly.nations.model;
 
-import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
 //import me.bergenfly.nations.model.plot.PlotSection;
-import me.bergenfly.nations.model.plot.PlotSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 

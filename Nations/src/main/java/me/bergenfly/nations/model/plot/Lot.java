@@ -2,15 +2,18 @@ package me.bergenfly.nations.model.plot;
 
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.LandOwner;
+import me.bergenfly.nations.model.User;
 import org.bukkit.World;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Lot {
     private final World world;
 
     private LandAdministrator administrator;
+    private LandAdministrator claimer;
 
     private LandOwner owner;
 
@@ -19,6 +22,10 @@ public class Lot {
     private Set<Rectangle> rectangles = new HashSet<>();
 
     private Set<User> trusted = new HashSet<>();
+
+    public LandAdministrator getHolder() {
+        return claimer;
+    }
 
     public LandAdministrator getAdministrator() {
         return administrator;
@@ -74,5 +81,9 @@ public class Lot {
             return !overlapsWith(other) &&
                     (overlapsWith(other.expanded(1,0)) || overlapsWith(other.expanded(0,1)));
         }
+    }
+
+    public Map<String, Object> save() {
+
     }
 }

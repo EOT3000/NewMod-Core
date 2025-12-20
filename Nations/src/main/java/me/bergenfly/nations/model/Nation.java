@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.Pair;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.check.Check;
-import me.bergenfly.nations.model.plot.PlotSection;
 import me.bergenfly.nations.registry.Registry;
 
 import java.util.HashSet;
@@ -38,6 +37,10 @@ public class Nation implements LandAdministrator {
 
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return "$"+initialName+"_"+creationTime+"_"+founder;
     }
 
     public Town getCapital() {
