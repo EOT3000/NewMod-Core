@@ -3,17 +3,16 @@ package me.bergenfly.nations.model.plot;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.LandOwner;
 import me.bergenfly.nations.model.User;
+import me.bergenfly.nations.serializer.IdList;
+import me.bergenfly.nations.serializer.Serializable;
 import org.bukkit.World;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class Lot {
+public class Lot implements Serializable {
     private final World world;
 
     private LandAdministrator administrator;
-    private LandAdministrator claimer;
 
     private LandOwner owner;
 
@@ -22,10 +21,6 @@ public class Lot {
     private Set<Rectangle> rectangles = new HashSet<>();
 
     private Set<User> trusted = new HashSet<>();
-
-    public LandAdministrator getHolder() {
-        return claimer;
-    }
 
     public LandAdministrator getAdministrator() {
         return administrator;
@@ -43,7 +38,7 @@ public class Lot {
 
     }
 
-    public static class Rectangle {
+    public static class Rectangle implements Serializable {
         public final int xMin;
         public final int zMin;
         public final int xMax;
@@ -81,9 +76,33 @@ public class Lot {
             return !overlapsWith(other) &&
                     (overlapsWith(other.expanded(1,0)) || overlapsWith(other.expanded(0,1)));
         }
+
+        @Override
+        public String serialize() {
+            return xMin+","+zMin+";"+xMax+","+zMax;
+        }
+
+        @Override
+        public String getId() {
+            throw new UnsupportedOperationException("Rectangle does not support IDs");
+        }
     }
 
-    public Map<String, Object> save() {
+    @Override
+    public String getId() {
+        throw new UnsupportedOperationException("Lot does not support IDs (yet?)");
+    }
 
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> ret = new HashMap<>();
+
+        ret.put("rectangles", rectangles);
+        ret.put("world", world.getName());
+        ret.put("administrator", administrator.getId());
+        ret.put("owner", owner.getId());
+        ret.put("trusted", new IdList(trusted));
+
+        return null;
     }
 }

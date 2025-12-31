@@ -4,20 +4,21 @@ import it.unimi.dsi.fastutil.Pair;
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.check.Check;
+import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.registry.Registry;
+import me.bergenfly.nations.serializer.IdList;
+import me.bergenfly.nations.serializer.Serializable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class Nation implements LandAdministrator {
+public class Nation implements LandAdministrator, Serializable {
     private static Registry<Town, String> COMMUNITIES;
     private static Registry<Nation, String> NATIONS;
     private static NationsLandManager LAND;
 
     private final Set<Town> towns = new HashSet<>();
 
-    private final Set<PlotSection> land = new HashSet<>();
+    private final Set<ClaimedChunk> land = new HashSet<>();
 
     private final Set<User> outlaws = new HashSet<>();
     private final Set<Town> sanctionedTowns = new HashSet<>();
@@ -31,6 +32,19 @@ public class Nation implements LandAdministrator {
     private final String initialName;
     private final String founder;
 
+    public Nation(String name, User leader) {
+        this(name, leader, System.currentTimeMillis(), name, leader.getId()); //TODO: too long name causes file creation error?
+    }
+
+    public Nation(String name, User leader, long creationTime, String initialName, String founder) {
+        this.name = name;
+        this.leader = leader;
+
+        this.creationTime = creationTime;
+        this.initialName = initialName;
+        this.founder = founder;
+    }
+
     public User getLeader() {
         return leader;
     }
@@ -39,8 +53,9 @@ public class Nation implements LandAdministrator {
         return name;
     }
 
+    @Override
     public String getId() {
-        return "$"+initialName+"_"+creationTime+"_"+founder;
+        return "$N_"+initialName+"_"+creationTime;
     }
 
     public Town getCapital() {
@@ -115,10 +130,7 @@ public class Nation implements LandAdministrator {
             return Pair.of(null, "Fatal error trying to create " + name + "; proposed capital " + capital.getNation() + " is already in nation " + capital.getNation().getName());
         }
 
-        Nation nation = new Nation();
-
-        nation.leader = capital.getLeader();
-        nation.name = name;
+        Nation nation = new Nation(name, capital.getLeader());
 
         for(Town town : otherTowns) {
             if(town.getNation() == null) {
@@ -131,5 +143,28 @@ public class Nation implements LandAdministrator {
         NATIONS.set(name, nation);
 
         return Pair.of(nation, "");
+    }
+
+    @Override
+    public Set<ClaimedChunk> getLand() {
+        return Set.of();
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> ret = new HashMap<>();
+
+        ret.put("name", name);
+        ret.put("leader", leader);
+
+        ret.put("towns", new IdList(towns));
+        ret.put("outlaws", new IdList(outlaws));
+        ret.put("sanctionedTowns", new IdList(sanctionedTowns));
+
+        ret.put("initialName", initialName);
+        ret.put("creationTime", creationTime);
+        ret.put("capital", capital.getId());
+
+        return ret;
     }
 }

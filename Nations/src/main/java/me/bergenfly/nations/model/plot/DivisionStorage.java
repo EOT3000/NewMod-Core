@@ -19,6 +19,15 @@ public class DivisionStorage {
         divisionsStorage = new ChunkChunk[(int) Math.pow(2,divisions)][(int) Math.pow(2,divisions)];
     }
 
+    public DivisionStorage(LandAdministrator holder, LandAdministrator administrator) {
+        numberDivisions = 1;
+
+        divisionsStorage = new ChunkChunk[1][1];
+
+        divisionsStorage[0][0] = new ChunkChunk(holder, administrator);
+    }
+
+
     public void divide() {
         if(numberDivisions >= 4) {
             throw new IllegalStateException("Cannot split a chunk further than 4 times");

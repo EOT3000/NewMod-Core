@@ -6,23 +6,28 @@ import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
+import me.bergenfly.nations.model.plot.Lot;
 import me.bergenfly.nations.operator.TownOperation;
 import me.bergenfly.nations.registry.Registry;
+import me.bergenfly.nations.serializer.IdList;
+import me.bergenfly.nations.serializer.Serializable;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-public class Town implements LandAdministrator {
+public class Town implements LandAdministrator, Serializable {
     private static Registry<Town, String> COMMUNITIES;
     private static NationsLandManager LAND;
 
     private final Set<User> residents = new HashSet<>();
-    private final Set<PlotSection> land = new HashSet<>();
+    private final Set<ClaimedChunk> land = new HashSet<>();
     private final Set<Lot> lots = new HashSet<>();
 
     private final Set<TownOperation> openProposals = new HashSet<>();
@@ -38,10 +43,25 @@ public class Town implements LandAdministrator {
 
     private ClaimedChunk homePlot;
 
-    private Town(String name, User leader) {
+    private final long creationTime;
+    private final String initialName;
+    private final String founder;
+
+    public String getId() {
+        return "$T_"+initialName+"_"+creationTime;
+    }
+
+    public Town(String name, User leader) {
+        this(name, leader, System.currentTimeMillis(), name, leader.getId()); //TODO: too long name causes file creation error?
+    }
+
+    public Town(String name, User leader, long creationTime, String initialName, String founder) {
         this.name = name;
         this.leader = leader;
 
+        this.creationTime = creationTime;
+        this.initialName = initialName;
+        this.founder = founder;
     }
 
     public String getName() {
@@ -149,6 +169,18 @@ public class Town implements LandAdministrator {
         if(!Check.checkTownCanLeaveNation(this)) {
             return false;
         }
+
+        if(nation == null) {
+            return true;
+        }
+
+        this.nation = null;
+
+        if(nation.getTowns().contains(this)) {
+            nation.removeTown(this);
+        }
+
+        return true;
     }
 
     public boolean setNation(@NotNull Nation nation) {
@@ -158,7 +190,9 @@ public class Town implements LandAdministrator {
 
         this.nation = nation;
 
-        if(nation.town)
+        if(!nation.getTowns().contains(this)) {
+            nation.addTown(this);
+        }
 
         return true;
     }
@@ -168,13 +202,8 @@ public class Town implements LandAdministrator {
     }
 
     @Override
-    public Set<PlotSection> getLand() {
+    public Set<ClaimedChunk> getLand() {
         return new HashSet<>(land);
-    }
-
-    @Override
-    public PlotSection createEmptyPlotSection(@NotNull ClaimedChunk in) {
-        return null;
     }
 
     public int getMaxChunks() {
@@ -239,5 +268,23 @@ public class Town implements LandAdministrator {
         //NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
 
         return new ObjectIntImmutablePair<>(s, 1);
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> ret = new HashMap<>();
+
+        ret.put("name", name);
+        ret.put("leader", leader);
+
+        ret.put("residents", new IdList(residents));
+        ret.put("outlaws", new IdList(outlaws));
+
+        ret.put("initialName", initialName);
+        ret.put("creationTime", creationTime);
+
+        ret.put("lots", lots);
+
+        return ret;
     }
 }

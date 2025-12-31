@@ -1,7 +1,7 @@
 package me.bergenfly.nations.model.plot;
 
 import io.papermc.paper.plugin.PermissionManager;
-import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.NationsPlugin;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +16,7 @@ import java.util.function.Function;
 public enum DefaultPlotPermission implements PlotPermission {
     PLACE("place"),                                 //Place most blocks
     DESTROY("destroy"),                             //Destroy most blocks
+    //TODO note, placing chest next to other chest can be a bug to access the other chest if you don't have perms in the other chunk
     CONTAINER("container"),                         //Open and modify containers
     SIGN("sign"),                                   //Modify signs
     VEHICLE("vehicle"),                             //Place boats and minecarts

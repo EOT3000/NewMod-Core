@@ -1,6 +1,7 @@
 package me.bergenfly.nations.model;
 
 import me.bergenfly.nations.model.check.Check;
+import me.bergenfly.nations.serializer.Serializable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private final UUID uuid;
 
     public User(UUID uuid) {
@@ -70,5 +71,16 @@ public class User {
 
     public @Nullable Player getPlayer() {
         return Bukkit.getPlayer(uuid);
+    }
+
+
+    @Override
+    public Object serialize() {
+        return getId();
+    }
+
+    @Override
+    public String getId() {
+        return uuid.toString();
     }
 }
