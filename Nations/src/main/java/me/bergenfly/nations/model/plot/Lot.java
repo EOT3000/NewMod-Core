@@ -1,10 +1,13 @@
 package me.bergenfly.nations.model.plot;
 
+import me.bergenfly.nations.config.DefaultTownPermission;
+import me.bergenfly.nations.config.TownPermission;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.LandOwner;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.serializer.IdList;
 import me.bergenfly.nations.serializer.Serializable;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.*;
@@ -22,6 +25,8 @@ public class Lot implements Serializable {
 
     private Set<User> trusted = new HashSet<>();
 
+    private Map<PlotPermission, List<Level>> setPermissions = new HashMap<>();
+
     public LandAdministrator getAdministrator() {
         return administrator;
     }
@@ -30,12 +35,31 @@ public class Lot implements Serializable {
         return owner;
     }
 
+
+    public LandOwner getOwnerOrTenant(Location location) {
+        return getOwner();
+    }
+
     public boolean isTrusted(User user) {
         return trusted.contains(user);
     }
 
-    public boolean isAllowed(Level level, PlotPermission permission) {
 
+
+    public boolean isAllowed(User user, PlotPermission permission, Location location) {
+        if(location.getBlockZ() >= depth) {
+            return isTrusted(user) || (setPermissions.containsKey(permission) && belongsTo(setPermissions.get(permission), user));
+        } else {
+            return administrator.equals(user.getCommunity()) && user.hasTownPermission(DefaultTownPermission.ACCESS_SUBWAY);
+        }
+    }
+
+    private boolean belongsTo(List<Level> levels, User user) {
+        if(levels.contains(Level.EVERYONE)) {
+            return true;
+        }
+
+        return false;
     }
 
     public static class Rectangle implements Serializable {

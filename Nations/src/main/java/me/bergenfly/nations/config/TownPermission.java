@@ -1,4 +1,4 @@
 package me.bergenfly.nations.config;
 
-public class TownPermission {
+public interface TownPermission {
 }

@@ -1,6 +1,6 @@
 package me.bergenfly.nations.config;
 
-public enum DefaultTownPermission {
+public enum DefaultTownPermission implements TownPermission {
     //RESIDENT MANAGEMENT:
 
     INVITE_RESIDENT,

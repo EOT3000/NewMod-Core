@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.plot.ClaimedChunk;
+import me.bergenfly.nations.model.plot.Lot;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.registry.RegistryImpl;
 import me.bergenfly.nations.util.ChunkLocation;
@@ -56,7 +57,7 @@ public class NationsLandManager {
 
         ClaimedChunk newChunk = new ClaimedChunk(chunkX, chunkZ, w);
 
-        newChunk.setSectionAt(0, 0, administrator.createEmptyPlotSection(newChunk));
+        newChunk.getStorage().setAt(0, 0, administrator, administrator);
 
         administratorClaims.putIfAbsent(administrator, new IntOpenHashSet());
 
@@ -79,15 +80,8 @@ public class NationsLandManager {
         //}
     }
 
-    public PlotSection getPlotSectionAtLocation(Location location) {
-        ClaimedChunk chunk = getClaimedChunkAtChunk(location.getChunk());
-        return chunk == null ? null : chunk.getPlotSectionAt(location.getBlockX()-chunk.getChunkX()*16, location.getBlockZ()-chunk.getChunkZ()*16);
-    }
 
-    public PlotSection getPlotSectionAtLocation(int x, int z, World world) {
-        ChunkLocation location = new ChunkLocation(x,z);
+    public Lot getLotAt(Location location) {
 
-        ClaimedChunk chunk = getClaimedChunkAtChunk(world, location.chunkX(), location.chunkZ());
-        return chunk == null ? null : chunk.getPlotSectionAt(location.coordWithinChunkX(), location.coordWithinChunkZ());
     }
 }

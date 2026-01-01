@@ -1,5 +1,6 @@
 package me.bergenfly.nations.model;
 
+import me.bergenfly.nations.config.TownPermission;
 import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.serializer.Serializable;
 import org.bukkit.Bukkit;
@@ -73,6 +74,9 @@ public class User implements Serializable {
         return Bukkit.getPlayer(uuid);
     }
 
+    public boolean hasTownPermission(TownPermission permission) {
+        return false;
+    }
 
     @Override
     public Object serialize() {

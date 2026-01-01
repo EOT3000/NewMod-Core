@@ -1,17 +1,18 @@
 package me.bergenfly.nations.model.plot;
 
 import me.bergenfly.nations.model.LandAdministrator;
+import me.bergenfly.nations.serializer.Serializable;
 
-import java.util.Objects;
+import java.util.*;
 
-public class DivisionStorage {
+public class DivisionStorage implements Serializable {
     private ChunkChunk[][] divisionsStorage;
 
     private int numberDivisions;
 
     public DivisionStorage(int divisions) {
         if(divisions < 0 || divisions > 4) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Number of DivisionStorage divisions cannot be below 0, or above 4");
         }
 
         numberDivisions = divisions;
@@ -86,6 +87,41 @@ public class DivisionStorage {
         int zIndex = z0_15/((int) Math.pow(2, 4-numberDivisions));
 
         divisionsStorage[xIndex][zIndex] = new ChunkChunk(holder, administrator);
+    }
+
+    @Override
+    public Object serialize() {
+        Map<String, Object> ret = new HashMap<>();
+
+        ret.put("numDivisions", numberDivisions);
+
+        List<Map<String, Object>> divisions = new ArrayList<>();
+
+        for(int xColumn = 0; xColumn < divisionsStorage.length; xColumn++) {
+            for (int zRow = 0; zRow < divisionsStorage.length; zRow++) {
+                if(divisionsStorage[xColumn][zRow] != null) {
+                    ChunkChunk bit = divisionsStorage[xColumn][zRow];
+
+                    Map<String, Object> bitStorage = new HashMap<>();
+
+                    bitStorage.put("claimer", bit.holder.getId());
+                    bitStorage.put("administrator", bit.administrator.getId());
+                    bitStorage.put("xColumn", xColumn);
+                    bitStorage.put("zRow", zRow);
+
+                    divisions.add(bitStorage);
+                }
+            }
+        }
+
+        ret.put("divisions", divisions);
+
+        return ret;
+    }
+
+    @Override
+    public String getId() {
+        throw new UnsupportedOperationException("DivisionStorage does not implement getId");
     }
 
     private static record ChunkChunk(LandAdministrator holder, LandAdministrator administrator) {

@@ -11,19 +11,18 @@ import me.bergenfly.nations.operator.TownOperation;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.serializer.IdList;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.TownDeserialized;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 public class Town implements LandAdministrator, Serializable {
     private static Registry<Town, String> COMMUNITIES;
+    private static Registry<User, UUID> USERS;
     private static NationsLandManager LAND;
 
     private final Set<User> residents = new HashSet<>();
@@ -47,8 +46,16 @@ public class Town implements LandAdministrator, Serializable {
     private final String initialName;
     private final String founder;
 
+    private TownDeserialized deserializedTown;
+
     public String getId() {
         return "$T_"+initialName+"_"+creationTime;
+    }
+
+    public Town(TownDeserialized deserializedTown) {
+        this(deserializedTown.name(), deserializedTown.getLeader(), deserializedTown.creationTime(), deserializedTown.initialName(), deserializedTown.founder());
+
+        this.deserializedTown = deserializedTown;
     }
 
     public Town(String name, User leader) {
@@ -282,6 +289,7 @@ public class Town implements LandAdministrator, Serializable {
 
         ret.put("initialName", initialName);
         ret.put("creationTime", creationTime);
+        ret.put("founder", founder);
 
         ret.put("lots", lots);
 

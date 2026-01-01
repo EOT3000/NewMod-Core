@@ -4,5 +4,6 @@ public enum Level {
     FRIEND,
     TOWN,
     NATION,
-    ALLY
+    ALLY,
+    EVERYONE,
 }
