@@ -7,4 +7,8 @@ public interface Serializable {
     Object serialize();
 
     String getId();
+
+    default String getName() {
+        return getId();
+    }
 }

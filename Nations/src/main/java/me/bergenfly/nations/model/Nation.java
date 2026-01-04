@@ -8,6 +8,7 @@ import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.serializer.IdList;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.NationDeserialized;
 
 import java.util.*;
 
@@ -32,6 +33,22 @@ public class Nation implements LandAdministrator, Serializable {
     private final String initialName;
     private final String founder;
 
+    public Nation(NationDeserialized deserialized) {
+        this(deserialized.name(), NationsPlugin.getInstance().usersRegistry().get(UUID.fromString(deserialized.leader())),
+                deserialized.creationTime(), deserialized.initialName(), deserialized.founder());
+
+        Registry<User, UUID> USERS = NationsPlugin.getInstance().usersRegistry();
+        Registry<Town, String> TOWNS = NationsPlugin.getInstance().communitiesRegistry();
+
+        for(String outlaw : deserialized.outlaws()) {
+            outlaws.add(USERS.get(UUID.fromString(outlaw)));
+        }
+
+        for(String town : deserialized.towns()) {
+            towns.add(TOWNS.get(town));
+        }
+    }
+
     public Nation(String name, User leader) {
         this(name, leader, System.currentTimeMillis(), name, leader.getId()); //TODO: too long name causes file creation error?
     }
@@ -49,6 +66,7 @@ public class Nation implements LandAdministrator, Serializable {
         return leader;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -71,6 +71,7 @@ public class Town implements LandAdministrator, Serializable {
         this.founder = founder;
     }
 
+    @Override
     public String getName() {
         return name;
     }

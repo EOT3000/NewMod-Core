@@ -3,6 +3,7 @@ package me.bergenfly.nations.model.plot;
 import me.bergenfly.nations.manager.Plots;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.ChunkDeserialized;
 import org.bukkit.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,12 @@ public class ClaimedChunk implements Serializable {
         this.chunkZ = chunkZ;
         this.world = world;
         this.storage = new DivisionStorage(0);
+    }
+
+    public ClaimedChunk(ChunkDeserialized data) {
+        this(data.chunkX(), data.chunkZ(), Plots.getWorld(data.world()));
+
+        this.storage = new DivisionStorage(data.storage());
     }
 
     public int getChunkX() {

@@ -1,7 +1,11 @@
 package me.bergenfly.nations.model.plot;
 
+import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.model.LandAdministrator;
+import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.ChunkChunkDeserialized;
+import me.bergenfly.nations.serializer.type.DivisionStorageDeserialized;
 
 import java.util.*;
 
@@ -9,6 +13,8 @@ public class DivisionStorage implements Serializable {
     private ChunkChunk[][] divisionsStorage;
 
     private int numberDivisions;
+
+
 
     public DivisionStorage(int divisions) {
         if(divisions < 0 || divisions > 4) {
@@ -18,6 +24,20 @@ public class DivisionStorage implements Serializable {
         numberDivisions = divisions;
 
         divisionsStorage = new ChunkChunk[(int) Math.pow(2,divisions)][(int) Math.pow(2,divisions)];
+    }
+
+    public DivisionStorage(DivisionStorageDeserialized data) {
+        this(data.numDivisions());
+
+        Registry<Serializable, String> ID_HAVERS = NationsPlugin.getInstance().idHaverRegistry();
+
+        for(ChunkChunkDeserialized chunkChunk : data.divisions()) {
+            ChunkChunk pieceOfChunk = new ChunkChunk(
+                    (LandAdministrator) ID_HAVERS.get(chunkChunk.administrator()),
+                    (LandAdministrator) ID_HAVERS.get(chunkChunk.claimer()));
+
+            divisionsStorage[chunkChunk.xColumn()][chunkChunk.zRow()] = pieceOfChunk;
+        }
     }
 
     public DivisionStorage(LandAdministrator holder, LandAdministrator administrator) {

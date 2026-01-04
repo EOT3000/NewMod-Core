@@ -1,27 +1,23 @@
 package me.bergenfly.nations;
 
 
-import it.unimi.dsi.fastutil.Pair;
-import me.bergenfly.nations.api.NationsAPI;
-import me.bergenfly.nations.api.model.organization.*;
-import me.bergenfly.nations.api.model.plot.ClaimedChunk;
-import me.bergenfly.nations.api.model.plot.PlotSection;
-import me.bergenfly.nations.command.community.SettlementCommand;
-import me.bergenfly.nations.command.company.CompanyCommand;
-import me.bergenfly.nations.command.nation.NationCommand;
-import me.bergenfly.nations.command.plot.PlotCommand;
-import me.bergenfly.nations.command.community.CommunityCommand;
-import me.bergenfly.nations.command.community.TribeCommand;
-import me.bergenfly.nations.listener.PlotListener;
+import me.bergenfly.nations.commands.community.TownCommand;
+import me.bergenfly.nations.commands.nation.NationCommand;
+import me.bergenfly.nations.commands.plot.PlotCommand;
+import me.bergenfly.nations.listener.PlotWandListener;
 import me.bergenfly.nations.manager.NationsLandManager;
 import me.bergenfly.nations.manager.NationsPermissionManager;
+import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.Nation;
 import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.registry.RegistryImpl;
 import me.bergenfly.nations.registry.StringRegistry;
-import me.bergenfly.nations.save.*;
+import me.bergenfly.nations.serializer.Saver;
+import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.NationDeserialized;
+import me.bergenfly.nations.serializer.type.TownDeserialized;
 import org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,8 +28,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
@@ -51,7 +49,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
     private StringRegistry<Town> COMMUNITIES;
     private Registry<User, UUID> USERS;
     //private Registry<Company, String> COMPANIES;
-    private Registry<LandPermissionHolder, String> PERMISSION_HOLDERS_ID;
+    private StringRegistry<Serializable> PERMISSION_HOLDER;
 
     private NationsPermissionManager permissionManager;
 
@@ -80,18 +78,24 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         logger.info(ChatColor.DARK_AQUA + "---------------------------------------------");
 
         this.NATIONS = new StringRegistry<>(Nation.class);
-        this.COMMUNITIES = new StringRegistry<>(Community.class);
+        this.COMMUNITIES = new StringRegistry<>(Town.class);
         this.USERS = new RegistryImpl<>(User.class);
-        this.COMPANIES = new RegistryImpl<>(Company.class);
-        this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
+        //this.COMPANIES = new RegistryImpl<>(Company.class);
+        //this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
         this.permissionManager = new NationsPermissionManager();
 
         try {
-            LoadUser.loadUsers();
-            LoadCommunity.loadCommunities();
-            LoadNation.loadNations();
-            LoadPlot.loadPlots();
+            Set<Town> loadedTowns = Saver.loadFromDirectory(new File("/Nations/towns"), TownDeserialized.class, Town::new);
+            Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedTowns, COMMUNITIES), COMMUNITIES), PERMISSION_HOLDER);
+
+            Set<Nation> loadedNations = Saver.loadFromDirectory(new File("/Nations/nations"), NationDeserialized.class, Nation::new);
+            Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
+
+            Set<Nation> loadedNations = Saver.loadValuesFromFile(new File("/Nations/nations"), NationDeserialized.class, Nation::new);
+            Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
+
+
         } catch (Exception e) {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
@@ -99,15 +103,15 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        Bukkit.getPluginCommand("community").setExecutor(new CommunityCommand("community"));
-        Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
-        Bukkit.getPluginCommand("tribe").setExecutor(new TribeCommand());
+        Bukkit.getPluginCommand("town").setExecutor(new TownCommand());
+        //Bukkit.getPluginCommand("settlement").setExecutor(new SettlementCommand());
+        //Bukkit.getPluginCommand("tribe").setExecutor(new TribeCommand());
         Bukkit.getPluginCommand("nation").setExecutor(new NationCommand());
         Bukkit.getPluginCommand("plot").setExecutor(new PlotCommand());
-        Bukkit.getPluginCommand("company").setExecutor(new CompanyCommand());
+        //Bukkit.getPluginCommand("company").setExecutor(new CompanyCommand());
 
         Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(new PlotListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlotWandListener(), this);
     }
 
     @Override
@@ -132,7 +136,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         User user = USERS.get(uuid);
 
         if(user == null) {
-            USERS.set(uuid, new UserImpl(uuid));
+            USERS.set(uuid, new User(uuid));
         } else {
             user.updateName();
         }
@@ -203,6 +207,10 @@ public class NationsPlugin extends JavaPlugin implements Listener {
 
     public Registry<Town, String> communitiesRegistry() {
         return COMMUNITIES;
+    }
+
+    public Registry<Serializable, String> idHaverRegistry() {
+        return PERMISSION_HOLDER;
     }
 
     public StringRegistry<Nation> nationsRegistry() {

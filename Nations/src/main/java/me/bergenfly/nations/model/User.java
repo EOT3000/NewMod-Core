@@ -14,6 +14,8 @@ import java.util.UUID;
 public class User implements Serializable {
     private final UUID uuid;
 
+
+
     public User(UUID uuid) {
         this.uuid = uuid;
     }

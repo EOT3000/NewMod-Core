@@ -1,9 +1,13 @@
 package me.bergenfly.nations.serializer;
 
+import me.bergenfly.nations.registry.Registry;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 
 public class Saver {
     private static final Yaml yaml = new Yaml();
@@ -48,7 +52,47 @@ public class Saver {
         return serializable;
     }
 
-    public static <T extends Serializable> T loadFromFile(File file, Class<T> clazz) {
+    public static <T extends Serializable, S> Set<T> loadValuesFromFile(File file, Class<S> clazz, Function<S, T> converter) {
+        Set<T> ret = new HashSet<>();
+
+        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+
+        for(String key : configuration.getKeys(false)) {
+            ConfigurationSection chunk = configuration.getSerializable(key);
+
+
+        }
+    }
+
+    public static <T extends Serializable, S> Set<T> loadFromDirectory(File dir, Class<S> clazz, Function<S, T> converter) {
+        Set<T> ret = new HashSet<>();
+
+        for(File file : dir.listFiles()) {
+            T t = converter.apply(loadFromFile(file, clazz));
+
+            ret.add(t);
+        }
+
+        return ret;
+    }
+
+    public static <S extends Serializable, T extends S> Set<T> addToRegistryById(Set<T> set, Registry<S, String> registry) {
+        for(T t : set) {
+            registry.set(t.getId(), t);
+        }
+
+        return set;
+    }
+
+    public static <S extends Serializable, T extends S> Set<T> addToRegistryByName(Set<T> set, Registry<S, String> registry) {
+        for(T t : set) {
+            registry.set(t.getName(), t);
+        }
+
+        return set;
+    }
+
+    public static <T> T loadFromFile(File file, Class<T> clazz) {
         try(FileInputStream stream = new FileInputStream(file)) {
             return yaml.loadAs(stream, clazz);
         } catch (Exception e) {
