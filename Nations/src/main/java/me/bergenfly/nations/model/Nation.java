@@ -183,7 +183,7 @@ public class Nation implements LandAdministrator, Serializable {
         Map<String, Object> ret = new HashMap<>();
 
         ret.put("name", name);
-        ret.put("leader", leader);
+        ret.put("leader", leader.getId());
 
         ret.put("towns", new IdList(towns));
         ret.put("outlaws", new IdList(outlaws));

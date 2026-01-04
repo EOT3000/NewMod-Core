@@ -293,7 +293,7 @@ public class Town implements LandAdministrator, Serializable {
         Map<String, Object> ret = new HashMap<>();
 
         ret.put("name", name);
-        ret.put("leader", leader);
+        ret.put("leader", leader.getId());
 
         ret.put("residents", new IdList(residents));
         ret.put("outlaws", new IdList(outlaws));

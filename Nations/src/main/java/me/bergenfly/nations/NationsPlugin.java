@@ -17,10 +17,7 @@ import me.bergenfly.nations.registry.RegistryImpl;
 import me.bergenfly.nations.registry.StringRegistry;
 import me.bergenfly.nations.serializer.Saver;
 import me.bergenfly.nations.serializer.Serializable;
-import me.bergenfly.nations.serializer.type.ChunkDeserialized;
-import me.bergenfly.nations.serializer.type.ChunkListDeserialized;
-import me.bergenfly.nations.serializer.type.NationDeserialized;
-import me.bergenfly.nations.serializer.type.TownDeserialized;
+import me.bergenfly.nations.serializer.type.*;
 import org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -98,6 +95,10 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("/Nations/chunks.yml"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
             Saver.addToRegistryById(loadedChunks, landManager.chunksRegistry(), Integer::parseInt);
 
+            Set<User> loadedUsers = Saver.loadFromDirectory(new File("/Nations/users"), UserDeserialized.class, User::new);
+            Saver.addToRegistryById(loadedUsers, USERS, UUID::fromString);
+
+
         } catch (Exception e) {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
@@ -131,9 +132,11 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             Saver.saveToFile(town, new File("/Nations/town/" + town.getId() + ".yml"), Town.class);
         }
 
-        for(Town town : COMMUNITIES.list()) {
-            Saver.saveToFile(town, new File("/Nations/town/" + town.getId() + ".yml"), Town.class);
+        for(User user : USERS.list()) {
+            Saver.saveToFile(user, new File("/Nations/users/" + user.getId() + ".yml"), User.class);
         }
+
+        Saver.saveToFile(landManager.chunksRegistry().list(), new File("/Nation/chunks/chunks.yml"), ClaimedChunk.class);
     }
 
     //Don't use this. Only internal code can use this
@@ -150,7 +153,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         User user = USERS.get(uuid);
 
         if(user == null) {
-            USERS.set(uuid, new User(uuid));
+            USERS.set(uuid, new User(uuid, event.getPlayer().getName()));
         } else {
             user.updateName();
         }
@@ -173,7 +176,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         PlotSection from = landManager.getPlotSectionAtLocation(event.getFrom());
         PlotSection to = landManager.getPlotSectionAtLocation(event.getTo());
@@ -197,7 +200,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
 
             event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }
-    }
+    }*/
 
     public void addReminder(UUID uuid, String string) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);

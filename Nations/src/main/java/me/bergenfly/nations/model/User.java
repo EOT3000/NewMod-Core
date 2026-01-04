@@ -1,26 +1,45 @@
 package me.bergenfly.nations.model;
 
+import com.google.common.collect.Maps;
 import me.bergenfly.nations.config.TownPermission;
 import me.bergenfly.nations.model.check.Check;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.UserDeserialized;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class User implements Serializable {
     private final UUID uuid;
+    private String name;
 
 
-
-    public User(UUID uuid) {
-        this.uuid = uuid;
-    }
 
     private Town community;
+
+
+
+    public User(UUID uuid, String name) {
+        this.uuid = uuid;
+        this.name = name;
+    }
+
+    public User(UserDeserialized data) {
+        this(UUID.fromString(data.id()), data.name());
+    }
+
+
+    public void updateName() {
+        this.name = getOfflinePlayer().getName();
+    }
+
+
 
     public boolean hasCommunity() {
         return community != null;
@@ -76,17 +95,28 @@ public class User implements Serializable {
         return Bukkit.getPlayer(uuid);
     }
 
+    //TODO
     public boolean hasTownPermission(TownPermission permission) {
         return false;
     }
 
     @Override
     public Object serialize() {
-        return getId();
+        Map<String, String> ret = new HashMap<>();
+
+        ret.put("name", getName());
+        ret.put("id", getId());
+
+        return ret;
     }
 
     @Override
     public String getId() {
         return uuid.toString();
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

@@ -22,6 +22,16 @@ public class Saver {
         }
     }
 
+    public static <T extends Serializable> void saveToFile(List<T> serializable, File file, Class<T> clazz) {
+        try(FileWriter writer = new FileWriter(file)) {
+            Object simplified = simplify(serializable);
+
+            yaml.dump(simplified, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static Object simplify(Object serializable) {
         if(serializable instanceof Serializable s) {
             return simplify(s.serialize());

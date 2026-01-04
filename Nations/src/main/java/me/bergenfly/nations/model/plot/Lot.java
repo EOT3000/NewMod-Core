@@ -2,6 +2,7 @@ package me.bergenfly.nations.model.plot;
 
 import me.bergenfly.nations.config.DefaultTownPermission;
 import me.bergenfly.nations.config.TownPermission;
+import me.bergenfly.nations.manager.Plots;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.LandOwner;
 import me.bergenfly.nations.model.User;
@@ -21,11 +22,19 @@ public class Lot implements Serializable {
 
     private int depth;
 
-    private Set<Rectangle> rectangles = new HashSet<>();
+    private final Set<Rectangle> rectangles = new HashSet<>();
 
-    private Set<User> trusted = new HashSet<>();
+    private final Set<User> trusted = new HashSet<>();
 
     private Map<PlotPermission, List<Level>> setPermissions = new HashMap<>();
+
+
+
+    public Lot(World world) {
+        this.world = world;
+    }
+
+
 
     public LandAdministrator getAdministrator() {
         return administrator;
@@ -54,6 +63,7 @@ public class Lot implements Serializable {
         }
     }
 
+    //TODO finish this and rename method
     private boolean belongsTo(List<Level> levels, User user) {
         if(levels.contains(Level.EVERYONE)) {
             return true;
@@ -122,11 +132,12 @@ public class Lot implements Serializable {
         Map<String, Object> ret = new HashMap<>();
 
         ret.put("rectangles", rectangles);
-        ret.put("world", world.getName());
+        ret.put("world", Plots.getWorldId(world));
         ret.put("administrator", administrator.getId());
         ret.put("owner", owner.getId());
         ret.put("trusted", new IdList(trusted));
+        //TODO permissions
 
-        return null;
+        return ret;
     }
 }

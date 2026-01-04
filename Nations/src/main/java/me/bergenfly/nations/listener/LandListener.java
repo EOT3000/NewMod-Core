@@ -1,4 +1,4 @@
-package me.bergenfly.nations.listener;
+/*package me.bergenfly.nations.listener;
 
 public class LandListener {
 
@@ -79,3 +79,4 @@ public class LandListener {
 
     }
 }
+*/
