@@ -80,8 +80,11 @@ public class NationsLandManager {
         //}
     }
 
-
-    public Lot getLotAt(Location location) {
-
+    public Registry<ClaimedChunk, Integer> chunksRegistry() {
+        return PLOTS;
     }
+
+    /*public Lot getLotAt(Location location) {
+
+    }*/
 }

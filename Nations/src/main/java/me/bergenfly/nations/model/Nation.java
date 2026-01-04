@@ -165,7 +165,17 @@ public class Nation implements LandAdministrator, Serializable {
 
     @Override
     public Set<ClaimedChunk> getLand() {
-        return Set.of();
+        return new HashSet<>(land);
+    }
+
+    @Override
+    public void addLandToList(ClaimedChunk claimedChunk) {
+        land.add(claimedChunk);
+    }
+
+    @Override
+    public void removeLandFromList(ClaimedChunk claimedChunk) {
+        land.remove(claimedChunk);
     }
 
     @Override

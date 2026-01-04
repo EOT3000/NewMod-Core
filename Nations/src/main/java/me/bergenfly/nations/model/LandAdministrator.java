@@ -18,4 +18,8 @@ public interface LandAdministrator extends Serializable {
      * @return a set of all the {@link ClaimedChunk}s that this administrator administrates.
      */
     Set<ClaimedChunk> getLand();
+
+    void addLandToList(ClaimedChunk claimedChunk);
+
+    void removeLandFromList(ClaimedChunk claimedChunk);
 }

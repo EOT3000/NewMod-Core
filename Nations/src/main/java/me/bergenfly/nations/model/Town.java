@@ -214,6 +214,16 @@ public class Town implements LandAdministrator, Serializable {
         return new HashSet<>(land);
     }
 
+    @Override
+    public void addLandToList(ClaimedChunk claimedChunk) {
+        land.add(claimedChunk);
+    }
+
+    @Override
+    public void removeLandFromList(ClaimedChunk claimedChunk) {
+        land.remove(claimedChunk);
+    }
+
     public int getMaxChunks() {
         return residents.size()*20;
     }

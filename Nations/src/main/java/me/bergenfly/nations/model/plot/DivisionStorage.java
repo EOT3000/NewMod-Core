@@ -16,7 +16,7 @@ public class DivisionStorage implements Serializable {
 
 
 
-    public DivisionStorage(int divisions) {
+    public DivisionStorage(int divisions, ClaimedChunk claimedChunk) {
         if(divisions < 0 || divisions > 4) {
             throw new IllegalArgumentException("Number of DivisionStorage divisions cannot be below 0, or above 4");
         }
@@ -26,8 +26,8 @@ public class DivisionStorage implements Serializable {
         divisionsStorage = new ChunkChunk[(int) Math.pow(2,divisions)][(int) Math.pow(2,divisions)];
     }
 
-    public DivisionStorage(DivisionStorageDeserialized data) {
-        this(data.numDivisions());
+    public DivisionStorage(DivisionStorageDeserialized data, ClaimedChunk claimedChunk) {
+        this(data.numDivisions(), claimedChunk);
 
         Registry<Serializable, String> ID_HAVERS = NationsPlugin.getInstance().idHaverRegistry();
 
@@ -37,6 +37,8 @@ public class DivisionStorage implements Serializable {
                     (LandAdministrator) ID_HAVERS.get(chunkChunk.claimer()));
 
             divisionsStorage[chunkChunk.xColumn()][chunkChunk.zRow()] = pieceOfChunk;
+
+            pieceOfChunk.holder.addLand();
         }
     }
 

@@ -14,9 +14,7 @@ public class Saver {
 
     public static <T extends Serializable> void saveToFile(T serializable, File file, Class<T> clazz) {
         try(FileWriter writer = new FileWriter(file)) {
-            Object object = serializable.serialize();
-
-            Object simplified = simplify(object);
+            Object simplified = simplify(serializable);
 
             yaml.dump(simplified, writer);
         } catch (IOException e) {
@@ -55,14 +53,29 @@ public class Saver {
     public static <T extends Serializable, S> Set<T> loadValuesFromFile(File file, Class<S> clazz, Function<S, T> converter) {
         Set<T> ret = new HashSet<>();
 
-        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
+        S[] list = loadFromFile(file, (Class<S[]>) clazz.arrayType());
 
-        for(String key : configuration.getKeys(false)) {
-            ConfigurationSection chunk = configuration.getSerializable(key);
-
-
+        for(S s : list) {
+            ret.add(converter.apply(s));
         }
+
+        return ret;
     }
+
+
+
+    public static <FINAL extends Serializable, RAW, INTERMEDIATE> Set<FINAL> loadValuesFromFileArray(File file, Class<RAW> clazz, Function<RAW,INTERMEDIATE[]> arrayGetter, Function<INTERMEDIATE, FINAL> converter) {
+        Set<FINAL> ret = new HashSet<>();
+
+        INTERMEDIATE[] intermediates = arrayGetter.apply(loadFromFile(file, clazz));
+
+        for(INTERMEDIATE intermediate : intermediates) {
+            ret.add(converter.apply(intermediate));
+        }
+
+        return ret;
+    }
+
 
     public static <T extends Serializable, S> Set<T> loadFromDirectory(File dir, Class<S> clazz, Function<S, T> converter) {
         Set<T> ret = new HashSet<>();
@@ -79,6 +92,14 @@ public class Saver {
     public static <S extends Serializable, T extends S> Set<T> addToRegistryById(Set<T> set, Registry<S, String> registry) {
         for(T t : set) {
             registry.set(t.getId(), t);
+        }
+
+        return set;
+    }
+
+    public static <S extends Serializable, T extends S, K> Set<T> addToRegistryById(Set<T> set, Registry<S, K> registry, Function<String, K> converter) {
+        for(T t : set) {
+            registry.set(converter.apply(t.getId()), t);
         }
 
         return set;

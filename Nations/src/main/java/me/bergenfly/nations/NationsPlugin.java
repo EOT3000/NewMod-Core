@@ -11,11 +11,14 @@ import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.model.Nation;
 import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
+import me.bergenfly.nations.model.plot.ClaimedChunk;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.registry.RegistryImpl;
 import me.bergenfly.nations.registry.StringRegistry;
 import me.bergenfly.nations.serializer.Saver;
 import me.bergenfly.nations.serializer.Serializable;
+import me.bergenfly.nations.serializer.type.ChunkDeserialized;
+import me.bergenfly.nations.serializer.type.ChunkListDeserialized;
 import me.bergenfly.nations.serializer.type.NationDeserialized;
 import me.bergenfly.nations.serializer.type.TownDeserialized;
 import org.apache.commons.lang3.tuple.Triple;
@@ -92,9 +95,8 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             Set<Nation> loadedNations = Saver.loadFromDirectory(new File("/Nations/nations"), NationDeserialized.class, Nation::new);
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
 
-            Set<Nation> loadedNations = Saver.loadValuesFromFile(new File("/Nations/nations"), NationDeserialized.class, Nation::new);
-            Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
-
+            Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("/Nations/chunks.yml"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
+            Saver.addToRegistryById(loadedChunks, landManager.chunksRegistry(), Integer::parseInt);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,10 +118,22 @@ public class NationsPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        SavePlot.savePlots();
-        SaveNation.saveNations();
-        SaveCommunity.saveCommunities();
-        SaveUser.saveUsers();
+        //SavePlot.savePlots();
+        //SaveNation.saveNations();
+        //SaveCommunity.saveCommunities();
+        //SaveUser.saveUsers();
+
+        for(Nation nation : NATIONS.list()) {
+            Saver.saveToFile(nation, new File("/Nations/nations/" + nation.getId() + ".yml"), Nation.class);
+        }
+
+        for(Town town : COMMUNITIES.list()) {
+            Saver.saveToFile(town, new File("/Nations/town/" + town.getId() + ".yml"), Town.class);
+        }
+
+        for(Town town : COMMUNITIES.list()) {
+            Saver.saveToFile(town, new File("/Nations/town/" + town.getId() + ".yml"), Town.class);
+        }
     }
 
     //Don't use this. Only internal code can use this

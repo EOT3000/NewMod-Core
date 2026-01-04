@@ -21,13 +21,13 @@ public class ClaimedChunk implements Serializable {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.world = world;
-        this.storage = new DivisionStorage(0);
+        this.storage = new DivisionStorage(0, this);
     }
 
     public ClaimedChunk(ChunkDeserialized data) {
         this(data.chunkX(), data.chunkZ(), Plots.getWorld(data.world()));
 
-        this.storage = new DivisionStorage(data.storage());
+        this.storage = new DivisionStorage(data.storage(), this);
     }
 
     public int getChunkX() {
@@ -56,8 +56,10 @@ public class ClaimedChunk implements Serializable {
         data.put("chunkZ", chunkZ);
         data.put("world", Plots.getWorldId(world));
         data.put("storage", storage);
+        data.put("id", getId());
+        data.put("title", chunkX + "," + chunkZ);
 
-        return null;
+        return ret;
     }
 
     @Override
