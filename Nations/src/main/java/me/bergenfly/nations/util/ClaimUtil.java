@@ -1,4 +1,4 @@
-package me.bergenfly.nations.util;
+/*package me.bergenfly.nations.util;
 
 import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.manager.NationsLandManager;
@@ -273,3 +273,4 @@ public class ClaimUtil {
         return isAreaTouchingSpecific(chunkX*16, chunkZ*16, chunkX*16+15, chunkX*16+15, world, administrator);
     }
 }
+*/

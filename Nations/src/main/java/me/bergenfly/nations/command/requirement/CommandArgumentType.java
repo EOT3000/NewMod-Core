@@ -5,6 +5,7 @@ import me.bergenfly.nations.command.TranslatableString;
 import me.bergenfly.nations.model.Town;
 import me.bergenfly.nations.model.User;
 import org.apache.commons.lang3.function.TriFunction;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -34,7 +35,10 @@ public interface CommandArgumentType<T> {
     CommandArgumentType<Float> NUMBER = BasicCommandArgumentType.createExceptionCheckType(Float.TYPE, Float::parseFloat, "nations.command.error.number.not_argument");
     CommandArgumentType<Town> TOWN = BasicCommandArgumentType.createNullCheckType(Town.class, NationsPlugin.getInstance().communitiesRegistry()::get, "nations.command.error.town.not_argument", () -> NationsPlugin.getInstance().communitiesRegistry().list().stream().map(Town::getName).collect(Collectors.toList()));
     CommandArgumentType<String> STRING = BasicCommandArgumentType.createExceptionCheckType(String.class, (a) -> a, "");
-    CommandArgumentType<User> USER = BasicCommandArgumentType.createNullCheckType(User.class, (a) -> USERS.get(Bukkit.getOfflinePlayer(a).getUniqueId()) , "nations.command.error.player.not_argument", (b) -> Bukkit.getOnlinePlayers().stream().map((a) -> a.getName()).collect(Collectors.list));
+    CommandArgumentType<User> USER = BasicCommandArgumentType.createNullCheckType(User.class,
+            (String a) -> NationsPlugin.getInstance().usersRegistry().get(Bukkit.getOfflinePlayer(a).getUniqueId()),
+            "nations.command.error.player.not_argument",
+            () -> Bukkit.getOnlinePlayers().stream().map((a) -> a.getName()).collect(Collectors.toList()));
 
 
     class BasicCommandArgumentType<T> implements CommandArgumentType<T> {

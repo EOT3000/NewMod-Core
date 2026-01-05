@@ -1,4 +1,4 @@
-package me.bergenfly.nations.commands.nation;
+/*package me.bergenfly.nations.commands.nation;
 
 import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.command.CommandFlower;
@@ -445,3 +445,4 @@ public class NationCommandOld extends CommandRoot {
         }
     }
 }
+*/

@@ -38,7 +38,7 @@ public class DivisionStorage implements Serializable {
 
             divisionsStorage[chunkChunk.xColumn()][chunkChunk.zRow()] = pieceOfChunk;
 
-            pieceOfChunk.holder.addLand();
+            pieceOfChunk.holder.addLandToList(claimedChunk);
         }
     }
 
@@ -109,6 +109,20 @@ public class DivisionStorage implements Serializable {
         int zIndex = z0_15/((int) Math.pow(2, 4-numberDivisions));
 
         divisionsStorage[xIndex][zIndex] = new ChunkChunk(holder, administrator);
+    }
+
+    public LandAdministrator getAdminAt(int x0_15, int z0_15) {
+        int xIndex = x0_15/((int) Math.pow(2, 4-numberDivisions));
+        int zIndex = z0_15/((int) Math.pow(2, 4-numberDivisions));
+
+        return divisionsStorage[xIndex][zIndex].administrator;
+    }
+
+    public LandAdministrator getHolderAt(int x0_15, int z0_15) {
+        int xIndex = x0_15/((int) Math.pow(2, 4-numberDivisions));
+        int zIndex = z0_15/((int) Math.pow(2, 4-numberDivisions));
+
+        return divisionsStorage[xIndex][zIndex].holder;
     }
 
     @Override

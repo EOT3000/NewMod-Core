@@ -1,4 +1,4 @@
-package me.bergenfly.nations.command;
+/*package me.bergenfly.nations.command;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
@@ -278,7 +278,7 @@ public class ObjectFetchers {
                 public static final int NONE_MATCH_SPECIFIC;
                 public static final int NONE_MATCH_GENERAL;
                 public static final int MULTIPLE_MATCH;
-                public static final int TOO_MANY_PARAMETERS;*/
+                public static final int TOO_MANY_PARAMETERS;* /
 
                 if(c == VALID) {
                     r[i] = m.right();
@@ -437,4 +437,4 @@ public class ObjectFetchers {
         };
     }
 
-}
+}*/

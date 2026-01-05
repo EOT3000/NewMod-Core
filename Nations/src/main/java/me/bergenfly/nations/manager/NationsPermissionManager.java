@@ -2,10 +2,12 @@ package me.bergenfly.nations.manager;
 
 import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
-import me.bergenfly.nations.api.model.User;
-import me.bergenfly.nations.api.model.organization.*;
-import me.bergenfly.nations.api.registry.Registry;
-import me.bergenfly.nations.impl.NationsPlugin;
+import me.bergenfly.nations.NationsPlugin;
+import me.bergenfly.nations.model.Nation;
+import me.bergenfly.nations.model.Town;
+import me.bergenfly.nations.model.User;
+import me.bergenfly.nations.registry.Registry;
+import me.bergenfly.nations.serializer.Serializable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -32,7 +34,7 @@ public class NationsPermissionManager {
     public static final int MULTIPLE_MATCH;
     public static final int TOO_MANY_PARAMETERS;
 
-    private final Map<String, Set<LandPermissionHolder>> holders = new HashMap<>();
+    private final Map<String, Set<Serializable>> holders = new HashMap<>();
 
     /**
      * Register a permission holder, for example when a holder is created, or when a holder's name is changed.
@@ -40,7 +42,7 @@ public class NationsPermissionManager {
      * @param holder the holder to register
      * @param oldName the old name of the holder to deregister
      */
-    public void registerHolder(LandPermissionHolder holder, @Nullable String oldName) {
+    public void registerHolder(Serializable holder, @Nullable String oldName) {
         if(oldName != null && holders.get(oldName) != null) {
             holders.get(oldName).remove(holder);
         }
@@ -49,12 +51,12 @@ public class NationsPermissionManager {
 
         holders.get(holder.getName()).add(holder);
 
-        if(holder instanceof Deletable d) {
-            d.subscribeToDeletion((a) -> holders.get(a.getName()).remove(d));
-        }
+        //if(holder instanceof Deletable d) {
+        //    d.subscribeToDeletion((a) -> holders.get(a.getName()).remove(d));
+        //}
     }
 
-    public IntObjectPair<LandPermissionHolder> get(String params) {
+    public IntObjectPair<Serializable> get(String params) {
         String[] spl = params.split(":");
 
         switch (spl.length) {
@@ -85,8 +87,8 @@ public class NationsPermissionManager {
         }
     }
 
-    public IntObjectPair<LandPermissionHolder> get(String type, Nation nation, String name) {
-        Set<LandPermissionHolder> byName = holders.get(name);
+    public IntObjectPair<Serializable> get(String type, Nation nation, String name) {
+        Set<Serializable> byName = holders.get(name);
 
         if(byName == null) {
             return new IntObjectImmutablePair<>(NONE_MATCH_GENERAL, null);
@@ -103,30 +105,30 @@ public class NationsPermissionManager {
             }
         }
 
-        List<LandPermissionHolder> valid = new ArrayList<>();
+        List<Serializable> valid = new ArrayList<>();
 
-        for(LandPermissionHolder holder : byName) {
+        for(Serializable holder : byName) {
             boolean typeValid = true;
             boolean nationValid = true;
 
             if(type != null) {
                 typeValid = switch (type) {
-                    case "rank" -> holder instanceof Rank;
-                    case "community" -> holder instanceof Community;
-                    case "tribe" -> holder instanceof Tribe;
-                    case "settlement" -> holder instanceof Settlement;
+                    //case "rank" -> holder instanceof Rank;
+                    //case "community" -> holder instanceof Community;
+                    //case "tribe" -> holder instanceof Tribe;
+                    case "town" -> holder instanceof Town;
                     case "nation" -> holder instanceof Nation;
-                    case "company" -> holder instanceof Company;
+                    //case "company" -> holder instanceof Company;
                     case "user" -> holder instanceof User;
                     default -> false; //Will never happen
                 };
             }
 
-            if(nation != null) {
+            /*if(nation != null) {
                 if(holder instanceof NationComponent c) {
                     nationValid = nation.equals(c.getNation());
                 }
-            }
+            }*/
 
             if(nationValid && typeValid) valid.add(holder);
         }

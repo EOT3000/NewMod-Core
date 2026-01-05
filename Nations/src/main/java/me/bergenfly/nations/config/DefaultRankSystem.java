@@ -1,5 +1,7 @@
 package me.bergenfly.nations.config;
 
+import static me.bergenfly.nations.config.DefaultTownPermission.*;
+
 public enum DefaultRankSystem {
     /*
     //RESIDENT MANAGEMENT:
@@ -37,6 +39,10 @@ public enum DefaultRankSystem {
     VIEW_VAULT,
      */
 
-    HELPER(INVITE_RESIDENT, ACCESS_ROAD, ACCESS_PARK, ACCESS_SUBWAY, SELL_PUBLIC_APARTMENT, VIEW_VAULT),
-    DEPUTY(INVITE_RESIDENT, PROPOSE_KICK, ISSUE_WARRANT, ISSUE_LOCK, ACCESS_SHERIFF_OFFICE, VIEW_VAULT)
+    HELPER(INVITE_RESIDENT, ACCESS_ROAD, ACCESS_PARK, ACCESS_SUBWAY, MANAGE_PUBLIC_HOUSING, VIEW_VAULT),
+    DEPUTY(INVITE_RESIDENT, PROPOSE_KICK, ISSUE_WARRANT, ACCESS_SHERIFF_OFFICE, VIEW_VAULT);
+
+    DefaultRankSystem(DefaultTownPermission... permissions) {
+
+    }
 }

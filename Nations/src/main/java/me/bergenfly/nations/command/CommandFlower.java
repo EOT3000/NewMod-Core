@@ -5,10 +5,6 @@ import me.bergenfly.nations.command.requirement.CommandArgumentType;
 import me.bergenfly.nations.command.requirement.CommandRequirement;
 import me.bergenfly.nations.model.User;
 import me.bergenfly.nations.model.*;
-import me.bergenfly.nations.DefaultNationPermission;
-import me.bergenfly.nations.DefaultPlotPermission;
-import me.bergenfly.nations.permission.NationPermission;
-import me.bergenfly.nations.permission.PlotPermission;
 import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.NationsPlugin;
 import org.apache.commons.lang3.function.TriFunction;
@@ -122,7 +118,7 @@ public class CommandFlower {
 
             @Override
             public String convert(String input) {
-                return ;
+                return input.toLowerCase();
             }
         });
     }

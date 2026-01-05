@@ -1,4 +1,4 @@
-package me.bergenfly.nations.commands.plot;
+/*package me.bergenfly.nations.commands.plot;
 
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import me.bergenfly.nations.api.command.*;
@@ -217,4 +217,4 @@ public class PlotCommandOld extends CommandRoot {
             return false;
         }
     }
-}
+}*/

@@ -60,7 +60,7 @@ public class ClaimUtil2 {
 
                 ClaimedChunk chunk = manager.getClaimedChunkAtChunk(w, chunkX, chunkZ);
 
-                if(chunk.getPlotSectionAt(0,0).getAdministrator().equals(admin)) {
+                if(chunk.getStorage().getAdminAt(0,0).equals(admin)) {
                     count++;
                 }
             }
@@ -75,13 +75,13 @@ public class ClaimUtil2 {
 
         int count = 0;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX+1, chunkZ).getPlotSectionAt(0,0).getAdministrator().equals(admin)) count++;
+        if(manager.getClaimedChunkAtChunk(w, chunkX+1, chunkZ).getStorage().getAdminAt(0,0).equals(admin)) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ+1).getPlotSectionAt(0,0).getAdministrator().equals(admin)) count++;
+        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ+1).getStorage().getAdminAt(0,0).equals(admin)) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX-1, chunkZ).getPlotSectionAt(0,0).getAdministrator().equals(admin)) count++;
+        if(manager.getClaimedChunkAtChunk(w, chunkX-1, chunkZ).getStorage().getAdminAt(0,0).equals(admin)) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ-1).getPlotSectionAt(0,0).getAdministrator().equals(admin)) count++;
+        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ-1).getStorage().getAdminAt(0,0).equals(admin)) count++;
 
         return count;
     }

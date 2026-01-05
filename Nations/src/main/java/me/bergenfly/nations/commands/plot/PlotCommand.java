@@ -17,6 +17,10 @@ import java.util.UUID;
 import static me.bergenfly.nations.commands.plot.PlotChecks.*;
 
 public class PlotCommand extends CommandRoot {
+    public PlotCommand() {
+        super("plot");
+    }
+
     @Override
     public void loadSubcommands() {
         {
