@@ -1,32 +1,43 @@
 package me.bergenfly.nations.serializer;
 
+import com.google.gson.Gson;
 import me.bergenfly.nations.registry.Registry;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
 
 public class Saver {
-    private static final Yaml yaml = new Yaml();
+    private static final Gson gson = new Gson();
 
     public static <T extends Serializable> void saveToFile(T serializable, File file, Class<T> clazz) {
-        try(FileWriter writer = new FileWriter(file)) {
+        try {
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try(FileOutputStream writer = new FileOutputStream(file)) {
             Object simplified = simplify(serializable);
 
-            yaml.dump(simplified, writer);
+            String output = gson.toJson(simplified);
+
+            writer.write(output.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static <T extends Serializable> void saveToFile(List<T> serializable, File file, Class<T> clazz) {
-        try(FileWriter writer = new FileWriter(file)) {
+        try(FileOutputStream writer = new FileOutputStream(file)) {
             Object simplified = simplify(serializable);
 
-            yaml.dump(simplified, writer);
+            String output = gson.toJson(simplified);
+
+            writer.write(output.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,6 +88,10 @@ public class Saver {
     public static <FINAL extends Serializable, RAW, INTERMEDIATE> Set<FINAL> loadValuesFromFileArray(File file, Class<RAW> clazz, Function<RAW,INTERMEDIATE[]> arrayGetter, Function<INTERMEDIATE, FINAL> converter) {
         Set<FINAL> ret = new HashSet<>();
 
+        if(!file.exists()) {
+            return ret;
+        }
+
         INTERMEDIATE[] intermediates = arrayGetter.apply(loadFromFile(file, clazz));
 
         for(INTERMEDIATE intermediate : intermediates) {
@@ -89,6 +104,10 @@ public class Saver {
 
     public static <T extends Serializable, S> Set<T> loadFromDirectory(File dir, Class<S> clazz, Function<S, T> converter) {
         Set<T> ret = new HashSet<>();
+
+        if(!dir.exists()) {
+            dir.mkdirs();
+        }
 
         for(File file : dir.listFiles()) {
             T t = converter.apply(loadFromFile(file, clazz));
@@ -124,12 +143,14 @@ public class Saver {
     }
 
     public static <T> T loadFromFile(File file, Class<T> clazz) {
-        try(FileInputStream stream = new FileInputStream(file)) {
-            return yaml.loadAs(stream, clazz);
+        try(FileReader stream = new FileReader(file)) {
+            return gson.fromJson(stream, clazz);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
     }
+
+    //todo https://stackoverflow.com/questions/60291720/java-parse-yaml-to-json to save as yaml
 }

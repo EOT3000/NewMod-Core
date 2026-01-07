@@ -86,16 +86,16 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         this.permissionManager = new NationsPermissionManager();
 
         try {
-            Set<Town> loadedTowns = Saver.loadFromDirectory(new File("/Nations/towns"), TownDeserialized.class, Town::new);
+            Set<Town> loadedTowns = Saver.loadFromDirectory(new File("./plugins/Nations/towns"), TownDeserialized.class, Town::new);
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedTowns, COMMUNITIES), COMMUNITIES), PERMISSION_HOLDER);
 
-            Set<Nation> loadedNations = Saver.loadFromDirectory(new File("/Nations/nations"), NationDeserialized.class, Nation::new);
+            Set<Nation> loadedNations = Saver.loadFromDirectory(new File("./plugins/Nations/nations"), NationDeserialized.class, Nation::new);
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
 
-            Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("/Nations/chunks.yml"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
+            Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("./plugins/Nations/chunks.json"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
             Saver.addToRegistryById(loadedChunks, landManager.chunksRegistry(), Integer::parseInt);
 
-            Set<User> loadedUsers = Saver.loadFromDirectory(new File("/Nations/users"), UserDeserialized.class, User::new);
+            Set<User> loadedUsers = Saver.loadFromDirectory(new File("./plugins/Nations/users"), UserDeserialized.class, User::new);
             Saver.addToRegistryById(loadedUsers, USERS, UUID::fromString);
 
 
@@ -125,18 +125,18 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         //SaveUser.saveUsers();
 
         for(Nation nation : NATIONS.list()) {
-            Saver.saveToFile(nation, new File("/Nations/nations/" + nation.getId() + ".yml"), Nation.class);
+            Saver.saveToFile(nation, new File("./plugins/Nations/nations/" + nation.getId() + ".json"), Nation.class);
         }
 
         for(Town town : COMMUNITIES.list()) {
-            Saver.saveToFile(town, new File("/Nations/town/" + town.getId() + ".yml"), Town.class);
+            Saver.saveToFile(town, new File("./plugins/Nations/towns/" + town.getId() + ".json"), Town.class);
         }
 
         for(User user : USERS.list()) {
-            Saver.saveToFile(user, new File("/Nations/users/" + user.getId() + ".yml"), User.class);
+            Saver.saveToFile(user, new File("./plugins/Nations/users/" + user.getId() + ".json"), User.class);
         }
 
-        Saver.saveToFile(landManager.chunksRegistry().list(), new File("/Nation/chunks/chunks.yml"), ClaimedChunk.class);
+        Saver.saveToFile(landManager.chunksRegistry().list(), new File("./plugins/Nations/chunks/chunks.json"), ClaimedChunk.class);
     }
 
     //Don't use this. Only internal code can use this

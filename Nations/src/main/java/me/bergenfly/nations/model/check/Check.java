@@ -9,7 +9,7 @@ public class Check {
     public static boolean checkResidentCanJoinTown(User user, Town town) {
         if(!user.hasCommunity()) {
             return true;
-        } else return user.getCommunity().canRemoveResident(user);
+        } else return user.getCommunity().canRemoveResident(user) || user.getCommunity().equals(town);
     }
 
     public static boolean checkTownCanLeaveNation(Town town) {

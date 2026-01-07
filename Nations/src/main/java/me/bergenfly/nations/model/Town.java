@@ -12,6 +12,7 @@ import me.bergenfly.nations.registry.Registry;
 import me.bergenfly.nations.serializer.IdList;
 import me.bergenfly.nations.serializer.Serializable;
 import me.bergenfly.nations.serializer.type.TownDeserialized;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Town implements LandAdministrator, Serializable {
     private static Registry<Town, String> COMMUNITIES;
@@ -111,7 +113,10 @@ public class Town implements LandAdministrator, Serializable {
     }
 
     public void sendInfo(CommandSender sender) {
-
+        sender.sendMessage(ChatColor.GOLD + "-----------");
+        sender.sendMessage("Town of " + this.getName());
+        sender.sendMessage("Led by " + this.getLeader().getName());
+        sender.sendMessage("Residents are " + this.getResidents().stream().map(User::getName).collect(Collectors.toSet()));
     }
 
     public boolean addOutlaw(User toAdd) {
@@ -262,6 +267,10 @@ public class Town implements LandAdministrator, Serializable {
     public static ObjectIntPair<Town> tryCreate(String name, User leader, Player player, boolean silent) {
         if(COMMUNITIES == null) {
             COMMUNITIES = NationsPlugin.getInstance().communitiesRegistry();
+        }
+
+        if(LAND == null) {
+            LAND = NationsPlugin.getInstance().landManager();
         }
 
         if(COMMUNITIES.get(name) != null) {

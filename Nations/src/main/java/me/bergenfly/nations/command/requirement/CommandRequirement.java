@@ -22,7 +22,17 @@ public interface CommandRequirement {
     class BasicCommandRequirement implements CommandRequirement {
         private final Predicate<CommandSender> check;
         private final String errorKey;
-        private CommandRequirement parent;
+        private CommandRequirement parent = new CommandRequirement() {
+            @Override
+            public boolean passes(CommandSender sender) {
+                return true;
+            }
+
+            @Override
+            public String getErrorMessage(CommandSender invoker) {
+                return "";
+            }
+        };
 
         public BasicCommandRequirement(Predicate<CommandSender> check, String errorKey) {
             this.check = check;

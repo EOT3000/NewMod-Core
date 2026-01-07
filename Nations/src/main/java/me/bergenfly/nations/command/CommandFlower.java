@@ -166,28 +166,35 @@ public class CommandFlower {
         return this;
     }
 
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings, String[] initial) {
-        System.out.println(Arrays.toString(strings));
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] finalArguments, String[] initialArguments) {
+        System.out.println(Arrays.toString(finalArguments));
 
         for(CommandRequirement requirement : requirements) {
             if(!requirement.passes(commandSender)) {
-
+                commandSender.sendMessage(requirement.getErrorMessage(commandSender));
+                return false;
             }
         }
 
         try {
-            NationsCommandInvocation made = new NationsCommandInvocation(arguments, strings, commandSender);
+            NationsCommandInvocation made = new NationsCommandInvocation(arguments, finalArguments, commandSender);
 
             try {
                 int code = this.command.complete(made);
 
+                made.code = code;
+
+                commandSender.sendMessage(messages.apply(made));
+
                 return code >= 0;
+            } catch (CommandIllegalArgumentException e) {
+                return false;
             } catch (Exception e) {
                 e.printStackTrace();
 
                 logger.log(Level.WARNING, "Error executing command");
-                logger.log(Level.WARNING, "Final arguments: " + Arrays.toString(strings));
-                logger.log(Level.WARNING, "All arguments: " + Arrays.toString(initial));
+                logger.log(Level.WARNING, "Final arguments: " + Arrays.toString(finalArguments));
+                logger.log(Level.WARNING, "All arguments: " + Arrays.toString(initialArguments));
                 logger.log(Level.WARNING, "---");
 
                 return false;
@@ -209,9 +216,13 @@ public class CommandFlower {
             this.args = rawArguments;
             this.executor = executor;
 
+            Int2ObjectMap<CommandArgumentType<?>> argumentTypesCopy = new Int2ObjectArrayMap<>(argumentTypes);
+
             for(int i = 0; i < rawArguments.length; i++) {
                 String arg = rawArguments[i];
                 CommandArgumentType<?> argumentType = argumentTypes.get(i);
+
+                argumentTypesCopy.remove(i);
 
                 if(argumentType == null) {
                     continue;
@@ -223,8 +234,14 @@ public class CommandFlower {
                 } else {
                     executor.sendMessage(argumentType.getErrorMessage(executor, arg, i+1));
 
-                    throw new RuntimeException();
+                    throw new CommandIllegalArgumentException();
                 }
+            }
+
+            if(!argumentTypesCopy.isEmpty()) {
+                executor.sendMessage("Missing data"); //TODO fix message, and add optional arguments
+
+                throw new CommandIllegalArgumentException();
             }
         }
 
@@ -249,4 +266,7 @@ public class CommandFlower {
         }
     }
 
+    public static class CommandIllegalArgumentException extends IllegalArgumentException {
+
+    }
 }

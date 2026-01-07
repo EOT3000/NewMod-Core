@@ -33,18 +33,18 @@ public abstract class CommandRoot implements TabExecutor {
         return root.addBranch(s, flower);
     }
 
-    public final Pair<CommandStem, String[]> getFinalStem(String[] strings) {
+    public final Pair<CommandStem, String[]> getFinalStem(String[] arguments) {
         CommandStem stem = root;
 
         int count = 0;
 
-        for(String string : strings) {
+        for(String string : arguments) {
             CommandStem next = stem.next(string);
 
             if(next == null) {
-                String[] stringsCopy = new String[strings.length-count];
+                String[] stringsCopy = new String[arguments.length-count];
 
-                System.arraycopy(strings, count, stringsCopy, 0, strings.length-count);
+                System.arraycopy(arguments, count, stringsCopy, 0, arguments.length-count);
 
                 return new ImmutablePair<>(stem, stringsCopy);
             }
@@ -54,9 +54,9 @@ public abstract class CommandRoot implements TabExecutor {
             count++;
         }
 
-        String[] stringsCopy = new String[strings.length-count];
+        String[] stringsCopy = new String[arguments.length-count];
 
-        System.arraycopy(strings, count, stringsCopy, 0, strings.length-count);
+        System.arraycopy(arguments, count, stringsCopy, 0, arguments.length-count);
 
         return new ImmutablePair<>(stem, stringsCopy);
     }
