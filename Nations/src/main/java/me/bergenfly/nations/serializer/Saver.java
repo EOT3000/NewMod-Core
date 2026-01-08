@@ -1,6 +1,7 @@
 package me.bergenfly.nations.serializer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import me.bergenfly.nations.registry.Registry;
 
 import java.io.*;
@@ -9,7 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 
 public class Saver {
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static <T extends Serializable> void saveToFile(T serializable, File file, Class<T> clazz) {
         try {
@@ -32,6 +33,14 @@ public class Saver {
     }
 
     public static <T extends Serializable> void saveToFile(List<T> serializable, File file, Class<T> clazz) {
+        try {
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try(FileOutputStream writer = new FileOutputStream(file)) {
             Object simplified = simplify(serializable);
 

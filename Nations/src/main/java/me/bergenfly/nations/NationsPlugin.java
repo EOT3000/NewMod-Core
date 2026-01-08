@@ -84,19 +84,20 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         //this.PERMISSION_HOLDERS_ID = new RegistryImpl<>(LandPermissionHolder.class);
         this.landManager = new NationsLandManager();
         this.permissionManager = new NationsPermissionManager();
+        this.PERMISSION_HOLDER = new StringRegistry<>(Serializable.class);
 
         try {
+            Set<User> loadedUsers = Saver.loadFromDirectory(new File("./plugins/Nations/users"), UserDeserialized.class, User::new);
+            Saver.addToRegistryById(loadedUsers, USERS, UUID::fromString);
+
             Set<Town> loadedTowns = Saver.loadFromDirectory(new File("./plugins/Nations/towns"), TownDeserialized.class, Town::new);
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedTowns, COMMUNITIES), COMMUNITIES), PERMISSION_HOLDER);
 
             Set<Nation> loadedNations = Saver.loadFromDirectory(new File("./plugins/Nations/nations"), NationDeserialized.class, Nation::new);
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
 
-            Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("./plugins/Nations/chunks.json"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
+            Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("./plugins/Nations/chunks/chunks.json"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
             Saver.addToRegistryById(loadedChunks, landManager.chunksRegistry(), Integer::parseInt);
-
-            Set<User> loadedUsers = Saver.loadFromDirectory(new File("./plugins/Nations/users"), UserDeserialized.class, User::new);
-            Saver.addToRegistryById(loadedUsers, USERS, UUID::fromString);
 
 
         } catch (Exception e) {

@@ -184,7 +184,11 @@ public class CommandFlower {
 
                 made.code = code;
 
-                commandSender.sendMessage(messages.apply(made));
+                String message = messages.apply(made);
+
+                if(message != null) {
+                    commandSender.sendMessage(message);
+                }
 
                 return code >= 0;
             } catch (CommandIllegalArgumentException e) {

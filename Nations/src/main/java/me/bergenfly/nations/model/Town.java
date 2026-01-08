@@ -71,6 +71,8 @@ public class Town implements LandAdministrator, Serializable {
         this.creationTime = creationTime;
         this.initialName = initialName;
         this.founder = founder;
+
+        addResident(leader, true);
     }
 
     @Override
@@ -291,7 +293,7 @@ public class Town implements LandAdministrator, Serializable {
 
         COMMUNITIES.set(name, s);
 
-        leader.setCommunity(s, silent);
+        //leader.setCommunity(s, silent);
         //NationsPlugin.getInstance().permissionManager().registerHolder(s, null);
 
         return new ObjectIntImmutablePair<>(s, 1);
