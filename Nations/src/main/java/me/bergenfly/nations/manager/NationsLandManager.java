@@ -12,6 +12,7 @@ import me.bergenfly.nations.util.ChunkLocation;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -38,11 +39,11 @@ public class NationsLandManager {
         return PLOTS.get(Plots.getLocationId(chunkX, chunkZ, w));
     }
 
-    public ClaimedChunk tryClaimFullChunkOtherwiseFail(Chunk chunk, @Nullable LandAdministrator administrator) {
+    public ClaimedChunk tryClaimFullChunkOtherwiseFail(Chunk chunk, @NotNull LandAdministrator administrator) {
         return tryClaimFullChunkOtherwiseFail(chunk.getWorld(), chunk.getX(), chunk.getZ(), administrator);
     }
 
-    public ClaimedChunk tryClaimFullChunkOtherwiseFail(World w, int chunkX, int chunkZ, @Nullable LandAdministrator administrator) {
+    public ClaimedChunk tryClaimFullChunkOtherwiseFail(World w, int chunkX, int chunkZ, @NotNull LandAdministrator administrator) {
         int id = Plots.getLocationId(chunkX, chunkZ, w);
 
         ClaimedChunk chunk = PLOTS.get(id);
@@ -58,6 +59,8 @@ public class NationsLandManager {
         ClaimedChunk newChunk = new ClaimedChunk(chunkX, chunkZ, w);
 
         newChunk.getStorage().setAt(0, 0, administrator, administrator);
+
+        administrator.addLandToList(newChunk);
 
         administratorClaims.putIfAbsent(administrator, new IntOpenHashSet());
 
@@ -82,6 +85,32 @@ public class NationsLandManager {
 
     public Registry<ClaimedChunk, Integer> chunksRegistry() {
         return PLOTS;
+    }
+
+    //TODO diff admin and claimer
+    public LandAdministrator getAdministratorOf(Location location) {
+        ClaimedChunk chunk = getClaimedChunkAtChunk(location.getChunk());
+
+        int inChunkX = location.getBlockX()-location.getChunk().getX()*16;
+        int inChunkZ = location.getBlockZ()-location.getChunk().getZ()*16;
+
+        return chunk == null ? null : chunk.getStorage().getAdminAt(inChunkX, inChunkZ);
+    }
+
+
+
+    public void registerLoadedChunk(ClaimedChunk chunk) {
+        for(LandAdministrator administrator : chunk.getStorage().administrators()) {
+            administrator.addLandToList(chunk);
+
+            administratorClaims.putIfAbsent(administrator, new IntOpenHashSet());
+
+            administratorClaims.get(administrator).add(Plots.getLocationId(chunk));
+
+            int id = Plots.getLocationId(chunk.getChunkX(), chunk.getChunkZ(), chunk.getWorld());
+
+            PLOTS.set(id, chunk);
+        }
     }
 
     /*public Lot getLotAt(Location location) {

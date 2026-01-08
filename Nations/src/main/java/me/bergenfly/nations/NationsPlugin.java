@@ -97,7 +97,6 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             Saver.addToRegistryById(Saver.addToRegistryByName(Saver.addToRegistryById(loadedNations, NATIONS), NATIONS), PERMISSION_HOLDER);
 
             Set<ClaimedChunk> loadedChunks = Saver.loadValuesFromFileArray(new File("./plugins/Nations/chunks/chunks.json"), ChunkListDeserialized.class, ChunkListDeserialized::chunks, ClaimedChunk::new);
-            Saver.addToRegistryById(loadedChunks, landManager.chunksRegistry(), Integer::parseInt);
 
 
         } catch (Exception e) {
@@ -137,7 +136,7 @@ public class NationsPlugin extends JavaPlugin implements Listener {
             Saver.saveToFile(user, new File("./plugins/Nations/users/" + user.getId() + ".json"), User.class);
         }
 
-        Saver.saveToFile(landManager.chunksRegistry().list(), new File("./plugins/Nations/chunks/chunks.json"), ClaimedChunk.class);
+        Saver.saveToFile("chunks", landManager.chunksRegistry().list(), new File("./plugins/Nations/chunks/chunks.json"), ClaimedChunk.class);
     }
 
     //Don't use this. Only internal code can use this
@@ -177,10 +176,10 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        PlotSection from = landManager.getPlotSectionAtLocation(event.getFrom());
-        PlotSection to = landManager.getPlotSectionAtLocation(event.getTo());
+        LandAdministrator from = landManager.getAdministratorOf(event.getFrom());
+        LandAdministrator to = landManager.getAdministratorOf(event.getTo());
 
         if (to == from) {
             return;
@@ -189,19 +188,9 @@ public class NationsPlugin extends JavaPlugin implements Listener {
         if (to == null) {
             event.getPlayer().sendTitle(ChatColor.DARK_GREEN + "Entering Wilderness", ChatColor.GREEN + "It's dangerous to go alone", 5, 25, 5);
         } else {
-            LandAdministrator admin = to.getAdministrator();
-
-            if(from != null) {
-                LandAdministrator adminOld = from.getAdministrator();
-
-                if(adminOld == admin) {
-                    return;
-                }
-            }
-
-            event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + admin.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
+            event.getPlayer().sendTitle(ChatColor.GOLD + "Entering " + ChatColor.YELLOW + to.getName(), ChatColor.YELLOW + "oooo", 5, 25, 5);
         }
-    }*/
+    }
 
     public void addReminder(UUID uuid, String string) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);

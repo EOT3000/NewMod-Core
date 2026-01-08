@@ -15,6 +15,8 @@ public class Saver {
     public static <T extends Serializable> void saveToFile(T serializable, File file, Class<T> clazz) {
         try {
             if(!file.exists()) {
+                file.getParentFile().mkdirs();
+
                 file.createNewFile();
             }
         } catch (Exception e) {
@@ -32,9 +34,11 @@ public class Saver {
         }
     }
 
-    public static <T extends Serializable> void saveToFile(List<T> serializable, File file, Class<T> clazz) {
+    public static <T extends Serializable> void saveToFile(String key, List<T> serializable, File file, Class<T> clazz) {
         try {
             if(!file.exists()) {
+                file.getParentFile().mkdirs();
+
                 file.createNewFile();
             }
         } catch (Exception e) {
@@ -42,7 +46,11 @@ public class Saver {
         }
 
         try(FileOutputStream writer = new FileOutputStream(file)) {
-            Object simplified = simplify(serializable);
+            Map<String, Object> mapWithSerializableList = new HashMap<>();
+
+            mapWithSerializableList.put(key, serializable);
+
+            Object simplified = simplify(mapWithSerializableList);
 
             String output = gson.toJson(simplified);
 

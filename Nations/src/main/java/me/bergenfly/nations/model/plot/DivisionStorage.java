@@ -125,6 +125,18 @@ public class DivisionStorage implements Serializable {
         return divisionsStorage[xIndex][zIndex].holder;
     }
 
+    public Set<LandAdministrator> administrators() {
+        Set<LandAdministrator> ret = new HashSet<>();
+
+        for(ChunkChunk[] firstLayerInIteration : divisionsStorage) {
+            for(ChunkChunk chunkChunk : firstLayerInIteration) {
+                ret.add(chunkChunk.administrator);
+            }
+        }
+
+        return ret;
+    }
+
     @Override
     public Object serialize() {
         Map<String, Object> ret = new HashMap<>();

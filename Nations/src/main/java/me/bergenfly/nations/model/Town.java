@@ -119,6 +119,7 @@ public class Town implements LandAdministrator, Serializable {
         sender.sendMessage("Town of " + this.getName());
         sender.sendMessage("Led by " + this.getLeader().getName());
         sender.sendMessage("Residents are " + this.getResidents().stream().map(User::getName).collect(Collectors.toSet()));
+        sender.sendMessage("Claims number " + land.size());
     }
 
     public boolean addOutlaw(User toAdd) {

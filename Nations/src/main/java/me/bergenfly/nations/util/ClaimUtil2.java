@@ -23,22 +23,24 @@ public class ClaimUtil2 {
     }
 
     public static int tryClaimSettlementWithClaimChecks(Town town, World w, int chunkX, int chunkZ) {
-        if(town.getLand().size() < 5) {
+        if(town.getLand().isEmpty()) {
+            //
+        } else if(town.getLand().size() < 5) {
             if(getDirectlyAdjacent(town, false, w, chunkX, chunkZ) == 0) {
-                return -1;
+                return -1; //<5; 1 directly adjacent
             }
         } else {
             if(getAdjacent(town, false, w, chunkX, chunkZ) < 3) {
-                return -2;
+                return -2; //>=5; 3 adjacent or diagonal
             }
         }
 
         if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ) != null) {
-            return -3;
+            return -3; //already claimed
         }
 
-        if(town.getMaxChunks() >= town.getLand().size()) {
-            return -4;
+        if(town.getMaxChunks() <= town.getLand().size()) {
+            return -4; //not enough chunks
         }
 
         manager.tryClaimFullChunkOtherwiseFail(w, chunkX, chunkZ, town);
@@ -58,9 +60,9 @@ public class ClaimUtil2 {
                     continue;
                 }
 
-                ClaimedChunk chunk = manager.getClaimedChunkAtChunk(w, chunkX, chunkZ);
 
-                if(chunk.getStorage().getAdminAt(0,0).equals(admin)) {
+
+                if(admin.equals(adminAt(w, chunkX+x, chunkZ+z))) {
                     count++;
                 }
             }
@@ -75,14 +77,24 @@ public class ClaimUtil2 {
 
         int count = 0;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX+1, chunkZ).getStorage().getAdminAt(0,0).equals(admin)) count++;
+        if(admin.equals(adminAt(w, chunkX+1, chunkZ))) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ+1).getStorage().getAdminAt(0,0).equals(admin)) count++;
+        if(admin.equals(adminAt(w, chunkX, chunkZ+1))) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX-1, chunkZ).getStorage().getAdminAt(0,0).equals(admin)) count++;
+        if(admin.equals(adminAt(w, chunkX-1, chunkZ))) count++;
 
-        if(manager.getClaimedChunkAtChunk(w, chunkX, chunkZ-1).getStorage().getAdminAt(0,0).equals(admin)) count++;
+        if(admin.equals(adminAt(w, chunkX, chunkZ-1))) count++;
 
         return count;
+    }
+
+    private static LandAdministrator adminAt(World w, int chunkX, int chunkZ) {
+        ClaimedChunk chunk = manager.getClaimedChunkAtChunk(w, chunkX, chunkZ);
+
+        if(chunk == null) {
+            return null;
+        }
+
+        return chunk.getStorage().getAdminAt(0,0);
     }
 }

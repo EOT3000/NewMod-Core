@@ -1,5 +1,6 @@
 package me.bergenfly.nations.model.plot;
 
+import me.bergenfly.nations.NationsPlugin;
 import me.bergenfly.nations.manager.Plots;
 import me.bergenfly.nations.model.LandAdministrator;
 import me.bergenfly.nations.serializer.Serializable;
@@ -28,6 +29,8 @@ public class ClaimedChunk implements Serializable {
         this(data.chunkX(), data.chunkZ(), Plots.getWorld(data.world()));
 
         this.storage = new DivisionStorage(data.storage(), this);
+
+        NationsPlugin.getInstance().landManager().registerLoadedChunk(this);
     }
 
     public int getChunkX() {
@@ -48,7 +51,7 @@ public class ClaimedChunk implements Serializable {
 
     @Override
     public Object serialize() {
-        Map<String, Object> ret = new HashMap<>();
+        //Map<String, Object> ret = new HashMap<>();
 
         Map<String, Object> data = new HashMap<>();
 
@@ -59,7 +62,7 @@ public class ClaimedChunk implements Serializable {
         data.put("id", getId());
         data.put("title", chunkX + "," + chunkZ);
 
-        return ret;
+        return data;
     }
 
     @Override
